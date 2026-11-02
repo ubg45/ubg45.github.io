@@ -55,25 +55,25 @@
     // Category rules are matched against game titles (a game can belong to several).
     // re = pattern, not = exact titles to exclude, add = exact titles to include.
     categories: [
-      { id: 'shooting', name: 'Shooting', re: /shoot|\bgun|snip|1v1|recoil|bullet|fortzone|swat|raft wars|archer|tank stars|royale/i,
+      { id: 'shooting', name: 'Shooting', re: /awesome tanks|shoot|\bgun|snip|1v1|recoil|bullet|fortzone|swat|raft wars|archer|tank stars|royale/i,
         not: ['penalty shooters 2'], add: ['Blumgi Paintball'] },
       { id: 'roblox', name: 'Roblox', re: /roblox|robux|\bobby\b|obby blox|brainrot|tsunami|steal an egg/i },
       { id: 'racing', name: 'Racing', re: /racing|\brace\b|racer|drift|kart|\bf1\b|top speed|burnout|moto|x3m|wheelie|bike|biker|motorcycle|rider|\bmx\b/i,
         not: ['line rider', 'free rider', 'f1 reaction test'] },
       { id: 'car', name: 'Car', re: /\bcars?\b|drift|derby|monster|taxi|jeep|truck|parking|eggy car|escape road|madalin/i },
       { id: 'driving', name: 'Driving', re: /driv|simulator|parking|traffic|highway|truck|\bbus\b|tram|loader|hover race/i },
-      { id: 'clicker', name: 'Clicker', re: /clicker|idle|tycoon|merge|mining|miner|fishing|monkey mart|dogeminer|gold digger/i,
+      { id: 'clicker', name: 'Clicker', re: /clicker|idle|incremancer|progress knight|tycoon|merge|mining|miner|fishing|monkey mart|dogeminer|gold digger/i,
         not: ['gold miner', 'gold miner: special edition'] },
       { id: 'survival', name: 'Survival', re: /surviv|lava|backrooms|escaping|zombie|pandemic|death run|fortzone/i },
       { id: 'horror', name: 'Horror', re: /baldi|backrooms|granny|fnaf|horror|scary/i },
       { id: 'sports', name: 'Sports', re: /soccer|football|basket|baseball|cricket|golf|boxing|wrestle|penalty|retro bowl|fifa|dunk|rocket goal|4th and goal|bottle flip|8 ball/i },
-      { id: 'puzzle', name: 'Puzzle', re: /puzzle|quiz|2048|tetris|stacktris|sandtris|wordle|maze|block|bloxorz|baba|simon|color match|snail bob|bob the robber|alchemy|fluid|compare|fox|appel|plonky|stretch|spiral|3dash|merge/i,
+      { id: 'puzzle', name: 'Puzzle', re: /submachine|riddle|escape the|don't escape|sugar sugar|factory balls|hextris|family feud|breaklock|the treasure|conway|puzzle|quiz|2048|tetris|stacktris|sandtris|wordle|maze|block|bloxorz|baba|simon|color match|snail bob|bob the robber|alchemy|fluid|compare|fox|appel|plonky|stretch|spiral|3dash|merge/i,
         not: ['blumgi bounce'] },
-      { id: 'action', name: 'Action', re: /fight|battle|ragdoll|knockout|duel|smash|zombie|royale|ninja|boxing|wrestle|blade|kick the buddy|stick war|age of war/i },
-      { id: 'adventure', name: 'Adventure', re: /pokemon|stardew|mario 64|portal|toca life|getting over it|escaping the prison|breaking the bank|stealing the diamond/i },
-      { id: 'platform', name: 'Platform', re: /\brun [123]\b|\brun$|runner|jump|platform|mario|sonic|dash|geometry|parkour|\bovo\b|red ball|surf|crossy|hook|tomb of|temple run|dadish|devil|only level|hardest game|easyest|cluster rush|getting over|jetpack|pogo|swingo|elastic|space waves|sprinter|fowlst|penguin|penga|get on top|jelly|going balls|slope|tunnel rush|shell jump/i },
-      { id: 'simulation', name: 'Simulation', re: /simulator|simulation|sandbox|sand game|papa's|bartender|toca|stardew|alchemy|pandemic|kick the buddy|fluid|tycoon/i },
-      { id: 'strategy', name: 'Strategy', re: /tower|defen|age of war|stick war|plants vs|chess|poker|hold'em|black jack|deal or no|clash|battle cats|bloons|solitaire|pandemic/i },
+      { id: 'action', name: 'Action', re: /gun mayhem|creative kill|getaway|time shooter|shadow fight|rooftop snipers|rookie bowman|trace|fight|battle|ragdoll|knockout|duel|smash|zombie|royale|ninja|boxing|wrestle|blade|kick the buddy|stick war|age of war/i },
+      { id: 'adventure', name: 'Adventure', re: /henry stickmin|submachine|riddle|escape the|don't escape|abandoned|stick rpg|rogue soul|aground|10 minutes till dawn|lion soldier|gentleman|amidst the sky|the final earth|swords and souls|eaglercraft|pokemon|stardew|mario 64|portal|toca life|getting over it|escaping the prison|breaking the bank|stealing the diamond/i },
+      { id: 'platform', name: 'Platform', re: /fireboy|vex \d|achievement unlocked|cat ninja|scuba bear|babel tower|geometry vibes|rift shift|\brun [123]\b|\brun$|runner|jump|platform|mario|sonic|dash|geometry|parkour|\bovo\b|red ball|surf|crossy|hook|tomb of|temple run|dadish|devil|only level|hardest game|easyest|cluster rush|getting over|jetpack|pogo|swingo|elastic|space waves|sprinter|fowlst|penguin|penga|get on top|jelly|going balls|slope|tunnel rush|shell jump/i },
+      { id: 'simulation', name: 'Simulation', re: /simulator|simulation|sandspiel|sandbox|sand game|papa's|bartender|toca|stardew|alchemy|pandemic|kick the buddy|fluid|tycoon/i },
+      { id: 'strategy', name: 'Strategy', re: /ages of conflict|evowars|bloons|tower|defen|age of war|stick war|plants vs|chess|poker|hold'em|black jack|deal or no|clash|battle cats|bloons|solitaire|pandemic/i },
       { id: 'arcade', name: 'Arcade', re: /pacman|flappy|snake|dino game|fruit ninja|angry birds|bad piggies|peggle|dunk shot|plonky|simon|swingo|gobble|duck life|money movers|wacky flip/i, fallback: true }
     ],
 

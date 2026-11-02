@@ -297,7 +297,37 @@
       secs.push(rowSection(d.name, d.games.slice(0, C.ROW_MAX), '#/category/' + d.id));
     });
     secs.forEach(function (s) { homeView.appendChild(s); });
+    homeView.appendChild(allSection());
     requestAnimationFrame(function () { secs.forEach(function (s) { s._update(); }); });
+  }
+
+  /* Every game on the site, at the bottom of the homepage. */
+  var ALL_SORT_KEY = 'ubg45.allSort', allSort = store(ALL_SORT_KEY) || 'az';
+  if (['az', 'za', 'new'].indexOf(allSort) < 0) allSort = 'az';
+  function sortedAll(mode) {
+    var cmp = function (a, b) { return a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: 'base' }); };
+    var list = catalog.slice();
+    if (mode === 'za') list.sort(function (a, b) { return cmp(b, a); });
+    else if (mode === 'new') list.sort(function (a, b) {
+      var da = ST.addedOn(a.title) || '', db = ST.addedOn(b.title) || '';
+      return da < db ? 1 : da > db ? -1 : b.index - a.index;
+    });
+    else list.sort(cmp);
+    return list;
+  }
+  function allSection() {
+    var sec = el('section', 'sec all-sec');
+    sec.id = 'allGames';
+    sec.innerHTML = '<div class="sec-head"><h2><span class="h-ico all"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h6.5v6.5H4zM13.5 4H20v6.5h-6.5zM4 13.5h6.5V20H4zM13.5 13.5H20V20h-6.5z"/></svg></span>All Games</h2>' +
+      '<span class="meta all-count">' + catalog.length + ' games</span>' +
+      '<label class="sort"><span>Sort</span><select aria-label="Sort all games"><option value="az">A to Z</option><option value="za">Z to A</option><option value="new">Newest first</option></select></label></div>' +
+      '<div class="tile-grid" id="allGrid"></div>';
+    var sel = $('select', sec), gridEl = $('#allGrid', sec);
+    function fill() { gridEl.innerHTML = ''; var f = document.createDocumentFragment(); sortedAll(allSort).forEach(function (g) { f.appendChild(cloneOf(g)); }); gridEl.appendChild(f); syncFavs(); }
+    sel.value = allSort;
+    sel.addEventListener('change', function () { allSort = sel.value; store(ALL_SORT_KEY, allSort); fill(); });
+    fill();
+    return sec;
   }
 
   function listPage(title, games, emptyHtml, meta) {
