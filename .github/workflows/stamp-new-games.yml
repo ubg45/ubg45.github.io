@@ -4,7 +4,7 @@ name: Stamp new games
 on:
   push:
     branches: [main]
-    paths: [index.html]
+    paths: [index.html, ubg45.css, ubg45.js, ubg45-config.js, ubg45-stats.js, ubg45-settings.js]
 permissions:
   contents: write
 jobs:
@@ -15,10 +15,10 @@ jobs:
       - run: python3 tools/stamp-added.py
       - name: Commit
         run: |
-          if [ -n "$(git status --porcelain ubg45-added.js)" ]; then
+          if [ -n "$(git status --porcelain ubg45-added.js index.html)" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add ubg45-added.js
-            git commit -m "Stamp new games [skip ci]"
+            git add ubg45-added.js index.html
+            git commit -m "Stamp new games + refresh asset versions [skip ci]"
             git push
           fi

@@ -7,7 +7,7 @@
 Games already in the file keep their original date, and removed games keep their entry, so a game never
 becomes "New" twice. The site shows a game as New for NEW_DAYS days (ubg45-config.js) after its date.
 """
-import datetime, html, json, os, re, sys
+import datetime, hashlib, html, json, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INDEX, OUT = os.path.join(ROOT, 'index.html'), os.path.join(ROOT, 'ubg45-added.js')
@@ -30,6 +30,19 @@ def load():
     m = re.search(r'\)\.added\s*=\s*(\{.*\});', open(OUT, encoding='utf-8').read(), re.S)
     return json.loads(m.group(1)) if m else {}
 
+ASSETS = ['ubg45.css', 'ubg45-settings.js', 'ubg45-config.js', 'ubg45-added.js', 'ubg45-stats.js', 'ubg45.js']
+
+def bust():
+    """Add/refresh ?v=<hash> on the site's own css/js tags so browsers always fetch the newest files."""
+    src = open(INDEX, encoding='utf-8').read(); out = src
+    for name in ASSETS:
+        path = os.path.join(ROOT, name)
+        if not os.path.exists(path): continue
+        h = hashlib.sha1(open(path, 'rb').read()).hexdigest()[:8]
+        out = re.sub(r'((?:href|src)=")%s(?:\?v=[0-9a-f]+)?(")' % re.escape(name), r'\g<1>%s?v=%s\g<2>' % (name, h), out)
+    if out != src: open(INDEX, 'w', encoding='utf-8').write(out)
+    return out != src
+
 def main():
     baseline = '--baseline' in sys.argv
     today = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d')
@@ -40,6 +53,7 @@ def main():
             new.append(t)
     body = ',\n'.join('  %s: %s' % (json.dumps(k, ensure_ascii=False), json.dumps(v)) for k, v in added.items())
     open(OUT, 'w', encoding='utf-8').write(HEAD + '(window.UBG45 = window.UBG45 || {}).added = {\n' + body + '\n};\n')
+    print('cache-bust tags updated' if bust() else 'cache-bust tags already current')
     print('stamped %d new game(s)%s' % (len(new), ': ' + ', '.join(new) if new and len(new) < 20 else ''))
 
 if __name__ == '__main__': main()

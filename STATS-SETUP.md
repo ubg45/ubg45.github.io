@@ -1,26 +1,24 @@
-# Turning on live Trending (5 minutes, free)
+# Trending: how the play statistics work (Supabase)
 
-UBG45 records anonymous play statistics in a **Firebase Realtime Database** and builds the Trending tag from them.
-Until you do this, nothing is recorded and the homepage row is honestly labelled "Popular".
+UBG45 stores anonymous play counts in your Supabase project **ubg43-global-trending**
+(`https://wewynhmybroxzynaxnrx.supabase.co`) in its own table, `ubg45_daily_stats`
+(the UBG43 tables `game_trending` and `game_play_events` are not touched).
 
-1. Go to https://console.firebase.google.com and click **Add project** (name it anything, turn Google Analytics off).
-2. In the project: **Build → Realtime Database → Create Database** (any location, start in **locked mode**).
-3. Open the **Rules** tab, replace everything with the contents of `database.rules.json` from this repo, and click **Publish**.
-   These rules let anyone read the counters, and only allow +1 open or up to +60 seconds of play per write, so the numbers can't be set to anything.
-4. Copy the database URL shown at the top of the Data tab (like `https://your-project-default-rtdb.firebaseio.com`).
-5. Paste it into `ubg45-config.js`:  `stats: { databaseUrl: 'https://your-project-default-rtdb.firebaseio.com', ... }` and commit.
+* Per day and per game id: number of opens and seconds played. No accounts, no IPs, nothing personal.
+* The table is locked (RLS on, no policies). The site can only call two functions:
+  * `ubg45_record(p_game, p_opens, p_seconds)` - adds at most +1 open / +60 seconds per call, game id must match `[a-z0-9-]{1,80}`, at most 700 different games per day.
+  * `ubg45_stats(p_days)` - returns opens/seconds per game summed over the last N days (max 30).
+* The key in `ubg45-config.js` (`supabaseKey`, a `sb_publishable_...` key) is meant to be public.
+* A game gets the Trending tag when, in the last 7 days, it has 3+ opens or 15+ minutes played (always 2+ opens), top 12 by score.
+  The homepage row is labelled "Trending" once 3+ games qualify, otherwise "Popular".
+* Players can switch sharing off in Settings.
 
-## What is stored
-`ubg45/days/<YYYY-MM-DD>/<game-id> = { o: opens, s: seconds played }`. Nothing about the person: no IP, name or device id.
-Players can switch it off under Settings > Your data.
+## Notes
+* Supabase free projects pause after about 7 days with no activity at all; restore it from the dashboard if that happens (visitors playing games keeps it awake).
+* To see the data: Supabase dashboard -> SQL editor -> `select * from ubg45_daily_stats order by day desc, opens desc;`
+* To reset the stats: `delete from ubg45_daily_stats;`
+* To use Firebase Realtime Database instead, empty `supabaseUrl`/`supabaseKey` and set `databaseUrl` (rules in `database.rules.json`).
 
-## Trending rule (edit in `ubg45-config.js` > `stats`)
-Over the last `TRENDING_DAYS` (7) days a game trends when it has **a high number of opens OR a high amount of play time**:
-at least `MIN_OPENS` (3) opens or `MIN_MINUTES` (15) minutes played, and always at least 2 opens (one tab left open can't trend).
-The score is the better of "share of the busiest game's opens" and "share of the most-played game's minutes".
-The top `TRENDING_MAX` (12) get the Trending tag and the Trending row.
-
-## New tag (fully automatic)
-`ubg45-added.js` holds the date each game first appeared. `.github/workflows/stamp-new-games.yml` runs
-`tools/stamp-added.py` whenever `index.html` changes on `main`, stamps any game that wasn't there before with today's date,
-and commits the file. A game shows the New tag for `NEW_DAYS` (14) days. You can run `python3 tools/stamp-added.py` yourself too.
+## New tags
+`tools/stamp-added.py` (run by the GitHub workflow on every push) records the date each game first appears and refreshes the `?v=` version
+on the css/js tags in index.html. A game shows "New" for 14 days.

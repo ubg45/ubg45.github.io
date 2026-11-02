@@ -1,13 +1,13 @@
 /* UBG45 stats layer: anonymous play statistics -> Trending, plus the automatic "New" rule.
  *
- * What is stored (Firebase Realtime Database, REST, no SDK, no accounts, no personal data):
- *   ubg45/days/<YYYY-MM-DD>/<game-id> = { o: opens, s: seconds played }
+ * What is stored (Supabase table ubg45_daily_stats via two RPC functions, or optionally Firebase RTDB; no SDK, no accounts, no personal data):
+ *   per day and per game id: opens and seconds played
  * Opens are counted when a game is launched from the site (at most once per game per browser per 20 minutes).
  * Play time is counted by a tiny heartbeat inside the game tab while that tab is visible.
  * Trending is computed in the browser from the last TRENDING_DAYS days of those counters.
  * "New" comes from ubg45-added.js (stamped automatically when a game first appears in index.html).
  *
- * With no databaseUrl in ubg45-config.js nothing is sent and no Trending is shown (the site stays fully usable).
+ * With no supabaseUrl/supabaseKey (or databaseUrl) in ubg45-config.js nothing is sent and no Trending is shown (the site stays fully usable).
  */
 (function (root) {
   'use strict';
@@ -17,9 +17,13 @@
   var DAY = 86400000, OPEN_DEDUPE = 20 * 60000, CACHE_TTL = 3 * 60000;
   var KEY_SENT = 'ubg45.stats.sent', KEY_CACHE = 'ubg45.stats.cache', KEY_OUT = 'ubg45.stats.optout';
 
-  var base = String(S.databaseUrl || '').replace(/\/+$/, '');
+  var sbUrl = String(S.supabaseUrl || '').replace(/\/+$/, '');
+  var sbKey = String(S.supabaseKey || '');
+  var isUrl = function (u) { return /^https:\/\/[^\s/]+/.test(u) || /^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/.test(u); };   // http only for local testing
+  var useSb = isUrl(sbUrl) && sbKey.length > 20;                       // Supabase (preferred) ...
+  var base = useSb ? sbUrl : String(S.databaseUrl || '').replace(/\/+$/, '');   // ... else Firebase Realtime Database
   var rootKey = S.root || 'ubg45';
-  var enabled = /^https:\/\/[^\s/]+/.test(base) || /^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/.test(base);   // http only for local testing
+  var enabled = useSb || isUrl(base);
 
   function ls(key, val) {
     try { if (val === undefined) return JSON.parse(localStorage.getItem(key) || 'null'); localStorage.setItem(key, JSON.stringify(val)); } catch (e) { /* storage unavailable */ }
@@ -33,6 +37,14 @@
   function url(path, q) { return base + '/' + rootKey + '/' + path + '.json' + (q || ''); }
 
   function increment(id, field, n) {
+    if (useSb) {
+      try {
+        return fetch(sbUrl + '/rest/v1/rpc/ubg45_record', {
+          method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json', apikey: sbKey },
+          body: JSON.stringify({ p_game: id, p_opens: field === 'o' ? n : 0, p_seconds: field === 's' ? n : 0 })
+        }).catch(function () { /* offline or blocked: ignore */ });
+      } catch (e) { return null; }
+    }
     var body = {}; body[field] = { '.sv': { increment: n } };
     try {
       return fetch(url('days/' + dayStr(Date.now()) + '/' + id), {
@@ -64,9 +76,10 @@
     // Script placed in the head of the game tab: adds the seconds the tab is actually visible.
     heartbeat: function (title) {
       if (!enabled || optedOut() || !title) return '';
-      var cfg = JSON.stringify({ b: base, r: rootKey, i: slug(title) }).replace(/</g, '\\u003c');
+      var cfg = JSON.stringify({ b: base, r: rootKey, i: slug(title), k: useSb ? sbKey : '' }).replace(/</g, '\\u003c');
       var js = '(function(c){var tot=0,MAX=10800,last=Date.now(),vis=!document.hidden;' +
-        'function post(n){if(n<=0||tot>=MAX)return;tot+=n;try{fetch(c.b+"/"+c.r+"/days/"+new Date().toISOString().slice(0,10)+"/"+c.i+".json",' +
+        'function post(n){if(n<=0||tot>=MAX)return;tot+=n;try{if(c.k){fetch(c.b+"/rest/v1/rpc/ubg45_record",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json",apikey:c.k},body:JSON.stringify({p_game:c.i,p_opens:0,p_seconds:n})}).catch(function(){});return}' +
+        'fetch(c.b+"/"+c.r+"/days/"+new Date().toISOString().slice(0,10)+"/"+c.i+".json",' +
         '{method:"PATCH",keepalive:true,headers:{"Content-Type":"application/json"},body:JSON.stringify({s:{".sv":{increment:n}}})}).catch(function(){})}catch(e){}}' +
         'function flush(){var now=Date.now();if(vis)post(Math.min(Math.round((now-last)/1000),60));last=now}' +
         'setInterval(flush,30000);' +
@@ -88,13 +101,23 @@
       var q = '?orderBy=%22%24key%22&startAt=%22' + start + '%22';
       var ctl = root.AbortController ? new AbortController() : null;
       var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 8000);
-      fetch(url('days', q), ctl ? { signal: ctl.signal } : undefined).then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+      var req = useSb
+        ? fetch(sbUrl + '/rest/v1/rpc/ubg45_stats', { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: sbKey }, body: JSON.stringify({ p_days: days }), signal: ctl ? ctl.signal : undefined })
+        : fetch(url('days', q), ctl ? { signal: ctl.signal } : undefined);
+      req.then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
         .then(function (data) {
           clearTimeout(timer);
-          var rows = stats.aggregate(data, start);
+          var rows = useSb ? stats.fromRows(data) : stats.aggregate(data, start);
           ls(KEY_CACHE, { t: Date.now(), days: days, base: base, rows: rows });
           cb(rows, false);
         }).catch(function () { clearTimeout(timer); /* keep whatever we showed from cache */ });
+    },
+
+    // Supabase returns [{id, o, s}] already summed over the window.
+    fromRows: function (list) {
+      return (Array.isArray(list) ? list : []).map(function (r) {
+        return { id: String(r && r.id || ''), o: Number(r && r.o) || 0, s: Number(r && r.s) || 0 };
+      }).filter(function (r) { return r.id && r.o >= 0 && r.s >= 0; });
     },
 
     aggregate: function (data, startDay) {

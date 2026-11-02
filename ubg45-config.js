@@ -15,10 +15,14 @@
     NEW_DAYS: 14,
     newTitles: [],
 
-    // TRENDING: live, from play statistics in your Firebase Realtime Database (see STATS-SETUP.md).
-    // Leave databaseUrl empty and nothing is recorded; the homepage row is then labelled "Popular" (hand-picked below).
+    // TRENDING: live, from anonymous play statistics in Supabase (see STATS-SETUP.md).
+    // Leave supabaseUrl and databaseUrl empty and nothing is recorded; the homepage row is then labelled "Popular" (hand-picked below).
     stats: {
-      databaseUrl: '',      // e.g. 'https://your-project-default-rtdb.firebaseio.com'
+      // Supabase (project ubg43-global-trending; UBG45 uses its own table ubg45_daily_stats). The publishable key is safe to be public:
+      // the table has no direct access, the browser can only call two capped functions (ubg45_record / ubg45_stats).
+      supabaseUrl: 'https://wewynhmybroxzynaxnrx.supabase.co',
+      supabaseKey: 'sb_publishable_9-0Y5XyyOzpnILu1cb6dHg_j8234P2p',
+      databaseUrl: '',      // optional alternative: a Firebase Realtime Database URL (only used when the Supabase fields are empty)
       root: 'ubg45',
       TRENDING_DAYS: 7,     // look at the last 7 days
       TRENDING_MAX: 12,     // at most this many games trend at once
