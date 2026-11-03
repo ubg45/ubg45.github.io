@@ -453,5 +453,8 @@
   "vex 6": "2026-11-02",
   "vex 7": "2026-11-02",
   "web osu!": "2026-11-02",
-  "x trench run": "2026-11-02"
+  "x trench run": "2026-11-02",
+  "minecraft beta 1.7.3": "2026-11-03",
+  "ninja vs evilcorp": "2026-11-03",
+  "territorial.io": "2026-11-03"
 };
