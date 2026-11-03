@@ -33,6 +33,7 @@
     RECENT_MAX: 16,       // recently played kept per browser
     ROW_MAX: 24,          // tiles per horizontal row on the homepage
     CATEGORY_ROWS: 5,     // category rows shown under New Games
+    HOME_HIDE_CATEGORIES: ['car', 'driving', 'racing', 'roblox', 'shooting'],   // no homepage row for these (still in the left sidebar)
     MIN_CATEGORY_SIZE: 3, // categories with fewer games are hidden
 
     // Collage on the homepage. The first two become the large tiles.

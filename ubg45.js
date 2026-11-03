@@ -293,7 +293,7 @@
     var secs = [live ? rowSection('Trending', liveTrending.slice(0, C.ROW_MAX), '#/popular', 'trending')
                      : rowSection('Popular', pick(C.trending).slice(0, C.ROW_MAX), '#/popular')];   // hand-picked until real play data exists
     if (newGames.length) secs.push(rowSection('New Games', newGames.slice(0, C.ROW_MAX), '#/new', 'new'));
-    activeCats.filter(function (d) { return !d.fallback; }).slice(0, C.CATEGORY_ROWS).forEach(function (d) {
+    activeCats.filter(function (d) { return !d.fallback && (C.HOME_HIDE_CATEGORIES || []).indexOf(d.id) < 0; }).slice(0, C.CATEGORY_ROWS).forEach(function (d) {
       secs.push(rowSection(d.name, d.games.slice(0, C.ROW_MAX), '#/category/' + d.id));
     });
     secs.forEach(function (s) { homeView.appendChild(s); });
