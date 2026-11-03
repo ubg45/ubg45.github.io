@@ -146,17 +146,22 @@
   /* Badges: Trending (live data only) and New (automatic). Rebuilt whenever the data changes. */
   var BADGE_ICON = {
     trending: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.6 1.8c.5 3.4-1 5.2-2.6 7C8.5 10.4 7 12 7 14.7a5.1 5.1 0 0 0 5 5.3 5.2 5.2 0 0 0 5.2-5.4c0-2-.8-3.4-1.8-4.7-.4 1.2-1 1.9-1.9 2.3.6-3.3-.3-6.2-1.9-10.4z"/></svg>',
+    popular: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2l2.9 6 6.5.9-4.7 4.6 1.1 6.5L12 17.1l-5.8 3.1 1.1-6.5L2.6 9.1l6.5-.9z"/></svg>',
     'new': '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M10 2.5l2 5.7 5.7 2-5.7 2-2 5.8-2-5.8-5.7-2 5.7-2z"/><path fill="currentColor" d="M18.5 13l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/></svg>'
   };
+  var BADGE_LABEL = { trending: 'Trending', popular: 'Popular', 'new': 'New' };
+  var popularIds = {};                                  // our hand-picked most-played games (shown as Popular until/unless they trend live)
+  pick(C.trending).slice(0, C.ROW_MAX).forEach(function (g) { popularIds[g.index] = 1; });
   function applyBadges() {
     catalog.forEach(function (g) {
       var c = g.el, old = $(':scope > .badges', c); if (old) old.remove();
       var kinds = [];
-      if (trendingIds[g.index]) kinds.push('trending');
+      if (trendingIds[g.index]) kinds.push('trending');          // live play data wins ...
+      else if (popularIds[g.index]) kinds.push('popular');        // ... otherwise the hand-picked Popular games
       if (g.isNew) kinds.push('new');
       if (!kinds.length) return;
       var wrap = el('div', 'badges');
-      kinds.forEach(function (k) { wrap.appendChild(el('span', 'badge ' + k, BADGE_ICON[k] + '<span>' + (k === 'new' ? 'New' : 'Trending') + '</span>')); });
+      kinds.forEach(function (k) { wrap.appendChild(el('span', 'badge ' + k, BADGE_ICON[k] + '<span>' + BADGE_LABEL[k] + '</span>')); });
       c.insertBefore(wrap, c.firstChild);
     });
   }
@@ -291,9 +296,9 @@
     homeView.appendChild(buildCollage());
     var live = liveTrending.length >= (C.stats.MIN_LIVE || 3);
     var secs = [live ? rowSection('Trending', liveTrending.slice(0, C.ROW_MAX), '#/popular', 'trending')
-                     : rowSection('Popular', pick(C.trending).slice(0, C.ROW_MAX), '#/popular')];   // hand-picked until real play data exists
+                     : rowSection('Popular', pick(C.trending).slice(0, C.ROW_MAX), '#/popular', 'popular')];   // hand-picked until real play data exists
     if (newGames.length) secs.push(rowSection('New Games', newGames.slice(0, C.ROW_MAX), '#/new', 'new'));
-    activeCats.filter(function (d) { return !d.fallback && (C.HOME_HIDE_CATEGORIES || []).indexOf(d.id) < 0; }).slice(0, C.CATEGORY_ROWS).forEach(function (d) {
+    activeCats.filter(function (d) { return !d.fallback; }).slice(0, C.CATEGORY_ROWS).filter(function (d) { return (C.HOME_HIDE_CATEGORIES || []).indexOf(d.id) < 0; }).forEach(function (d) {
       secs.push(rowSection(d.name, d.games.slice(0, C.ROW_MAX), '#/category/' + d.id));
     });
     secs.forEach(function (s) { homeView.appendChild(s); });
