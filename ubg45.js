@@ -245,7 +245,7 @@
 
   /* ------------------------------------------------------------------ views */
   function rowSection(title, games, moreHref, icon) {
-    var sec = el('section', 'sec');
+    var sec = el('section', 'sec' + (icon ? ' sec-' + icon : ''));
     var head = el('div', 'sec-head', '<h2>' + (icon ? '<span class="h-ico ' + icon + '">' + BADGE_ICON[icon] + '</span>' : '') + esc(title) + '</h2>' + (moreHref ? '<a class="more" href="' + moreHref + '">View more</a>' : ''));
     var wrap = el('div', 'row-wrap');
     var row = el('div', 'row');
@@ -291,8 +291,55 @@
     return wrap;
   }
 
+  /* Game of the day: one hand-picked game per calendar day (same for everyone), with a big Play button. */
+  function buildHero() {
+    var pool = pick(C.featured); if (!pool.length) pool = catalog.slice(0, 12);
+    var day = Math.floor(Date.now() / 86400000);
+    var g = pool[day % pool.length];
+    var imgEl = $('img', g.el), src = imgEl && imgEl.getAttribute('src');
+    var cats = catDefs.filter(function (d) { return d.games.indexOf(g) >= 0 && !d.fallback; }).slice(0, 3).map(function (d) { return d.name; });
+    var sec = el('section', 'hero');
+    sec.setAttribute('aria-label', 'Game of the day');
+    sec.innerHTML =
+      (src ? '<div class="hero-bg"></div>' : '') +
+      '<div class="hero-art" role="button" tabindex="0" aria-label="Play ' + esc(g.title) + '">' + (src ? '<img alt="">' : '<div class="thumb-fallback">' + esc(g.title) + '</div>') + '</div>' +
+      '<div class="hero-copy"><p class="hero-kicker"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2l2.9 6 6.5.9-4.7 4.6 1.1 6.5L12 17.1l-5.8 3.1 1.1-6.5L2.6 9.1l6.5-.9z"/></svg>Game of the day</p>' +
+      '<h1>' + esc(g.title) + '</h1>' +
+      '<p class="hero-sub">' + (cats.length ? esc(cats.join(', ')) + ' game. ' : '') + 'Free, opens in a new tab.</p>' +
+      '<div class="hero-actions"><button class="btn-play" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8.5 5.6v12.8a1 1 0 0 0 1.5.9l10-6.4a1 1 0 0 0 0-1.7l-10-6.4a1 1 0 0 0-1.5.8z"/></svg>Play now</button>' +
+      '<button class="btn-ghost" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>Surprise me</button></div></div>' +
+      '<div class="hero-facts"><span class="fact"><b>' + catalog.length + '</b> games</span>' +
+      (newGames.length ? '<span class="fact"><b>' + newGames.length + '</b> new lately</span>' : '') +
+      '<span class="fact">No downloads</span></div>';
+    if (src) {
+      var im = $('.hero-art img', sec); im.src = src;
+      im.addEventListener('error', function () { var d = el('div', 'thumb-fallback', esc(g.title)); im.replaceWith(d); });
+      $('.hero-bg', sec).style.backgroundImage = 'url("' + src.replace(/"/g, '%22') + '")';
+    }
+    function play() { g.el.click(); }
+    $('.btn-play', sec).addEventListener('click', play);
+    $('.hero-art', sec).addEventListener('click', play);
+    $('.hero-art', sec).addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(); } });
+    $('.btn-ghost', sec).addEventListener('click', randomGame);
+    return sec;
+  }
+
+  /* Quick category chips (the homepage has no category rows, so this is how you jump into one). */
+  function buildChips() {
+    var order = [].concat.apply([], C.sidebarGroups || []);
+    var list = order.map(function (id) { return catById[id]; }).filter(function (d) { return d && !d.fallback && d.games.length >= C.MIN_CATEGORY_SIZE; });
+    var wrap = el('nav', 'chips'); wrap.setAttribute('aria-label', 'Browse by category');
+    list.forEach(function (d) {
+      var a = el('a', 'chip', '<span class="ico">' + svg(d.id) + '</span>' + esc(d.name) + ' <small>' + d.games.length + '</small>');
+      a.href = '#/category/' + d.id; wrap.appendChild(a);
+    });
+    return wrap;
+  }
+
   function buildHome() {
     homeView.innerHTML = '';
+    homeView.appendChild(buildHero());
+    homeView.appendChild(buildChips());
     homeView.appendChild(buildCollage());
     var live = liveTrending.length >= (C.stats.MIN_LIVE || 3);
     var secs = [live ? rowSection('Trending', liveTrending.slice(0, C.ROW_MAX), '#/popular', 'trending')
@@ -576,6 +623,18 @@
   /* ------------------------------------------------------------------ random, header buttons */
   function randomGame() { if (typeof window.openRandom === 'function') window.openRandom(); }
   $('#randomBtn').addEventListener('click', randomGame);
+
+  // Light / dark theme (remembered in this browser; light by default)
+  (function () {
+    var root = document.documentElement, btn = $('#themeBtn'), meta = document.querySelector('meta[name="theme-color"]');
+    function paint() { var d = root.getAttribute('data-theme') === 'dark'; if (meta) meta.setAttribute('content', d ? '#111937' : '#ffffff'); if (btn) btn.setAttribute('aria-pressed', d ? 'true' : 'false'); }
+    paint();
+    if (btn) btn.addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next); try { localStorage.setItem('ubg45.theme', next); } catch (e) { /* ignore */ }
+      paint();
+    });
+  })();
 
   /* ------------------------------------------------------------------ sidebar collapse / drawer */
   var mq = window.matchMedia('(max-width: 900px)');
