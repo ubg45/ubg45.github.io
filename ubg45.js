@@ -173,6 +173,8 @@
     if (!b) return;
     e.stopPropagation(); e.preventDefault();
     toggleFav(b.closest('.game-card').getAttribute('data-title'));
+    b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+    b.addEventListener('animationend', function () { b.classList.remove('pop'); }, { once: true });
   }, true);
   document.addEventListener('keydown', function (e) {
     var t = e.target;
@@ -613,6 +615,56 @@
     render();
     if (!searchBar.value) syncFavs();
   });
+  /* Live suggestions under the search bar: top title matches, arrow keys + Enter, click to play. */
+  var suggest = $('#suggest'), sgItems = [], sgActive = -1;
+  searchBar.placeholder = 'Search ' + catalog.length + ' games';
+  function hl(title, q) {
+    var i = norm(title).indexOf(q); if (i < 0 || norm(title).length !== title.length) return esc(title);
+    return esc(title.slice(0, i)) + '<mark>' + esc(title.slice(i, i + q.length)) + '</mark>' + esc(title.slice(i + q.length));
+  }
+  function sgClose() { suggest.hidden = true; suggest.innerHTML = ''; sgItems = []; sgActive = -1; searchBar.setAttribute('aria-expanded', 'false'); searchBar.removeAttribute('aria-activedescendant'); }
+  function sgSetActive(i) {
+    sgItems.forEach(function (n, k) { n.classList.toggle('active', k === i); n.setAttribute('aria-selected', k === i ? 'true' : 'false'); });
+    sgActive = i; var n = sgItems[i]; if (n) { searchBar.setAttribute('aria-activedescendant', n.id); n.scrollIntoView({ block: 'nearest' }); } else searchBar.removeAttribute('aria-activedescendant');
+  }
+  function sgOpen(g) { sgClose(); searchBar.blur(); g.el.click(); }
+  function sgRender() {
+    var q = norm(searchBar.value);
+    if (!q || document.activeElement !== searchBar) { sgClose(); return; }
+    var starts = [], has = [];
+    catalog.forEach(function (g) { var t = norm(g.title), i = t.indexOf(q); if (i === 0) starts.push(g); else if (i > 0) has.push(g); });
+    var all = starts.concat(has), top = all.slice(0, 6);
+    suggest.innerHTML = ''; sgItems = []; sgActive = -1;
+    if (!top.length) { suggest.innerHTML = '<div class="sg-empty"><b>No games found</b> for “' + esc(searchBar.value.trim()) + '”. Check the spelling.</div>'; }
+    top.forEach(function (g, k) {
+      var im = $('img', g.el), src = im && im.getAttribute('src');
+      var cat = catDefs.filter(function (d) { return d.games.indexOf(g) >= 0 && !d.fallback; })[0];
+      var b = el('button', 'sg-item', '<span class="sg-thumb">' + (src ? '<img alt="" loading="lazy">' : '') + '</span><span class="sg-text"><span class="sg-title">' + hl(g.title, q) + '</span><span class="sg-cat">' + (cat ? esc(cat.name) : 'Game') + '</span></span><span class="sg-go"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8.5 5.6v12.8a1 1 0 0 0 1.5.9l10-6.4a1 1 0 0 0 0-1.7l-10-6.4a1 1 0 0 0-1.5.8z"/></svg></span>');
+      b.type = 'button'; b.id = 'sg-' + k; b.setAttribute('role', 'option'); b.tabIndex = -1;
+      if (src) { var ii = $('img', b); ii.src = src; ii.addEventListener('error', function () { ii.remove(); }); }
+      b.addEventListener('mousedown', function (e) { e.preventDefault(); });
+      b.addEventListener('click', function () { sgOpen(g); });
+      b.addEventListener('mouseenter', function () { sgSetActive(k); });
+      suggest.appendChild(b); sgItems.push(b);
+    });
+    if (all.length > top.length) {
+      var m = el('button', 'sg-all', '<span>See all ' + all.length + ' results</span><span aria-hidden="true">&#8250;</span>'); m.type = 'button'; m.tabIndex = -1;
+      m.addEventListener('mousedown', function (e) { e.preventDefault(); });
+      m.addEventListener('click', function () { sgClose(); searchBar.blur(); });
+      suggest.appendChild(m);
+    }
+    suggest.hidden = false; searchBar.setAttribute('aria-expanded', 'true');
+  }
+  searchBar.addEventListener('input', sgRender);
+  searchBar.addEventListener('focus', sgRender);
+  searchBar.addEventListener('blur', function () { setTimeout(sgClose, 120); });
+  searchBar.addEventListener('keydown', function (e) {
+    if (suggest.hidden || !sgItems.length) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); sgSetActive((sgActive + 1) % sgItems.length); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); sgSetActive((sgActive - 1 + sgItems.length) % sgItems.length); }
+    else if (e.key === 'Enter') { if (sgActive >= 0) { e.preventDefault(); sgItems[sgActive].click(); } else { sgClose(); searchBar.blur(); } }
+    else if (e.key === 'Escape') { sgClose(); }
+  });
   clearBtn.addEventListener('click', function () { searchBar.value = ''; searchBar.dispatchEvent(new Event('input', { bubbles: true })); searchBar.focus(); });
   searchBar.addEventListener('keydown', function (e) { if (e.key === 'Escape' && searchBar.value) { searchBar.value = ''; searchBar.dispatchEvent(new Event('input', { bubbles: true })); } });
   document.addEventListener('keydown', function (e) {
@@ -631,8 +683,37 @@
     paint();
     if (btn) btn.addEventListener('click', function () {
       var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.classList.add('theme-fade'); setTimeout(function () { root.classList.remove('theme-fade'); }, 450);
       root.setAttribute('data-theme', next); try { localStorage.setItem('ubg45.theme', next); } catch (e) { /* ignore */ }
       paint();
+    });
+  })();
+
+  /* ------------------------------------------------------------------ button motion: ripples and one-shot spins */
+  (function () {
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+    var RIP = '.btn-play, .btn-ghost, .btn-s, .more, .chip, .sg-all, .nav-item';
+    document.addEventListener('pointerdown', function (e) {
+      if (e.button || (still && still.matches)) return;
+      var t = e.target.closest && e.target.closest(RIP);
+      if (!t) return;
+      var host = t;
+      if (t.classList.contains('nav-item')) {            // sidebar rows keep their marker outside, so ripple inside a clip layer
+        host = t.querySelector('.rip-clip');
+        if (!host) { host = document.createElement('span'); host.className = 'rip-clip'; t.appendChild(host); }
+      }
+      var r = t.getBoundingClientRect(), d = Math.max(r.width, r.height) * 2.1, s = document.createElement('span');
+      s.className = 'rip'; s.style.width = s.style.height = d + 'px';
+      s.style.left = (e.clientX - r.left - d / 2) + 'px'; s.style.top = (e.clientY - r.top - d / 2) + 'px';
+      host.appendChild(s);
+      s.addEventListener('animationend', function () { s.remove(); });
+    }, true);
+    ['themeBtn', 'randomBtn'].forEach(function (id) {
+      var b = document.getElementById(id); if (!b) return;
+      b.addEventListener('click', function () {
+        b.classList.remove('anim'); void b.offsetWidth; b.classList.add('anim');
+        setTimeout(function () { b.classList.remove('anim'); }, 800);
+      });
     });
   })();
 

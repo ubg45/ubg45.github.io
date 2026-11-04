@@ -16,7 +16,7 @@
   <script>try{var t=localStorage.getItem('ubg45.theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
   <link rel="preload" href="fonts/poppins-bold.woff" as="font" type="font/woff" crossorigin>
   <link rel="preconnect" href="https://ubg42.github.io">
-  <link rel="stylesheet" href="ubg45.css?v=26053379">
+  <link rel="stylesheet" href="ubg45.css?v=07ef902f">
   <script src="ubg45-settings.js?v=54944462"></script>
 </head>
 <body>
@@ -34,9 +34,11 @@
   </div>
 
   <div class="search" role="search">
-    <input id="searchBar" type="search" placeholder="Search" aria-label="Search games" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+    <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+    <input id="searchBar" type="search" placeholder="Search games" aria-label="Search games" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" role="combobox" aria-expanded="false" aria-controls="suggest" aria-autocomplete="list">
+    <kbd class="s-key" aria-hidden="true">/</kbd>
     <button class="search-clear" id="searchClear" type="button" aria-label="Clear search" hidden>&times;</button>
-    <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+    <div class="suggest" id="suggest" role="listbox" aria-label="Matching games" hidden></div>
   </div>
 
   <div class="tb-right">
@@ -2550,6 +2552,6 @@ rainbowElements.forEach(text => {
 <script src="ubg45-config.js?v=8e7a7840" defer></script>
 <script src="ubg45-added.js?v=ec357eb5" defer></script>
 <script src="ubg45-stats.js?v=de74d8aa" defer></script>
-<script src="ubg45.js?v=eb702936" defer></script>
+<script src="ubg45.js?v=904c83aa" defer></script>
 </body>
 </html>
