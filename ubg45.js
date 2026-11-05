@@ -147,6 +147,7 @@
   var BADGE_ICON = {
     trending: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.6 1.8c.5 3.4-1 5.2-2.6 7C8.5 10.4 7 12 7 14.7a5.1 5.1 0 0 0 5 5.3 5.2 5.2 0 0 0 5.2-5.4c0-2-.8-3.4-1.8-4.7-.4 1.2-1 1.9-1.9 2.3.6-3.3-.3-6.2-1.9-10.4z"/></svg>',
     popular: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2l2.9 6 6.5.9-4.7 4.6 1.1 6.5L12 17.1l-5.8 3.1 1.1-6.5L2.6 9.1l6.5-.9z"/></svg>',
+    recent: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 7.2V12l3.2 2" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     'new': '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M10 2.5l2 5.7 5.7 2-5.7 2-2 5.8-2-5.8-5.7-2 5.7-2z"/><path fill="currentColor" d="M18.5 13l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/></svg>'
   };
   var BADGE_LABEL = { trending: 'Trending', popular: 'Popular', 'new': 'New' };
@@ -190,10 +191,44 @@
     window.openGame = function (url) {
       var g = byUrl[url];
       if (g) { ST.begin(g.title); }
-      if (g) { recents = [g.title].concat(recents.filter(function (t) { return t !== g.title; })).slice(0, C.RECENT_MAX); store(RECENT_KEY, recents); }
+      if (g) { recents = [g.title].concat(recents.filter(function (t) { return t !== g.title; })).slice(0, C.RECENT_MAX); store(RECENT_KEY, recents); setTimeout(function () { if (typeof refreshRecent === 'function') refreshRecent(); }, 350); }
       return originalOpen.apply(this, arguments);
     };
   }
+
+  catalog.forEach(function (g) { skel(g.el); });
+
+  /* Full-screen button shown inside every game tab (see openGame in index.html). */
+  U.gameFs = function () {
+    function core() {
+      var z = document.getElementById('ubgFsZone'), b = document.getElementById('ubgFs'), d = document.documentElement, t;
+      if (!z || !b) return;
+      if (!(d.requestFullscreen || d.webkitRequestFullscreen)) { z.style.display = 'none'; return; }
+      function on() { return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+      function show() { z.className = 'show'; clearTimeout(t); t = setTimeout(function () { z.className = ''; }, 2600); }
+      function paint() { var f = on(); z.setAttribute('data-fs', f ? '1' : '0'); b.setAttribute('aria-label', f ? 'Exit full screen' : 'Full screen'); b.title = f ? 'Exit full screen' : 'Full screen'; }
+      b.addEventListener('click', function () {
+        try { if (on()) (document.exitFullscreen || document.webkitExitFullscreen).call(document); else (d.requestFullscreen || d.webkitRequestFullscreen).call(d); } catch (e) { /* ignore */ }
+        show();
+      });
+      z.addEventListener('mouseenter', show); z.addEventListener('mousemove', show); b.addEventListener('focus', show);
+      document.addEventListener('fullscreenchange', function () { paint(); show(); }); document.addEventListener('webkitfullscreenchange', function () { paint(); show(); });
+      paint(); show();
+    }
+    var css = '#ubgFsZone{position:fixed;right:12px;bottom:12px;width:44px;height:44px;z-index:2147483647}' +
+      '#ubgFs{width:44px;height:44px;border:0;border-radius:13px;background:rgba(15,20,40,.78);color:#fff;display:grid;place-items:center;cursor:pointer;padding:0;opacity:0;transform:translateY(10px) scale(.85);pointer-events:none;' +
+      'transition:opacity .25s ease,transform .35s cubic-bezier(.34,1.56,.64,1),background .2s;box-shadow:0 8px 20px rgba(0,0,0,.4),inset 0 0 0 1px rgba(255,255,255,.18);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}' +
+      '#ubgFsZone.show #ubgFs,#ubgFs:focus-visible{opacity:1;transform:none;pointer-events:auto}' +
+      '#ubgFs:hover{background:#2f5bff;transform:scale(1.1)}#ubgFs:active{transform:scale(.9);transition-duration:.07s}#ubgFs:focus-visible{outline:2px solid #fff;outline-offset:2px}' +
+      '#ubgFs svg{width:22px;height:22px;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}#ubgFs:hover svg{transform:scale(1.15)}' +
+      '#ubgFs .c{display:none}#ubgFsZone[data-fs="1"] .e{display:none}#ubgFsZone[data-fs="1"] .c{display:block}' +
+      '@media (hover:none){#ubgFsZone{display:none}}@media (prefers-reduced-motion:reduce){#ubgFs,#ubgFs svg{transition:none}}';
+    var ico = 'fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
+    return '<style>' + css + '</style><div id="ubgFsZone" data-fs="0"><button id="ubgFs" type="button" aria-label="Full screen" title="Full screen">' +
+      '<svg class="e" viewBox="0 0 24 24" ' + ico + '><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>' +
+      '<svg class="c" viewBox="0 0 24 24" ' + ico + '><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg></button></div>' +
+      '<script>(' + core.toString().replace(/<\/script/gi, '<\\/script') + ')();<\/script>';
+  };
 
   /* ------------------------------------------------------------------ DOM refs */
   var sidebar = $('#sidebar'), main = $('#main'), content = $('.content');
@@ -204,9 +239,18 @@
   function cloneOf(g, extra) {
     var c = g.el.cloneNode(true);
     c.removeAttribute('id'); c.removeAttribute('style');
-    c.classList.remove('is-fav');
+    c.classList.remove('is-fav', 'sk');
     if (extra) c.className += ' ' + extra;
+    skel(c);
     return c;
+  }
+  /* Shimmer on a tile until its thumbnail has loaded. */
+  function skel(c) {
+    var im = c.querySelector(':scope > img');
+    if (!im || (im.complete && im.naturalWidth)) return;
+    c.classList.add('sk');
+    var done = function () { c.classList.remove('sk'); };
+    im.addEventListener('load', done, { once: true }); im.addEventListener('error', done, { once: true });
   }
 
   /* ------------------------------------------------------------------ sidebar */
@@ -264,6 +308,27 @@
     sec.appendChild(head); sec.appendChild(wrap);
     sec._update = upd;
     return sec;
+  }
+
+  /* "Continue playing": the games this browser opened most recently. */
+  function recentGames() { return recents.map(function (t) { return byTitle[norm(t)]; }).filter(Boolean); }
+  function recentSection() {
+    var list = recentGames(); if (!list.length) return null;
+    var sec = rowSection('Continue playing', list.slice(0, C.RECENT_MAX), '#/recent', 'recent');
+    var clr = el('button', 'btn-s mini', 'Clear'); clr.type = 'button'; clr.setAttribute('aria-label', 'Clear recently played games');
+    clr.addEventListener('click', function () {
+      recents = []; store(RECENT_KEY, recents);
+      sec.classList.add('leaving');
+      setTimeout(function () { refreshRecent(); buildStrip(); if (typeof refreshSettingsData === 'function') refreshSettingsData(); }, 260);
+    });
+    $('.sec-head', sec).appendChild(clr);
+    return sec;
+  }
+  function refreshRecent() {
+    if (!$('.hero', homeView)) return;
+    var old = $('.sec-recent', homeView), fresh = recentSection();
+    if (old && fresh) old.replaceWith(fresh); else if (old) old.remove(); else if (fresh) { var ch = $('.chips', homeView); if (ch) ch.after(fresh); else homeView.appendChild(fresh); }
+    if (fresh) requestAnimationFrame(function () { fresh._update(); });
   }
 
   var cols = 0;
@@ -342,6 +407,7 @@
     homeView.innerHTML = '';
     homeView.appendChild(buildHero());
     homeView.appendChild(buildChips());
+    var rs = recentSection(); if (rs) homeView.appendChild(rs);
     homeView.appendChild(buildCollage());
     var live = liveTrending.length >= (C.stats.MIN_LIVE || 3);
     var secs = [live ? rowSection('Trending', liveTrending.slice(0, C.ROW_MAX), '#/popular', 'trending')
@@ -352,6 +418,7 @@
     });
     secs.forEach(function (s) { homeView.appendChild(s); });
     homeView.appendChild(allSection());
+    if (rs) secs.push(rs);
     requestAnimationFrame(function () { secs.forEach(function (s) { s._update(); }); });
   }
 
@@ -384,6 +451,7 @@
     return sec;
   }
 
+  var EMPTY_ACTIONS = '<div class="empty-actions"><button class="btn-s" type="button" data-act="random">Play a random game</button><a class="btn-s" href="#/" data-clear>Browse all games</a></div>';
   function listPage(title, games, emptyHtml, meta) {
     $('#listTitle').textContent = title;
     $('#listMeta').textContent = meta != null ? meta : games.length + (games.length === 1 ? ' game' : ' games');
@@ -433,10 +501,10 @@
         settingsView.hidden = false; buildSettings(); break;
       case 'favourites':
         g = favs.map(function (t) { return byTitle[norm(t)]; }).filter(Boolean);
-        listPage(TITLES.favourites, g, '<strong>No favourites yet</strong>Click the heart on any game (or press F while it is focused) to save it here.'); break;
+        listPage(TITLES.favourites, g, '<strong>No favourites yet</strong>Click the heart on any game (or press F while it is focused) to save it here.' + EMPTY_ACTIONS); break;
       case 'recent':
         g = recents.map(function (t) { return byTitle[norm(t)]; }).filter(Boolean);
-        listPage(TITLES.recent, g, '<strong>Nothing played yet</strong>Games you open will show up here.'); break;
+        listPage(TITLES.recent, g, '<strong>Nothing played yet</strong>Games you open will show up here.' + EMPTY_ACTIONS); break;
       default:
         homeView.hidden = false; if (!homeView.firstChild || homeView._cols !== cols) { buildHome(); homeView._cols = cols; }
     }
@@ -577,7 +645,7 @@
       var w = window.open(v, '_blank', 'noopener'); if (!w) say('Pop-up blocked. Allow pop-ups to test.', true);
     });
 
-    $s('clearRecent').addEventListener('click', function () { recents = []; store(RECENT_KEY, recents); buildStrip(); refreshSettingsData(); say('Recently played cleared.', false); });
+    $s('clearRecent').addEventListener('click', function () { recents = []; store(RECENT_KEY, recents); buildStrip(); refreshSettingsData(); refreshRecent(); say('Recently played cleared.', false); });
     $s('clearFavs').addEventListener('click', function () { favs = []; store(FAV_KEY, favs); syncFavs(); refreshSettingsData(); say('Favourites cleared.', false); });
     var rs = $s('resetSettings'), rsT;
     rs.addEventListener('click', function () {
@@ -590,7 +658,7 @@
       if (e.key !== FAV_KEY && e.key !== RECENT_KEY) return;
       favs = (store(FAV_KEY) || []).filter(function (t) { return byTitle[norm(t)]; });
       recents = (store(RECENT_KEY) || []).filter(function (t) { return byTitle[norm(t)]; });
-      syncFavs(); refreshSettingsData();
+      syncFavs(); refreshSettingsData(); refreshRecent();
       if (route.name === 'favourites' || route.name === 'recent') render();
     });
 
@@ -608,8 +676,60 @@
     $('#searchTitle').textContent = 'Results for “' + q + '”';
     $('#searchMeta').textContent = shown + (shown === 1 ? ' game' : ' games');
     var e = $('#searchEmpty'); e.hidden = shown > 0;
-    if (!shown) e.innerHTML = '<strong>No games found</strong>Nothing matches “' + esc(q) + '”. Check the spelling, or <a href="' + esc(C.suggestUrl) + '" target="_blank" rel="noopener" onclick="openGame(this.href, \'Google Docs\'); return false;">suggest it</a>.';
+    if (!shown) e.innerHTML = noResultsHtml(q);
   }
+  /* Typo-tolerant "did you mean" for searches that find nothing. */
+  function lev(a, b) {
+    if (a === b) return 0; if (!a.length) return b.length; if (!b.length) return a.length;
+    var prev2 = [], prev = [], cur = [], i, j;
+    for (j = 0; j <= b.length; j++) prev[j] = j;
+    for (i = 1; i <= a.length; i++) {
+      cur[0] = i;
+      for (j = 1; j <= b.length; j++) {
+        cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1));
+        if (i > 1 && j > 1 && a.charAt(i - 1) === b.charAt(j - 2) && a.charAt(i - 2) === b.charAt(j - 1)) cur[j] = Math.min(cur[j], prev2[j - 2] + 1);   // swapped letters count as one typo
+      }
+      prev2 = prev; prev = cur.slice();
+    }
+    return prev[b.length];
+  }
+  function similarGames(q, n) {
+    q = norm(q); if (!q) return [];
+    var toks = q.split(' ').filter(function (w) { return w.length >= 3; });
+    var lim = Math.max(1, Math.floor(q.length * 0.3)), out = [];
+    catalog.forEach(function (g) {
+      var t = norm(g.title), words = t.split(/[^a-z0-9]+/).filter(Boolean);
+      var best = Math.min(lev(q, t), lev(q, t.slice(0, q.length + 1)));
+      words.forEach(function (w) { best = Math.min(best, lev(q, w), lev(q, w.slice(0, q.length))); });
+      if (toks.some(function (w) { return t.indexOf(w) > -1; })) best = Math.min(best, 1);
+      if (best <= lim) out.push({ d: best, g: g });
+    });
+    out.sort(function (a, b) { return a.d - b.d || a.g.index - b.g.index; });
+    return out.slice(0, n).map(function (x) { return x.g; });
+  }
+  function noResultsHtml(q) {
+    var sim = similarGames(q, 4), label = 'Did you mean';
+    if (!sim.length) { sim = pick(C.trending).slice(0, 4); label = 'Popular right now'; }
+    var games = sim.map(function (g) {
+      var im = $('img', g.el), src = im && im.getAttribute('src');
+      return '<button type="button" class="chip es-game" data-q="' + esc(g.title) + '"><span class="ico">' + (src ? '<img alt="" src="' + esc(src) + '">' : '') + '</span>' + esc(g.title) + '</button>';
+    }).join('');
+    var cats = catDefs.filter(function (d) { return !d.fallback && d.games.length >= C.MIN_CATEGORY_SIZE; }).sort(function (a, b) { return b.games.length - a.games.length; }).slice(0, 6).map(function (d) {
+      return '<a class="chip" href="#/category/' + d.id + '" data-clear><span class="ico">' + svg(d.id) + '</span>' + esc(d.name) + ' <small>' + d.games.length + '</small></a>';
+    }).join('');
+    return '<strong>No games found</strong>Nothing matches “' + esc(q) + '”. Check the spelling or try a shorter word.' +
+      '<div class="es-block"><span class="es-label">' + label + '</span><div class="chips es-chips">' + games + '</div></div>' +
+      '<div class="es-block"><span class="es-label">Or browse a category</span><div class="chips es-chips">' + cats + '</div></div>' +
+      '<div class="empty-actions"><button class="btn-s" type="button" data-act="random">Play a random game</button>' +
+      '<a class="btn-s" href="' + esc(C.suggestUrl) + '" target="_blank" rel="noopener" onclick="openGame(this.href, \'Google Docs\'); return false;">Suggest this game</a></div>';
+  }
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest && e.target.closest('.empty [data-q], .empty [data-act], .empty [data-clear]');
+    if (!t) return;
+    if (t.hasAttribute('data-q')) { e.preventDefault(); searchBar.value = t.getAttribute('data-q'); searchBar.dispatchEvent(new Event('input', { bubbles: true })); window.scrollTo(0, 0); }
+    else if (t.getAttribute('data-act') === 'random') { e.preventDefault(); randomGame(); }
+    else if (t.hasAttribute('data-clear') && searchBar.value) { searchBar.value = ''; searchBar.dispatchEvent(new Event('input', { bubbles: true })); }
+  });
   searchBar.addEventListener('input', function () {
     clearBtn.hidden = !searchBar.value;
     render();
@@ -633,9 +753,12 @@
     if (!q || document.activeElement !== searchBar) { sgClose(); return; }
     var starts = [], has = [];
     catalog.forEach(function (g) { var t = norm(g.title), i = t.indexOf(q); if (i === 0) starts.push(g); else if (i > 0) has.push(g); });
-    var all = starts.concat(has), top = all.slice(0, 6);
+    var all = starts.concat(has), top = all.slice(0, 6), didYouMean = false;
     suggest.innerHTML = ''; sgItems = []; sgActive = -1;
-    if (!top.length) { suggest.innerHTML = '<div class="sg-empty"><b>No games found</b> for “' + esc(searchBar.value.trim()) + '”. Check the spelling.</div>'; }
+    if (!top.length) {
+      top = similarGames(q, 3); didYouMean = top.length > 0;
+      suggest.innerHTML = '<div class="sg-empty"><b>No games found</b> for “' + esc(searchBar.value.trim()) + '”.' + (didYouMean ? ' Did you mean:' : ' Check the spelling.') + '</div>';
+    }
     top.forEach(function (g, k) {
       var im = $('img', g.el), src = im && im.getAttribute('src');
       var cat = catDefs.filter(function (d) { return d.games.indexOf(g) >= 0 && !d.fallback; })[0];

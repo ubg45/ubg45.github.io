@@ -16,7 +16,7 @@
   <script>try{var t=localStorage.getItem('ubg45.theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
   <link rel="preload" href="fonts/poppins-bold.woff" as="font" type="font/woff" crossorigin>
   <link rel="preconnect" href="https://ubg42.github.io">
-  <link rel="stylesheet" href="ubg45.css?v=07ef902f">
+  <link rel="stylesheet" href="ubg45.css?v=a8fab2a0">
   <script src="ubg45-settings.js?v=54944462"></script>
 </head>
 <body>
@@ -65,7 +65,8 @@
 
     <main id="main">
       <noscript><p class="empty"><strong>JavaScript is required</strong>UBG45 needs JavaScript to list and open games.</p></noscript>
-      <div id="homeView"></div>
+      <div id="homeView"><div class="boot-skel" aria-hidden="true"><div class="bs-hero"></div><div class="bs-chips"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="bs-row"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div></div>
+      <noscript><style>.boot-skel{display:none}</style></noscript>
 
       <section id="listView" hidden>
         <div class="view-head"><h1 id="listTitle"></h1><span class="meta" id="listMeta"></span></div>
@@ -1941,7 +1942,8 @@ function openGame(url, title) {
       </style>
     </head>
     <body>
-      <iframe src="${url}" frameborder="0"></iframe>
+      <iframe src="${url}" frameborder="0" allow="fullscreen; autoplay; gamepad; clipboard-write" allowfullscreen></iframe>
+      ${window.UBG45 && UBG45.gameFs ? UBG45.gameFs() : ''}
     </body>
     </html>
   `);
@@ -2552,6 +2554,6 @@ rainbowElements.forEach(text => {
 <script src="ubg45-config.js?v=8e7a7840" defer></script>
 <script src="ubg45-added.js?v=ec357eb5" defer></script>
 <script src="ubg45-stats.js?v=de74d8aa" defer></script>
-<script src="ubg45.js?v=904c83aa" defer></script>
+<script src="ubg45.js?v=b39d990e" defer></script>
 </body>
 </html>

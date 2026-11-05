@@ -642,3 +642,43 @@ html.theme-fade, html.theme-fade *, html.theme-fade *::before, html.theme-fade *
   .theme-btn.anim svg, #randomBtn.anim svg, .fav-btn.pop svg, .search-clear:not([hidden]), .nav-item[aria-current="page"]::before, button:focus-visible, a.chip:focus-visible, .nav-item:focus-visible { animation: none !important; }
   html.theme-fade, html.theme-fade * { transition: none !important; }
 }
+
+/* ---------- Continue playing row ---------- */
+.h-ico.recent { background: linear-gradient(135deg, #2f5bff, #22c1ff); box-shadow: 0 2px 8px rgba(47, 91, 255, .35); }
+.sec-head .btn-s.mini { height: 30px; padding: 0 12px; border-radius: 999px; font-size: 13px; color: var(--muted); }
+.sec-head .btn-s.mini:hover { color: #d23a30; border-color: #d23a30; }
+.sec-recent { animation: sec-in .45s var(--smooth) both; transition: opacity .25s, transform .25s var(--smooth); }
+.sec-recent.leaving { opacity: 0; transform: translateY(-8px); }
+@keyframes sec-in { from { opacity: 0; transform: translateY(10px); } }
+
+/* ---------- Loading shimmer ---------- */
+:root { --sk-a: #dde3f4; --sk-b: #f6f8fe; }
+:root[data-theme="dark"] { --sk-a: #1a2350; --sk-b: #2b3877; }
+.game-card > img { transition: transform .4s ease, filter .3s ease, opacity .35s ease; }
+.game-card.sk { background: linear-gradient(100deg, var(--sk-a) 30%, var(--sk-b) 50%, var(--sk-a) 70%); background-size: 240% 100%; animation: sk 1.3s linear infinite; }
+.game-card.sk > img, .game-card.sk h3 { opacity: 0; }
+.game-card.sk::after { display: none; }
+@keyframes sk { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+.boot-skel { display: block; }
+.boot-skel i, .bs-hero { display: block; background: linear-gradient(100deg, var(--sk-a) 30%, var(--sk-b) 50%, var(--sk-a) 70%); background-size: 240% 100%; animation: sk 1.3s linear infinite; }
+.bs-hero { height: clamp(210px, 26vw, 290px); border-radius: 24px; }
+.bs-chips { display: flex; gap: 8px; margin: 16px 0 26px; overflow: hidden; }
+.bs-chips i { flex: none; width: 112px; height: 40px; border-radius: 999px; }
+.bs-row { display: flex; gap: 12px; overflow: hidden; }
+.bs-row i { flex: none; width: var(--tile, 150px); aspect-ratio: 1; border-radius: var(--r); }
+@media (prefers-reduced-motion: reduce) { .game-card.sk, .boot-skel i, .bs-hero, .sec-recent { animation: none; } }
+
+/* ---------- Better empty states ---------- */
+.empty .es-block { margin-top: 18px; }
+.empty .es-label { display: block; margin-bottom: 8px; color: var(--muted); font-size: 13px; font-weight: 600; }
+.empty .es-chips { justify-content: center; margin: 0; }
+.empty .chip { color: var(--ink); font-weight: 600; cursor: pointer; border: 0; font-family: inherit; }
+.empty .es-game .ico { overflow: hidden; }
+.empty .es-game .ico img { width: 100%; height: 100%; object-fit: cover; }
+.empty-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
+.empty .btn-s { display: inline-flex; align-items: center; color: var(--ink-2); text-decoration: none; font-weight: 600; }
+.empty .btn-s:first-child { background: var(--blue); border-color: var(--blue); color: #fff; }
+.empty .btn-s:first-child:hover { background: var(--blue); filter: brightness(1.1); }
+.sg-empty { animation: none; }
+.empty .es-chips { flex-wrap: wrap; overflow: visible; margin-right: 0; padding: 0; }
+.empty .chip { flex: none; max-width: 100%; }
