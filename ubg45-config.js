@@ -33,7 +33,7 @@
     RECENT_MAX: 16,       // recently played kept per browser
     ROW_MAX: 24,          // tiles per horizontal row on the homepage
     CATEGORY_ROWS: 5,     // category rows shown under New Games
-    HOME_HIDE_CATEGORIES: ['car', 'driving', 'racing', 'roblox', 'shooting', 'clicker', 'survival', 'sports', 'puzzle', 'action'],   // no homepage row for these (still in the left sidebar)
+    HOME_HIDE_CATEGORIES: ['driving', 'racing', 'roblox', 'shooting', 'clicker', 'survival', 'sports', 'puzzle', 'action'],   // no homepage row for these (still in the left sidebar)
     MIN_CATEGORY_SIZE: 3, // categories with fewer games are hidden
 
     // Collage on the homepage. The first two become the large tiles.
@@ -65,8 +65,7 @@
       { id: 'roblox', name: 'Roblox', re: /roblox|robux|\bobby\b|obby blox|brainrot|tsunami|steal an egg/i },
       { id: 'racing', name: 'Racing', re: /racing|\brace\b|racer|drift|kart|\bf1\b|top speed|burnout|moto|x3m|wheelie|bike|biker|motorcycle|rider|\bmx\b/i,
         not: ['line rider', 'free rider', 'f1 reaction test'] },
-      { id: 'car', name: 'Car', re: /\bcars?\b|drift|derby|monster|taxi|jeep|truck|parking|eggy car|escape road|madalin/i },
-      { id: 'driving', name: 'Driving', re: /driv|simulator|parking|traffic|highway|truck|\bbus\b|tram|loader|hover race/i },
+      { id: 'driving', name: 'Driving', re: /driv|simulator|parking|traffic|highway|truck|\bbus\b|tram|loader|hover race|\bcars?\b|drift|derby|monster|taxi|jeep|eggy car|escape road|madalin/i }   /* includes everything that used to be in Car */,
       { id: 'clicker', name: 'Clicker', re: /clicker|idle|incremancer|progress knight|tycoon|merge|mining|miner|fishing|monkey mart|dogeminer|gold digger/i,
         not: ['gold miner', 'gold miner: special edition'] },
       { id: 'survival', name: 'Survival', re: /surviv|lava|backrooms|escaping|zombie|pandemic|death run|fortzone/i },
@@ -84,7 +83,7 @@
 
     // Sidebar order: the first group mirrors the reference; groups are separated by a divider.
     sidebarGroups: [
-      ['shooting', 'roblox', 'racing', 'car', 'clicker', 'survival'],
+      ['shooting', 'roblox', 'racing', 'clicker', 'survival'],
       ['driving', 'sports', 'puzzle', 'horror', 'action', 'adventure', 'arcade', 'platform', 'simulation', 'strategy']
     ],
 

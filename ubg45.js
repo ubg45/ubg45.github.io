@@ -51,6 +51,7 @@
     heart: '<path d="M12 21s-8-5.2-8-11a4.6 4.6 0 0 1 8-3 4.6 4.6 0 0 1 8 3c0 5.8-8 11-8 11z" fill="#ef4b6a"/>',
     clock: '<circle cx="12" cy="12" r="9" fill="none" stroke="#2b3245" stroke-width="2"/><path d="M12 7v5l3.5 2" fill="none" stroke="#2b3245" stroke-width="2" stroke-linecap="round"/>',
     settings: '<path fill="#8a93a6" d="M10.5 2.8h3l.5 2.3 1.6.7 2-1.3 2.1 2.1-1.3 2 .7 1.6 2.3.5v3l-2.3.5-.7 1.6 1.3 2-2.1 2.1-2-1.3-1.6.7-.5 2.3h-3l-.5-2.3-1.6-.7-2 1.3-2.1-2.1 1.3-2-.7-1.6-2.3-.5v-3l2.3-.5.7-1.6-1.3-2 2.1-2.1 2 1.3 1.6-.7z"/><circle cx="12" cy="12" r="3.1" fill="#fff"/>',
+    news: '<rect x="3.5" y="4" width="14" height="16" rx="2.4" fill="#3d7bff"/><path d="M17.5 8.5h2.2a1.3 1.3 0 0 1 1.3 1.3V17a3 3 0 0 1-3 3h-.5z" fill="#ffb02e"/><path d="M7 8.5h7M7 12h7M7 15.5h4" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>',
     suggest: '<path d="M4 4h16v12H9l-5 4z" fill="#ffb02e"/><path d="M12 7.5v5M9.5 10h5" stroke="#fff" stroke-width="2" stroke-linecap="round"/>',
     generic: '<circle cx="12" cy="12" r="8" fill="#9aa3b5"/>'
   };
@@ -232,7 +233,7 @@
 
   /* ------------------------------------------------------------------ DOM refs */
   var sidebar = $('#sidebar'), main = $('#main'), content = $('.content');
-  var homeView = $('#homeView'), listView = $('#listView'), searchView = $('#searchView'), settingsView = $('#settingsView');
+  var homeView = $('#homeView'), listView = $('#listView'), searchView = $('#searchView'), settingsView = $('#settingsView'), newsView = $('#newsView');
   var searchBar = $('#searchBar'), clearBtn = $('#searchClear');
   var strip = $('#strip');
 
@@ -286,7 +287,9 @@
     sg.target = '_blank'; sg.rel = 'noopener';
     sg.setAttribute('onclick', "openGame(this.href, 'Google Docs'); return false;");
     f.appendChild(sg);
+    var nw = navItem('nav-news', 'news', 'News', '#/news', ''); f.appendChild(nw);
     sidebar.appendChild(f);
+    syncNewsBadge();
   }
 
   /* ------------------------------------------------------------------ views */
@@ -359,35 +362,88 @@
   }
 
   /* Game of the day: one hand-picked game per calendar day (same for everyone), with a big Play button. */
+  function localDay() { var d = new Date(); return Math.floor((d.getTime() - d.getTimezoneOffset() * 60000) / 86400000); }
+  /* Featured banner: today's pick first, then the next few featured games, rotating by itself (pause button, dots, daily rollover). */
   function buildHero() {
     var pool = pick(C.featured); if (!pool.length) pool = catalog.slice(0, 12);
-    var day = Math.floor(Date.now() / 86400000);
-    var g = pool[day % pool.length];
-    var imgEl = $('img', g.el), src = imgEl && imgEl.getAttribute('src');
-    var cats = catDefs.filter(function (d) { return d.games.indexOf(g) >= 0 && !d.fallback; }).slice(0, 3).map(function (d) { return d.name; });
+    var COUNT = Math.min(6, pool.length), day = 0, slides = [], idx = 0, g = null, token = 0, live = [];
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+    function pickSlides() { day = localDay(); slides = []; for (var k = 0; k < COUNT; k++) slides.push(pool[(day + k) % pool.length]); }
+    pickSlides();
+    var STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2l2.9 6 6.5.9-4.7 4.6 1.1 6.5L12 17.1l-5.8 3.1 1.1-6.5L2.6 9.1l6.5-.9z"/></svg>';
     var sec = el('section', 'hero');
-    sec.setAttribute('aria-label', 'Game of the day');
+    sec.setAttribute('aria-label', 'Featured games');
+    var dots = '';
+    if (COUNT > 1) {
+      for (var k = 0; k < COUNT; k++) dots += '<button class="hero-dot" type="button" data-i="' + k + '"><i></i></button>';
+      dots = '<div class="hero-dots">' + dots + '<button class="hero-pause" type="button" aria-label="Pause rotation" aria-pressed="false"><svg class="ic-pause" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 5h3.4v14H7zM13.6 5H17v14h-3.4z"/></svg><svg class="ic-play" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.6v12.8a1 1 0 0 0 1.5.9l10-6.4a1 1 0 0 0 0-1.7l-10-6.4A1 1 0 0 0 8 5.6z"/></svg></button></div>';
+    }
     sec.innerHTML =
-      (src ? '<div class="hero-bg"></div>' : '') +
-      '<div class="hero-art" role="button" tabindex="0" aria-label="Play ' + esc(g.title) + '">' + (src ? '<img alt="">' : '<div class="thumb-fallback">' + esc(g.title) + '</div>') + '</div>' +
-      '<div class="hero-copy"><p class="hero-kicker"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2l2.9 6 6.5.9-4.7 4.6 1.1 6.5L12 17.1l-5.8 3.1 1.1-6.5L2.6 9.1l6.5-.9z"/></svg>Game of the day</p>' +
-      '<h1>' + esc(g.title) + '</h1>' +
-      '<p class="hero-sub">' + (cats.length ? esc(cats.join(', ')) + ' game. ' : '') + 'Free, opens in a new tab.</p>' +
+      '<div class="hero-bg"></div>' +
+      '<div class="hero-art" role="button" tabindex="0"></div>' +
+      '<div class="hero-copy"><p class="hero-kicker"></p><h1></h1><p class="hero-sub"></p>' +
       '<div class="hero-actions"><button class="btn-play" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8.5 5.6v12.8a1 1 0 0 0 1.5.9l10-6.4a1 1 0 0 0 0-1.7l-10-6.4a1 1 0 0 0-1.5.8z"/></svg>Play now</button>' +
       '<button class="btn-ghost" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>Surprise me</button></div></div>' +
       '<div class="hero-facts"><span class="fact"><b>' + catalog.length + '</b> games</span>' +
       (newGames.length ? '<span class="fact"><b>' + newGames.length + '</b> new lately</span>' : '') +
-      '<span class="fact">No downloads</span></div>';
-    if (src) {
-      var im = $('.hero-art img', sec); im.src = src;
-      im.addEventListener('error', function () { var d = el('div', 'thumb-fallback', esc(g.title)); im.replaceWith(d); });
-      $('.hero-bg', sec).style.backgroundImage = 'url("' + src.replace(/"/g, '%22') + '")';
+      '<span class="fact">No downloads</span></div>' + dots;
+    var art = $('.hero-art', sec), copy = $('.hero-copy', sec), bg = $('.hero-bg', sec), dotEls = $$('.hero-dot', sec);
+
+    function fill(i) {
+      idx = i; g = slides[i];
+      var imgEl = $('img', g.el), src = imgEl && imgEl.getAttribute('src');
+      var cats = catDefs.filter(function (d) { return d.games.indexOf(g) >= 0 && !d.fallback; }).slice(0, 3).map(function (d) { return d.name; });
+      $('.hero-kicker', sec).innerHTML = STAR + (i === 0 ? 'Game of the day' : 'Featured game');
+      $('h1', sec).textContent = g.title;
+      $('.hero-sub', sec).textContent = (cats.length ? cats.join(', ') + ' game. ' : '') + 'Free, opens in a new tab.';
+      art.setAttribute('aria-label', 'Play ' + g.title);
+      art.innerHTML = src ? '<img alt="">' : '<div class="thumb-fallback">' + esc(g.title) + '</div>';
+      if (src) {
+        var im = $('img', art); im.src = src;
+        im.addEventListener('error', function () { var d = el('div', 'thumb-fallback', esc(g.title)); im.replaceWith(d); });
+      }
+      bg.style.backgroundImage = src ? 'url("' + src.replace(/"/g, '%22') + '")' : 'none';
+      dotEls.forEach(function (d, k) { d.classList.remove('on'); d.removeAttribute('aria-current'); d.setAttribute('aria-label', (k === 0 ? 'Game of the day: ' : 'Featured: ') + slides[k].title); });
+      if (dotEls[i]) { void sec.offsetWidth; dotEls[i].classList.add('on'); dotEls[i].setAttribute('aria-current', 'true'); }   // restarts the progress bar
     }
+    function go(i, animate) {
+      i = (i + slides.length) % slides.length;
+      live.forEach(function (a) { a.cancel(); }); live = [];
+      var t = ++token;
+      if (!animate || !sec.animate || (still && still.matches)) { fill(i); return; }
+      live = [
+        copy.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateX(-18px)' }], { duration: 200, easing: 'ease-in', fill: 'forwards' }),
+        art.animate([{ opacity: 1, transform: 'rotate(-4deg)' }, { opacity: 0, transform: 'rotate(-14deg) scale(.82)' }], { duration: 200, easing: 'ease-in', fill: 'forwards' }),
+        bg.animate([{ opacity: .55 }, { opacity: 0 }], { duration: 200, fill: 'forwards' })
+      ];
+      Promise.all(live.map(function (a) { return a.finished; })).then(function () {
+        if (t !== token) return;
+        fill(i); live.forEach(function (a) { a.cancel(); }); live = [];
+        copy.animate([{ opacity: 0, transform: 'translateX(18px)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.22, 1, .36, 1)' });
+        art.animate([{ opacity: 0, transform: 'rotate(8deg) scale(.8)' }, { opacity: 1, transform: 'rotate(-4deg)' }], { duration: 520, easing: 'cubic-bezier(.34, 1.56, .64, 1)' });
+        bg.animate([{ opacity: 0 }, { opacity: .55 }], { duration: 520 });
+      }).catch(function () { /* interrupted by a newer change */ });
+    }
+    fill(0);
+
     function play() { g.el.click(); }
     $('.btn-play', sec).addEventListener('click', play);
-    $('.hero-art', sec).addEventListener('click', play);
-    $('.hero-art', sec).addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(); } });
+    art.addEventListener('click', play);
+    art.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(); } });
     $('.btn-ghost', sec).addEventListener('click', randomGame);
+    dotEls.forEach(function (d) { d.addEventListener('click', function () { go(+d.getAttribute('data-i'), true); }); });
+    var pz = $('.hero-pause', sec);
+    if (pz) pz.addEventListener('click', function () {
+      var on = !sec.classList.contains('user-paused'); sec.classList.toggle('user-paused', on);
+      pz.setAttribute('aria-pressed', String(on)); pz.setAttribute('aria-label', on ? 'Resume rotation' : 'Pause rotation');
+    });
+    // The progress bar on the active dot ends -> next game. (It is paused on hover/focus, by the pause button, and in hidden tabs.)
+    sec.addEventListener('animationend', function (e) {
+      if (e.animationName !== 'hero-dot' || !sec.isConnected) return;
+      if (localDay() !== day) { pickSlides(); go(0, true); } else go(idx + 1, true);
+    });
+    document.addEventListener('visibilitychange', function () { sec.classList.toggle('tab-hidden', document.hidden); });
+    sec.classList.toggle('tab-hidden', document.hidden);
     return sec;
   }
 
@@ -484,8 +540,8 @@
     var q = searchBar.value.trim();
     var searching = !!q;
     body.classList.toggle('searching', searching);
-    homeView.hidden = listView.hidden = searchView.hidden = settingsView.hidden = true;
-    $('#stripWrap').hidden = searching || route.name === 'settings';
+    homeView.hidden = listView.hidden = searchView.hidden = settingsView.hidden = newsView.hidden = true;
+    $('#stripWrap').hidden = searching || route.name === 'settings' || route.name === 'news';
     if (searching) { searchView.hidden = false; updateSearch(); markNav(null); return; }
     var g;
     switch (route.name) {
@@ -499,6 +555,8 @@
         listPage(d.name + ' Games', d.games, '<strong>No games here yet</strong>'); break;
       case 'settings':
         settingsView.hidden = false; buildSettings(); break;
+      case 'news':
+        newsView.hidden = false; buildNews(); break;
       case 'favourites':
         g = favs.map(function (t) { return byTitle[norm(t)]; }).filter(Boolean);
         listPage(TITLES.favourites, g, '<strong>No favourites yet</strong>Click the heart on any game (or press F while it is focused) to save it here.' + EMPTY_ACTIONS); break;
@@ -508,7 +566,7 @@
       default:
         homeView.hidden = false; if (!homeView.firstChild || homeView._cols !== cols) { buildHome(); homeView._cols = cols; }
     }
-    if (route.name !== 'home' && route.name !== 'settings') listView.hidden = false;
+    if (route.name !== 'home' && route.name !== 'settings' && route.name !== 'news') listView.hidden = false;
     markNav(route);
     buildStrip();
     syncFavs();
@@ -524,8 +582,8 @@
   function parseHash() {
     var h = (location.hash || '').replace(/^#\/?/, '');
     var p = h.split('/');
-    if (p[0] === 'new' || p[0] === 'popular' || p[0] === 'favourites' || p[0] === 'recent' || p[0] === 'settings') route = { name: p[0], id: '' };
-    else if (p[0] === 'category' && p[1]) route = { name: 'category', id: decodeURIComponent(p[1]) };
+    if (p[0] === 'new' || p[0] === 'popular' || p[0] === 'favourites' || p[0] === 'recent' || p[0] === 'settings' || p[0] === 'news') route = { name: p[0], id: '' };
+    else if (p[0] === 'category' && p[1]) route = { name: 'category', id: (function (id) { return id === 'car' ? 'driving' : id; })(decodeURIComponent(p[1])) };   // Car was merged into Driving
     else route = { name: 'home', id: '' };
   }
   window.addEventListener('hashchange', function () {
@@ -533,6 +591,100 @@
     if (searchBar.value) { searchBar.value = ''; searchBar.dispatchEvent(new Event('input', { bubbles: true })); }
     closeDrawer(); render(); window.scrollTo(0, 0);
   });
+
+  /* ------------------------------------------------------------------ news page */
+  var NEWS_SEEN = 'ubg45.newsSeen';
+  var TAGS = { games: 'New games', feature: 'New feature', update: 'Update', fix: 'Fix' };
+  function dayMs(d) { var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d || ''); return m ? Date.UTC(+m[1], +m[2] - 1, +m[3]) : NaN; }
+  function newsEntries() {
+    var out = [], posts = (U.news || []).filter(function (n) { return n && !isNaN(dayMs(n.date)); });
+    posts.forEach(function (n, i) { out.push({ date: n.date, tag: TAGS[n.tag] ? n.tag : 'update', title: n.title, text: n.text, points: n.points || [], order: i }); });
+    var byDay = {}, added = U.added || {};
+    Object.keys(added).forEach(function (k) {
+      var d = added[k], g = byTitle[k]; if (!g || isNaN(dayMs(d)) || d < '2001-01-01') return;
+      (byDay[d] = byDay[d] || []).push(g);
+    });
+    Object.keys(byDay).forEach(function (d) {
+      var list = byDay[d].sort(function (a, b) { return a.index - b.index; });
+      out.push({ date: d, tag: 'games', title: list.length === 1 ? 'New game: ' + list[0].title : list.length + ' new games added', games: list, order: 1000 });
+    });
+    out.sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : a.order - b.order; });
+    return out;
+  }
+  function newsUnread() {
+    var seen = store(NEWS_SEEN), list = newsEntries();
+    if (!list.length) return 0;
+    if (!seen) { var cut = new Date(Date.now() - (C.NEW_DAYS || 14) * 864e5).toISOString().slice(0, 10); return list.filter(function (n) { return n.date >= cut; }).length; }
+    return list.filter(function (n) { return n.date > seen; }).length;
+  }
+  function syncNewsBadge() {
+    var a = document.getElementById('nav-news'); if (!a) return;
+    var n = newsUnread(), b = $('.n', a);
+    if (n && route.name !== 'news') { if (!b) { b = el('span', 'n hot'); a.appendChild(b); } b.className = 'n hot'; b.textContent = n; }
+    else if (b) b.remove();
+  }
+  function dayLabel(d) {
+    var t = dayMs(d), now = new Date(), today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()), diff = Math.round((today - t) / 864e5);
+    var abs = new Date(t).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+    return { rel: diff <= 0 ? 'Today' : diff === 1 ? 'Yesterday' : diff < 14 ? diff + ' days ago' : abs, abs: abs,
+      mon: new Date(t).toLocaleDateString(undefined, { month: 'short', timeZone: 'UTC' }), day: new Date(t).getUTCDate() };
+  }
+  function gameChip(g) {
+    var im = $('img', g.el), src = im && im.getAttribute('src');
+    var b = el('button', 'news-game', '<span class="ng-thumb">' + (src ? '<img alt="" loading="lazy">' : '') + '</span><span class="ng-title">' + esc(g.title) + '</span>');
+    b.type = 'button'; b.title = 'Play ' + g.title;
+    if (src) { var ii = $('img', b); ii.src = src; ii.addEventListener('error', function () { ii.remove(); }); }
+    b.addEventListener('click', function () { g.el.click(); });
+    return b;
+  }
+  var newsFilter = 'all';
+  function buildNews() {
+    var list = newsEntries(), seen = store(NEWS_SEEN), shown = 0;
+    var tabs = [['all', 'All'], ['games', 'New games'], ['update', 'Updates'], ['fix', 'Fixes']];
+    newsView.innerHTML =
+      '<div class="view-head"><h1 id="newsTitle">News &amp; updates</h1><span class="meta" id="newsMeta"></span></div>' +
+      '<div class="news-tabs" role="group" aria-label="Filter news">' + tabs.map(function (t) { return '<button type="button" class="news-tab" data-f="' + t[0] + '" aria-pressed="' + (newsFilter === t[0]) + '">' + t[1] + '</button>'; }).join('') + '</div>' +
+      '<div class="news-list" id="newsList"></div><div class="empty" id="newsEmpty" hidden><strong>Nothing here yet</strong>Check back soon.</div>';
+    var wrap = $('#newsList', newsView);
+    list.forEach(function (n) {
+      var kind = n.tag === 'feature' ? 'update' : n.tag, dl = dayLabel(n.date);
+      var card = el('article', 'news-card tag-' + n.tag + ((seen ? n.date > seen : n.date >= new Date(Date.now() - (C.NEW_DAYS || 14) * 864e5).toISOString().slice(0, 10)) ? ' fresh' : ''));
+      card.setAttribute('data-kind', kind);
+      card.innerHTML = '<div class="news-date" title="' + esc(dl.abs) + '"><span class="nd-mon">' + esc(dl.mon) + '</span><span class="nd-day">' + dl.day + '</span></div>' +
+        '<div class="news-body"><div class="news-meta"><span class="news-tag">' + TAGS[n.tag] + '</span><time datetime="' + n.date + '">' + esc(dl.rel === dl.abs ? dl.abs : dl.rel + ' · ' + dl.abs) + '</time><span class="news-fresh">New</span></div>' +
+        '<h2>' + esc(n.title) + '</h2>' + (n.text ? '<p class="news-text">' + esc(n.text) + '</p>' : '') +
+        (n.points && n.points.length ? '<ul class="news-points">' + n.points.map(function (p) { return '<li>' + esc(p) + '</li>'; }).join('') + '</ul>' : '') + '</div>';
+      if (n.games) {
+        var box = el('div', 'news-games'), LIM = 12;
+        n.games.forEach(function (g, i) { var c = gameChip(g); if (i >= LIM) c.hidden = true; box.appendChild(c); });
+        $('.news-body', card).appendChild(box);
+        if (n.games.length > LIM) {
+          var more = el('button', 'btn-s mini news-more', 'Show all ' + n.games.length); more.type = 'button'; more.setAttribute('aria-expanded', 'false');
+          more.addEventListener('click', function () {
+            var open = more.getAttribute('aria-expanded') !== 'true';
+            $$('.news-game', box).forEach(function (c, i) { if (i >= LIM) c.hidden = !open; });
+            more.setAttribute('aria-expanded', String(open)); more.textContent = open ? 'Show fewer' : 'Show all ' + n.games.length;
+          });
+          $('.news-body', card).appendChild(more);
+        }
+      }
+      wrap.appendChild(card);
+    });
+    function applyFilter() {
+      shown = 0;
+      $$('.news-card', wrap).forEach(function (c) {
+        var tag = c.className.match(/tag-(\w+)/)[1], ok = newsFilter === 'all' || (newsFilter === 'update' ? (tag === 'update' || tag === 'feature') : tag === newsFilter);
+        c.hidden = !ok; if (ok) shown++;
+      });
+      $('#newsMeta', newsView).textContent = shown + (shown === 1 ? ' post' : ' posts');
+      $('#newsEmpty', newsView).hidden = shown > 0;
+      $$('.news-tab', newsView).forEach(function (t) { t.setAttribute('aria-pressed', String(t.getAttribute('data-f') === newsFilter)); });
+    }
+    $$('.news-tab', newsView).forEach(function (t) { t.addEventListener('click', function () { newsFilter = t.getAttribute('data-f'); applyFilter(); }); });
+    applyFilter();
+    if (list.length) store(NEWS_SEEN, list[0].date);
+    syncNewsBadge();
+  }
 
   /* ------------------------------------------------------------------ settings page (tab cloak + panic key) */
   var settingsBuilt = false;
@@ -804,11 +956,22 @@
     var root = document.documentElement, btn = $('#themeBtn'), meta = document.querySelector('meta[name="theme-color"]');
     function paint() { var d = root.getAttribute('data-theme') === 'dark'; if (meta) meta.setAttribute('content', d ? '#111937' : '#ffffff'); if (btn) btn.setAttribute('aria-pressed', d ? 'true' : 'false'); }
     paint();
+    function flip(next) { root.setAttribute('data-theme', next); try { localStorage.setItem('ubg45.theme', next); } catch (e) { /* ignore */ } paint(); }
     if (btn) btn.addEventListener('click', function () {
       var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      root.classList.add('theme-fade'); setTimeout(function () { root.classList.remove('theme-fade'); }, 450);
-      root.setAttribute('data-theme', next); try { localStorage.setItem('ubg45.theme', next); } catch (e) { /* ignore */ }
-      paint();
+      var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      root.classList.add('theme-switching');                     // no per-element transitions, so the whole page changes in one frame
+      if (document.startViewTransition && !still) {
+        // Smooth circular wipe from the button: the browser snapshots old and new page and reveals the new one in one piece.
+        var r = btn.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+        var rad = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+        var vt = document.startViewTransition(function () { flip(next); });
+        vt.ready.then(function () {
+          root.animate({ clipPath: ['circle(0px at ' + x + 'px ' + y + 'px)', 'circle(' + rad + 'px at ' + x + 'px ' + y + 'px)'] },
+            { duration: 700, easing: 'cubic-bezier(.4, 0, .15, 1)', pseudoElement: '::view-transition-new(root)' });
+        }).catch(function () { /* transition skipped */ });
+        vt.finished.then(function () { root.classList.remove('theme-switching'); }, function () { root.classList.remove('theme-switching'); });
+      } else { flip(next); setTimeout(function () { root.classList.remove('theme-switching'); }, 80); }
     });
   })();
 
