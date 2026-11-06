@@ -15,7 +15,8 @@
     points: [
       'The big banner now rotates through featured games by itself. Today’s game of the day comes first, and you can pause it or pick a game with the dots.',
       'Car games now live in Driving, so there is one place to find them all.',
-      'Switching between light and dark mode is now one smooth wipe instead of loading in pieces.'
+      'Switching between light and dark mode is now one smooth wipe instead of loading in pieces.',
+      'Opening and closing the category menu is now a clean slide: icons stay put, names fade, and the games adjust once at the end instead of jumping around.'
     ]
   },
   {

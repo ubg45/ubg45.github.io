@@ -1017,9 +1017,23 @@
   function closeDrawer() { if (body.classList.contains('drawer-open')) { body.classList.remove('drawer-open'); applyMode(); } }
   menuBtn.addEventListener('click', function () {
     if (mq.matches) body.classList.toggle('drawer-open');
-    else { var c = !body.classList.contains('side-collapsed'); body.classList.toggle('side-collapsed', c); store('ubg45.sideCollapsed', c); }
+    else {
+      var c = !body.classList.contains('side-collapsed');
+      body.classList.add('side-anim');                                   // layout() holds the column count until the bar stops moving
+      clearTimeout(animTimer); animTimer = setTimeout(settle, 560);
+      body.classList.toggle('side-collapsed', c); store('ubg45.sideCollapsed', c);
+    }
     applyMode();
   });
+  var animTimer = 0;
+  function settle() {
+    clearTimeout(animTimer);
+    if (!body.classList.contains('side-anim')) return;
+    body.classList.add('side-settle'); body.classList.remove('side-anim');
+    layout();                                                            // one clean re-fit now that the width is final
+    body.classList.remove('side-settle');
+  }
+  sidebar.addEventListener('transitionend', function (e) { if (e.target === sidebar && e.propertyName === 'width') settle(); });
   $('#backdrop').addEventListener('click', function () { closeDrawer(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && body.classList.contains('drawer-open')) { closeDrawer(); menuBtn.focus(); } });
   (mq.addEventListener ? mq.addEventListener.bind(mq, 'change') : mq.addListener.bind(mq))(applyMode);
@@ -1028,10 +1042,17 @@
   function layout() {
     var w = main.clientWidth; if (!w) return;
     var small = w < 640, gap = small ? 6 : 8, target = small ? 100 : 128;
-    var n = Math.max(3, Math.min(14, Math.floor((w + gap) / (target + gap))));
+    var animating = body.classList.contains('side-anim');                     // while the side menu slides, keep the column count so tiles resize smoothly
+    var n = animating && cols ? cols : Math.max(3, Math.min(14, Math.floor((w + gap) / (target + gap))));
     var tile = (w - (n - 1) * gap) / n;
     root.style.setProperty('--cols', n); root.style.setProperty('--tile', tile.toFixed(2) + 'px'); root.style.setProperty('--gap', gap + 'px');
-    if (n !== cols) { cols = n; if (route.name === 'home' && !searchBar.value.trim()) { buildHome(); homeView._cols = n; syncFavs(); } }
+    if (n !== cols) {
+      cols = n;
+      if (route.name === 'home' && !searchBar.value.trim()) {
+        buildHome(); homeView._cols = n; syncFavs();
+        if (body.classList.contains('side-settle')) { homeView.classList.remove('refit'); void homeView.offsetWidth; homeView.classList.add('refit'); setTimeout(function () { homeView.classList.remove('refit'); }, 450); }
+      }
+    }
     $$('.row-wrap').forEach(function (w2) { var r = $('.row', w2); if (r) r.dispatchEvent(new Event('scroll')); });
   }
   if (window.ResizeObserver) new ResizeObserver(function () { layout(); }).observe(main);
