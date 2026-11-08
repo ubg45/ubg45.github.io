@@ -1,0 +1,2 @@
+# Games the weekly check must never hide, one per line: a game title or its address (blank lines and # comments are ignored).
+# They still appear in HEALTH.md when they fail, so you can look at them yourself.

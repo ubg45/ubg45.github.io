@@ -1,0 +1,32 @@
+name: Check games
+# Every Monday (and whenever you press "Run workflow" in the Actions tab) every game address is opened to see if it still works.
+# A game that fails two checks in a row is hidden by the site automatically (ubg45-health.js) and comes back by itself once it works.
+# The result is written to HEALTH.md. See tools/check-games.py for the safety rules (outage guard, protected games).
+on:
+  schedule:
+    - cron: '17 19 * * 0'   # Sunday 19:17 UTC = Monday morning in Australia
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: check-games
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check every game
+        run: python3 tools/check-games.py
+      - name: Refresh asset versions
+        run: python3 tools/stamp-added.py
+      - name: Commit the result
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add ubg45-health.js HEALTH.md tools/health-state.json ubg45-added.js index.html
+            git commit -m "Weekly game check: update hidden games and report [skip ci]"
+            git push
+          fi

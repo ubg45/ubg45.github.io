@@ -766,3 +766,155 @@ html.theme-switching *, html.theme-switching *::before, html.theme-switching *::
 
 @media (prefers-reduced-motion: reduce) { .sidebar, .nav-item, .nav-item .lbl, .nav-item .n, .nav-sep, .backdrop { transition: none !important; } .refit { animation: none; } }
 .nav-item .n:empty { display: none; }
+
+/* ==========================================================================
+   Community layer: like counts on tiles, share button, toast, sort control on list pages, game page
+   ========================================================================== */
+.share-btn {
+  position: absolute; top: 38px; right: 6px; z-index: 3; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%;
+  background: rgba(255, 255, 255, .95); display: grid; place-items: center; cursor: pointer; opacity: 0; transition: opacity .15s, transform .15s;
+  box-shadow: 0 1px 4px rgba(0,0,0,.25);
+}
+.share-btn svg { width: 15px; height: 15px; fill: none; stroke: var(--blue); stroke-width: 2.3; stroke-linecap: round; stroke-linejoin: round; }
+.game-card:hover .share-btn, .game-card:focus-visible .share-btn { opacity: 1; }
+.share-btn:hover { transform: scale(1.12); }
+.share-btn.pop { animation: heart-pop .45s cubic-bezier(.34, 1.56, .64, 1); }
+@media (hover: none) { .share-btn { opacity: .95; width: 26px; height: 26px; top: 36px; } }
+.game-card.mini .share-btn, .game-card.mini .like-chip { display: none; }
+
+.like-chip {
+  position: absolute; left: 6px; bottom: 6px; z-index: 2; display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px 0 6px; border-radius: 999px;
+  background: rgba(11, 20, 55, .74); color: #fff; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); transition: opacity .15s;
+}
+.like-chip svg { width: 12px; height: 12px; fill: #ffc83d; stroke: none; }
+.like-chip b { font-weight: 700; }
+.game-card:hover .like-chip, .game-card:focus-visible .like-chip { opacity: 0; }
+.game-card.lg .like-chip { left: 10px; bottom: 10px; height: 26px; font-size: 13px; padding: 0 10px 0 8px; }
+.game-card.lg .like-chip svg { width: 14px; height: 14px; }
+.h-ico.liked { background: linear-gradient(135deg, #ff2d6f, #ff8a5c); box-shadow: 0 2px 8px rgba(255, 70, 110, .35); }
+
+.toast {
+  position: fixed; left: 50%; bottom: 22px; z-index: 90; max-width: min(440px, calc(100vw - 32px)); padding: 11px 18px; border-radius: 14px;
+  background: #0b1437; color: #fff; font-size: 14px; font-weight: 600; line-height: 1.35; text-align: center; pointer-events: none;
+  box-shadow: 0 14px 34px -8px rgba(5, 10, 40, .6), inset 0 0 0 1px rgba(255,255,255,.14);
+  opacity: 0; transform: translate(-50%, 16px) scale(.96); transition: opacity .2s ease, transform .35s cubic-bezier(.34, 1.56, .64, 1); visibility: hidden;
+}
+.toast.on { opacity: 1; transform: translate(-50%, 0) scale(1); visibility: visible; }
+:root[data-theme="dark"] .toast { background: #eef1ff; color: #0b1437; box-shadow: 0 14px 34px -8px rgba(0,0,0,.7); }
+@media (prefers-reduced-motion: reduce) { .toast { transition: opacity .1s; transform: translate(-50%, 0); } .share-btn.pop { animation: none; } }
+
+.view-head .sort { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--muted); }
+.view-head .sort[hidden] { display: none; }
+.view-head .sort select, .all-sec .sort select {
+  font: inherit; font-weight: 700; color: var(--ink); background-color: var(--surface); border: 1.5px solid var(--line-3); border-radius: 999px; padding: 6px 30px 6px 14px; cursor: pointer;
+}
+.view-head .sort select:hover { border-color: var(--blue); }
+.view-head .sort select:focus-visible { outline: 3px solid rgba(47,107,255,.35); outline-offset: 2px; }
+@media (max-width: 640px) { .view-head { flex-wrap: wrap; } .view-head .sort { margin-left: 0; flex: 0 0 100%; } }
+
+/* The game page reuses the featured banner, with a few more buttons. */
+.play-hero { margin-top: 18px; }
+.play-hero .hero-art { cursor: pointer; }
+.play-hero .hero-kicker { color: var(--coin); }
+.play-cats { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 8px; }
+.pc { display: inline-flex; align-items: center; height: 26px; padding: 0 11px; border-radius: 999px; background: rgba(255,255,255,.16); color: #fff; font-size: 12.5px; font-weight: 600; text-decoration: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,.28); transition: background .15s, transform .15s; }
+a.pc:hover { background: rgba(255,255,255,.3); transform: translateY(-1px); }
+.btn-ghost.sm { height: 42px; padding: 0 16px 0 13px; font-size: 14px; gap: 7px; }
+.btn-ghost.sm svg { width: 18px; height: 18px; }
+.btn-ghost .cnt { min-width: 18px; padding: 1px 7px; border-radius: 999px; background: rgba(255,255,255,.22); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.btn-ghost .cnt[hidden] { display: none; }
+.btn-ghost[aria-pressed="true"] { background: #ef4b6a; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.55); }
+.btn-ghost[aria-pressed="true"] svg { fill: #fff; }
+#playLike[aria-pressed="true"] { background: #2f5bff; }
+.btn-ghost.arm { background: #e0762a; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.55); }
+.btn-ghost:disabled { opacity: .65; cursor: progress; }
+.btn-ghost.pop svg { animation: heart-pop .5s cubic-bezier(.34, 1.56, .64, 1); }
+@media (max-width: 640px) { .play-hero { padding: 20px 18px; } .btn-ghost.sm .lbl { font-size: 13px; } .play-hero .hero-actions .btn-play { flex: 1 0 100%; justify-content: center; } }
+.play-hero .hero-copy { max-width: 820px; }
+@media (max-width: 640px) {
+  .play-hero .hero-art { grid-row: 1 / span 4; }
+  .play-hero .play-cats { grid-column: 2; margin: 0; }
+  .play-hero .hero-actions { flex-wrap: wrap; }
+  .play-hero .btn-ghost.sm { flex: 1 1 auto; padding: 0 12px; }
+  .play-hero .hero-actions .btn-play { flex: 1 0 100%; }
+}
+
+/* Install-as-app entry: hidden until the browser says the site can be installed (or on iPhone/iPad, where it shows how). */
+.nav-item[hidden] { display: none; }
+#nav-install { animation: nav-in .5s cubic-bezier(.34, 1.56, .64, 1) backwards; }
+@keyframes nav-in { from { opacity: 0; transform: translateX(-10px) scale(.96); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { #nav-install { animation: none; } }
+
+/* Speed: the browser skips drawing the long lists lower on the page until you scroll near them (nothing is removed, Find still works). */
+#homeView > .sec:not(.sec-recent), #homeView > .all-sec { content-visibility: auto; contain-intrinsic-size: auto 260px; }
+#homeView > .all-sec { contain-intrinsic-size: auto 5200px; }
+
+/* ==========================================================================
+   Motion pass: pages, tiles, cards, sections, forms and small feedback all move a little, and all of it stops for people who ask their
+   system for reduced motion. Every entrance uses "backwards" fill, so once it ends the element returns to its normal hover/press styles.
+   ========================================================================== */
+@keyframes view-in { from { opacity: 0; transform: translateY(14px); } }
+@keyframes tile-in { from { opacity: 0; transform: translateY(18px) scale(.9); } }
+@keyframes chip-in { from { opacity: 0; transform: translateY(10px) scale(.88); } }
+@keyframes card-in { from { opacity: 0; transform: translateY(22px) scale(.97); } }
+@keyframes reveal { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+@keyframes bump { 0%, 100% { scale: 1; } 40% { scale: 1.45; } }
+@keyframes check-pop { 0% { scale: .6; } 60% { scale: 1.25; } 100% { scale: 1; } }
+@keyframes wiggle { 0%, 100% { rotate: 0deg; } 30% { rotate: -9deg; } 65% { rotate: 7deg; } }
+@keyframes line-in { from { scale: 0 1; } }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* a page you just opened settles in; its first tiles pop up one after another (see enterView in ubg45.js) */
+  .view-in { animation: view-in .42s var(--smooth) backwards; }
+  .tile-in { animation: tile-in .5s var(--spring) backwards; animation-delay: var(--d, 0ms); }
+
+  /* home: the category chips and the sidebar come in one after another on first load */
+.chips > .chip:nth-child(1) { animation-delay: 92ms; }
+.chips > .chip:nth-child(2) { animation-delay: 124ms; }
+.chips > .chip:nth-child(3) { animation-delay: 156ms; }
+.chips > .chip:nth-child(4) { animation-delay: 188ms; }
+.chips > .chip:nth-child(5) { animation-delay: 220ms; }
+.chips > .chip:nth-child(6) { animation-delay: 252ms; }
+.chips > .chip:nth-child(7) { animation-delay: 284ms; }
+.chips > .chip:nth-child(8) { animation-delay: 316ms; }
+.chips > .chip:nth-child(9) { animation-delay: 348ms; }
+.chips > .chip:nth-child(10) { animation-delay: 380ms; }
+.chips > .chip:nth-child(11) { animation-delay: 412ms; }
+.chips > .chip:nth-child(12) { animation-delay: 444ms; }
+.chips > .chip:nth-child(13) { animation-delay: 476ms; }
+.chips > .chip:nth-child(14) { animation-delay: 508ms; }
+  .chips > .chip { animation: chip-in .45s var(--spring) backwards; }
+  .sidebar .nav-item, .sidebar .nav-sep { animation: nav-in .5s var(--spring) backwards; animation-delay: calc(var(--i, 0) * 16ms + 80ms); }
+
+  /* settings, empty states, game page buttons */
+  .set-card { animation: card-in .5s var(--spring) backwards; }
+  .set-grid > .set-card:nth-child(2) { animation-delay: .07s; } .set-grid > .set-card:nth-child(3) { animation-delay: .14s; }
+  .empty:not([hidden]) { animation: card-in .5s var(--spring) backwards; }
+  .play-hero .hero-actions > * { animation: chip-in .5s var(--spring) backwards; }
+  .play-hero .hero-actions > :nth-child(2) { animation-delay: .1s; } .play-hero .hero-actions > :nth-child(3) { animation-delay: .15s; }
+  .play-hero .hero-actions > :nth-child(4) { animation-delay: .2s; } .play-hero .hero-actions > :nth-child(5) { animation-delay: .25s; }
+  .play-cats .pc { animation: chip-in .45s var(--spring) backwards; } .play-cats .pc:nth-child(2) { animation-delay: .06s; } .play-cats .pc:nth-child(3) { animation-delay: .12s; } .play-cats .pc:nth-child(4) { animation-delay: .18s; }
+  .hero-facts .fact { animation: chip-in .5s var(--spring) backwards; animation-delay: .25s; }
+
+  /* small feedback */
+  .bump { animation: bump .4s var(--spring); }
+  .set-check input:checked { animation: check-pop .35s var(--spring); }
+  .like-chip { animation: pop-in .45s var(--spring) backwards; }
+  .toast.on { animation: none; }
+  .sec-head h2 .h-ico { transition: transform .35s var(--spring); }
+  .sec-head:hover h2 .h-ico { transform: rotate(-9deg) scale(1.12); }
+  .news-game, .news-tab, .set-card select, .set-card input[type="text"], .sort select { transition: transform .2s var(--spring), border-color .15s, box-shadow .2s, background-color .15s, color .15s; }
+  .sec-head .more { transition: transform .25s var(--spring), color .15s; }
+  .sec-head .more:hover { transform: translateX(3px); }
+  .empty-actions .btn-s, .es-chips .chip { animation: chip-in .5s var(--spring) backwards; animation-delay: .12s; }
+  .view-head h1 { animation: view-in .45s var(--smooth) backwards; }
+  .news-new-dot { animation: pop-in .4s var(--spring); }
+}
+
+/* sections lower on the home page rise into place as you scroll to them (browsers without scroll-driven animations just show them) */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    #homeView > .sec:not(.sec-recent), #homeView > .all-sec > .sec-head { animation: reveal linear backwards; animation-timeline: view(); animation-range: entry 0% entry 40%; }
+  }
+}

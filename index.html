@@ -13,10 +13,16 @@
   <meta property="og:description" content="Play 450+ free unblocked games in your browser. No downloads.">
   <meta property="og:url" content="https://ubg45.github.io/ubg45/">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="pwa/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="UBG45">
   <script>try{var t=localStorage.getItem('ubg45.theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
   <link rel="preload" href="fonts/poppins-bold.woff" as="font" type="font/woff" crossorigin>
   <link rel="preconnect" href="https://ubg42.github.io">
-  <link rel="stylesheet" href="ubg45.css?v=264e8114">
+  <link rel="preconnect" href="https://wewynhmybroxzynaxnrx.supabase.co" crossorigin>
+  <link rel="stylesheet" href="ubg45.css?v=8e53aa0a">
   <script src="ubg45-settings.js?v=54944462"></script>
 </head>
 <body>
@@ -69,7 +75,8 @@
       <noscript><style>.boot-skel{display:none}</style></noscript>
 
       <section id="listView" hidden>
-        <div class="view-head"><h1 id="listTitle"></h1><span class="meta" id="listMeta"></span></div>
+        <div class="view-head"><h1 id="listTitle"></h1><span class="meta" id="listMeta"></span>
+          <label class="sort" id="listSortWrap" hidden><span>Sort</span><select id="listSort" aria-label="Sort games"></select></label></div>
         <div class="tile-grid" id="viewGrid"></div>
         <div class="empty" id="listEmpty" hidden></div>
       </section>
@@ -77,6 +84,8 @@
       <section id="settingsView" hidden aria-labelledby="settingsTitle"></section>
 
       <section id="newsView" hidden aria-labelledby="newsTitle"></section>
+
+      <section id="playView" hidden aria-label="Game"></section>
 
       <section id="searchView" hidden>
         <div class="view-head"><h1 id="searchTitle"></h1><span class="meta" id="searchMeta" aria-live="polite"></span></div>
@@ -2553,10 +2562,12 @@ rainbowElements.forEach(text => {
 }
 </style>
 
-<script src="ubg45-config.js?v=220119ad" defer></script>
+<script src="ubg45-config.js?v=068b4529" defer></script>
 <script src="ubg45-added.js?v=ec357eb5" defer></script>
-<script src="ubg45-news.js?v=77e1cd0f" defer></script>
+<script src="ubg45-news.js?v=b97dbdcf" defer></script>
 <script src="ubg45-stats.js?v=de74d8aa" defer></script>
-<script src="ubg45.js?v=444a9d59" defer></script>
+<script src="ubg45-health.js?v=7385aed2" defer></script>
+<script src="ubg45-social.js?v=1ea14bc4" defer></script>
+<script src="ubg45.js?v=87c7de05" defer></script>
 </body>
 </html>

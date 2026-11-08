@@ -10,6 +10,19 @@
  */
 (window.UBG45 = window.UBG45 || {}).news = [
   {
+    date: '2026-11-09', tag: 'feature', title: 'Likes, share links, sorting, install as an app and a lot more motion',
+    text: 'The biggest update yet. Everything here is live now.',
+    points: [
+      'Like the games you love. Likes are anonymous and real: a Most liked row appears on the home page once enough people have liked games.',
+      'Every game has its own page and link. Press the link button on a tile (or in a game) to copy it and send it to a friend.',
+      'Something not working? Press the flag in the corner of a game to report it. Games that stay broken are taken off the site automatically.',
+      'Sort category pages, favourites and All Games by A to Z, Z to A, newest, popular or most liked.',
+      'Install UBG45 as an app from the menu (or Add to Home Screen on iPhone). It opens in its own window and loads faster.',
+      'The home page now shows up noticeably quicker.',
+      'Pages settle in, game tiles pop up one after another, and counters bounce when they change. Turn on reduced motion in your system settings and it all calms down.'
+    ]
+  },
+  {
     date: '2026-11-06', tag: 'feature', title: 'News page, rotating featured games and a smoother dark mode',
     text: 'You are reading it. Every new game and site update will be posted here from now on.',
     points: [

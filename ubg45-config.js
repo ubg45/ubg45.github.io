@@ -30,6 +30,13 @@
       MIN_MINUTES: 15,      // ... or at least this many minutes played (and always 2+ opens)
       MIN_LIVE: 3           // show the live Trending row once this many games qualify
     },
+    // LIKES: anonymous, one per browser per game (see ubg45-social.js). Nothing is shown until real likes exist.
+    likes: {
+      MIN_CHIP: 3,          // a tile shows its heart count once a game has at least this many likes
+      MIN_ROW_LIKES: 2,     // a game needs this many likes to appear in "Most liked" ...
+      MIN_ROW_GAMES: 3      // ... and the row only appears once this many games qualify
+    },
+    pwa: true,            // lets the site be installed as an app and open faster (sw.js). false switches it off for everyone.
     RECENT_MAX: 16,       // recently played kept per browser
     ROW_MAX: 24,          // tiles per horizontal row on the homepage
     CATEGORY_ROWS: 5,     // category rows shown under New Games

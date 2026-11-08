@@ -52,12 +52,23 @@
     clock: '<circle cx="12" cy="12" r="9" fill="none" stroke="#2b3245" stroke-width="2"/><path d="M12 7v5l3.5 2" fill="none" stroke="#2b3245" stroke-width="2" stroke-linecap="round"/>',
     settings: '<path fill="#8a93a6" d="M10.5 2.8h3l.5 2.3 1.6.7 2-1.3 2.1 2.1-1.3 2 .7 1.6 2.3.5v3l-2.3.5-.7 1.6 1.3 2-2.1 2.1-2-1.3-1.6.7-.5 2.3h-3l-.5-2.3-1.6-.7-2 1.3-2.1-2.1 1.3-2-.7-1.6-2.3-.5v-3l2.3-.5.7-1.6-1.3-2 2.1-2.1 2 1.3 1.6-.7z"/><circle cx="12" cy="12" r="3.1" fill="#fff"/>',
     news: '<rect x="3.5" y="4" width="14" height="16" rx="2.4" fill="#3d7bff"/><path d="M17.5 8.5h2.2a1.3 1.3 0 0 1 1.3 1.3V17a3 3 0 0 1-3 3h-.5z" fill="#ffb02e"/><path d="M7 8.5h7M7 12h7M7 15.5h4" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>',
+    install: '<rect x="3" y="3" width="18" height="18" rx="5" fill="#2f6bff"/><path d="M12 7v7.2M8.6 11.2 12 14.6l3.4-3.4M7.5 17.2h9" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
     suggest: '<path d="M4 4h16v12H9l-5 4z" fill="#ffb02e"/><path d="M12 7.5v5M9.5 10h5" stroke="#fff" stroke-width="2" stroke-linecap="round"/>',
     generic: '<circle cx="12" cy="12" r="8" fill="#9aa3b5"/>'
   };
   function svg(name, size) { return '<svg viewBox="0 0 24 24" aria-hidden="true"' + (size ? ' width="' + size + '" height="' + size + '"' : '') + '>' + (ICON[name] || ICON.generic) + '</svg>'; }
 
   /* ------------------------------------------------------------------ catalog */
+  /* Games the weekly check found broken (ubg45-health.js, written by tools/check-games.py) are taken off the site until they pass again.
+   * Safety: ignored when it would remove more than a quarter of the catalog, and "?showhidden" in the address brings them back for the owner. */
+  (function () {
+    var H = U.health && Array.isArray(U.health.hidden) ? U.health.hidden : [], all = $$(':scope > .game-card', grid);
+    if (!H.length || /[?&]showhidden\b/.test(location.search) || H.length > all.length * 0.25) return;
+    var drop = {}; H.forEach(function (u) { drop[u] = 1; });
+    all.forEach(function (c) { var m = /openGame\('([^']+)'/.exec(c.getAttribute('onclick') || ''); if (m && drop[m[1]]) c.remove(); });
+    try { if (typeof links !== 'undefined' && links && links.length) for (var i = links.length - 1; i >= 0; i--) if (drop[links[i]]) links.splice(i, 1); } catch (e) { /* the random list is optional */ }
+  })();
+
   var catalog = $$(':scope > .game-card', grid).map(function (el, i) {
     var h = $('h3', el);
     var m = /openGame\('([^']+)'/.exec(el.getAttribute('onclick') || '');
@@ -98,6 +109,20 @@
     return da < db ? 1 : da > db ? -1 : b.index - a.index;
   });
   var liveTrending = [], trendingIds = {};              // filled from the database; empty until real data arrives
+  var bySlug = {};                                      // share links and the game page find a game by its slug
+  catalog.forEach(function (g) { var k = ST.slug(g.title); if (!bySlug[k]) bySlug[k] = g; });
+
+  /* Likes (anonymous, ubg45-social.js). Nothing is shown until real likes exist. */
+  var SOC = U.social || { on: false, isLiked: function () { return false; }, isReported: function () { return false; }, counts: function () {}, bump: function () {},
+    setLike: function () { return Promise.resolve({ liked: false, ok: false }); }, report: function () { return Promise.resolve('off'); },
+    copy: function (t) { try { return navigator.clipboard.writeText(t).then(function () { return true; }, function () { return false; }); } catch (e) { return Promise.resolve(false); } } };
+  var LK = C.likes || {};
+  var likeCounts = {}, statRows = {};                   // slug -> number of likes; slug -> {o, s} play counts from the stats database
+  function likeOf(g) { return likeCounts[ST.slug(g.title)] || 0; }
+  function hasLikes() { for (var k in likeCounts) return true; return false; }
+  function likedList() { var min = LK.MIN_ROW_LIKES || 2; return catalog.filter(function (g) { return likeOf(g) >= min; }).sort(function (a, b) { return likeOf(b) - likeOf(a) || a.index - b.index; }); }
+  function likedRowOn() { return SOC.on && likedList().length >= (LK.MIN_ROW_GAMES || 3); }
+  function fmtN(n) { return n >= 10000 ? Math.round(n / 1000) + 'k' : n >= 1000 ? (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k' : String(n); }
 
   /* ------------------------------------------------------------------ favourites & recents */
   var FAV_KEY = 'ubg45.favs', RECENT_KEY = 'ubg45.recent';
@@ -111,9 +136,14 @@
       var b = $('.fav-btn', c);
       if (b) { b.setAttribute('aria-pressed', String(on)); b.setAttribute('aria-label', (on ? 'Remove ' : 'Add ') + c.getAttribute('data-title') + (on ? ' from favourites' : ' to favourites')); }
     });
-    var n = $('#favCount'); n.textContent = favs.length; n.hidden = !favs.length;
+    var pf = $('#playFav');
+    if (pf) { var pt = pf.getAttribute('data-title'), pon = isFav(pt); pf.setAttribute('aria-pressed', String(pon)); $('.lbl', pf).textContent = pon ? 'Favourited' : 'Favourite'; }
+    var n = $('#favCount'), changed = n.textContent !== String(favs.length);
+    n.textContent = favs.length; n.hidden = !favs.length;
     var side = $('#nav-fav .n'); if (side) side.textContent = favs.length || '';
+    if (changed && favsReady) { bump(n); bump(side); }
   }
+  var favsReady = false;
   function toggleFav(title) {
     var i = favs.indexOf(title);
     if (i > -1) favs.splice(i, 1); else favs.unshift(title);
@@ -130,6 +160,8 @@
     c.setAttribute('aria-label', 'Play ' + g.title);
     c.appendChild(el('button', 'fav-btn', '<svg viewBox="0 0 24 24"><path d="M12 21s-8-5.2-8-11a4.6 4.6 0 0 1 8-3 4.6 4.6 0 0 1 8 3c0 5.8-8 11-8 11z"/></svg>')).setAttribute('type', 'button');
     $('.fav-btn', c).setAttribute('tabindex', '-1');
+    var sb = c.appendChild(el('button', 'share-btn', '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/></svg>'));
+    sb.setAttribute('type', 'button'); sb.setAttribute('tabindex', '-1'); sb.setAttribute('aria-label', 'Copy link to ' + g.title); sb.title = 'Copy link';
   });
 
   function thumbFallback(img) {
@@ -147,6 +179,7 @@
   /* Badges: Trending (live data only) and New (automatic). Rebuilt whenever the data changes. */
   var BADGE_ICON = {
     trending: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.6 1.8c.5 3.4-1 5.2-2.6 7C8.5 10.4 7 12 7 14.7a5.1 5.1 0 0 0 5 5.3 5.2 5.2 0 0 0 5.2-5.4c0-2-.8-3.4-1.8-4.7-.4 1.2-1 1.9-1.9 2.3.6-3.3-.3-6.2-1.9-10.4z"/></svg>',
+    liked: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 10.5v9.5H4.2A1.2 1.2 0 0 1 3 18.8v-7.1a1.2 1.2 0 0 1 1.2-1.2H7zM8.5 10.3 12 3.4a2.3 2.3 0 0 1 2.4 2.3v3.1h5a2 2 0 0 1 2 2.3l-1.1 6.8a2 2 0 0 1-2 1.7H8.5z"/></svg>',
     popular: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2l2.9 6 6.5.9-4.7 4.6 1.1 6.5L12 17.1l-5.8 3.1 1.1-6.5L2.6 9.1l6.5-.9z"/></svg>',
     recent: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 7.2V12l3.2 2" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     'new': '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M10 2.5l2 5.7 5.7 2-5.7 2-2 5.8-2-5.8-5.7-2 5.7-2z"/><path fill="currentColor" d="M18.5 13l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/></svg>'
@@ -169,8 +202,71 @@
   }
   applyBadges();
 
+  /* Small confirmation message at the bottom of the page. */
+  var toastEl = el('div', 'toast'), toastT = 0;
+  toastEl.setAttribute('role', 'status'); toastEl.setAttribute('aria-live', 'polite'); body.appendChild(toastEl);
+  function toast(msg, ms) {
+    toastEl.textContent = msg; toastEl.classList.remove('on'); void toastEl.offsetWidth; toastEl.classList.add('on');
+    clearTimeout(toastT); toastT = setTimeout(function () { toastEl.classList.remove('on'); }, ms || 2800);
+  }
+  U.toast = toast;
+  function shareGame(g) {
+    var url = U.shareUrl ? U.shareUrl(ST.slug(g.title)) : location.href;
+    if (window.matchMedia && matchMedia('(hover: none)').matches && navigator.share) { navigator.share({ title: g.title + ' on UBG45', url: url }).catch(function () { /* cancelled */ }); return; }
+    SOC.copy(url).then(function (ok) { toast(ok ? 'Link copied: ' + g.title : 'Could not copy the link. Copy it from the address bar after opening the game page.'); });
+  }
+
+  /* Like counts on tiles (only for games with enough likes). The originals carry the chip, clones copy it. */
+  var HEART = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 11v9H4.5A1.5 1.5 0 0 1 3 18.5v-6A1.5 1.5 0 0 1 4.5 11H7zM7 11l3.6-7.2A2.4 2.4 0 0 1 13 6.2V9.5h5.4a2 2 0 0 1 2 2.3l-1.1 6.5a2 2 0 0 1-2 1.7H7"/></svg>';
+  function applyLikes() {
+    var min = LK.MIN_CHIP || 3;
+    catalog.forEach(function (g) {
+      var c = g.el, old = $(':scope > .like-chip', c); if (old) old.remove();
+      var n = likeOf(g); if (n < min) return;
+      var chip = el('span', 'like-chip', HEART + '<b>' + fmtN(n) + '</b>'); chip.title = n + (n === 1 ? ' like' : ' likes');
+      c.insertBefore(chip, $(':scope > .fav-btn', c));
+    });
+  }
+
+  /* Sorting (category pages, favourites and All Games). Popular uses real play counts when they exist, then the hand-picked list. */
+  var SORT_LABEL = { 'default': 'Default', az: 'A to Z', za: 'Z to A', 'new': 'Newest', popular: 'Popular', liked: 'Most liked' };
+  var handRank = null;
+  function popKey(g) {
+    var r = statRows[ST.slug(g.title)];
+    if (r && (r.o || r.s)) return [0, -r.o, -r.s, g.index];
+    if (!handRank) { handRank = {}; pick((C.trending || []).concat(C.popularMore || [])).forEach(function (x, i) { handRank[x.index] = i; }); }
+    if (handRank[g.index] != null) return [1, handRank[g.index], 0, g.index];
+    return [2, 0, 0, g.index];
+  }
+  function cmpKey(a, b) { for (var i = 0; i < a.length; i++) if (a[i] !== b[i]) return a[i] < b[i] ? -1 : 1; return 0; }
+  var collator = window.Intl && Intl.Collator ? new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' }) : null;   // much faster than localeCompare on every comparison
+  function cmpTitle(a, b) { return collator ? collator.compare(a.title, b.title) : a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: 'base' }); }
+  function sortGames(list, mode) {
+    var out = list.slice();
+    if (mode === 'az') out.sort(cmpTitle);
+    else if (mode === 'za') out.sort(function (a, b) { return cmpTitle(b, a); });
+    else if (mode === 'new') out.sort(function (a, b) {
+      var da = ST.addedOn(a.title) || '', db = ST.addedOn(b.title) || '';
+      return da < db ? 1 : da > db ? -1 : b.index - a.index;
+    });
+    else if (mode === 'popular') out.sort(function (a, b) { return cmpKey(popKey(a), popKey(b)); });
+    else if (mode === 'liked') out.sort(function (a, b) { return likeOf(b) - likeOf(a); });   // stable: ties keep their normal order
+    return out;
+  }
+  function sortOptions(modes) {
+    return modes.filter(function (m) { return m !== 'liked' || (SOC.on && hasLikes()); }).map(function (m) { return '<option value="' + m + '">' + SORT_LABEL[m] + '</option>'; }).join('');
+  }
+
   // Card interactions (delegated so clones work too)
   document.addEventListener('click', function (e) {
+    var sh = e.target.closest && e.target.closest('.share-btn');
+    if (sh) {
+      e.stopPropagation(); e.preventDefault();
+      var gs = byTitle[norm(sh.closest('.game-card').getAttribute('data-title'))]; if (gs) shareGame(gs);
+      sh.classList.remove('pop'); void sh.offsetWidth; sh.classList.add('pop');
+      sh.addEventListener('animationend', function () { sh.classList.remove('pop'); }, { once: true });
+      return;
+    }
     var b = e.target.closest && e.target.closest('.fav-btn');
     if (!b) return;
     e.stopPropagation(); e.preventDefault();
@@ -191,49 +287,108 @@
     var originalOpen = window.openGame;
     window.openGame = function (url) {
       var g = byUrl[url];
+      U.currentGame = g ? { title: g.title, id: ST.slug(g.title), share: U.shareUrl ? U.shareUrl(ST.slug(g.title)) : '' } : null;   // read by U.gameFs while the game tab is written
       if (g) { ST.begin(g.title); }
       if (g) { recents = [g.title].concat(recents.filter(function (t) { return t !== g.title; })).slice(0, C.RECENT_MAX); store(RECENT_KEY, recents); setTimeout(function () { if (typeof refreshRecent === 'function') refreshRecent(); }, 350); }
-      return originalOpen.apply(this, arguments);
+      try { return originalOpen.apply(this, arguments); } finally { U.currentGame = null; }
     };
   }
 
   catalog.forEach(function (g) { skel(g.el); });
 
-  /* Full-screen button shown inside every game tab (see openGame in index.html). */
+  /* Toolbar shown inside every game tab (see openGame in index.html): like, copy link, report a broken game, full screen.
+   * It sits in the bottom-right corner, appears when the pointer reaches the corner and fades away again. Touch screens
+   * do not get it (they use the game page's buttons instead). Like and report only appear for games in the catalog. */
   U.gameFs = function () {
-    function core() {
-      var z = document.getElementById('ubgFsZone'), b = document.getElementById('ubgFs'), d = document.documentElement, t;
-      if (!z || !b) return;
-      if (!(d.requestFullscreen || d.webkitRequestFullscreen)) { z.style.display = 'none'; return; }
-      function on() { return !!(document.fullscreenElement || document.webkitFullscreenElement); }
-      function show() { z.className = 'show'; clearTimeout(t); t = setTimeout(function () { z.className = ''; }, 2600); }
-      function paint() { var f = on(); z.setAttribute('data-fs', f ? '1' : '0'); b.setAttribute('aria-label', f ? 'Exit full screen' : 'Full screen'); b.title = f ? 'Exit full screen' : 'Full screen'; }
-      b.addEventListener('click', function () {
-        try { if (on()) (document.exitFullscreen || document.webkitExitFullscreen).call(document); else (d.requestFullscreen || d.webkitRequestFullscreen).call(d); } catch (e) { /* ignore */ }
+    function core(cfg, make) {
+      var z = document.getElementById('ubgFsZone'), d = document.documentElement, t, hold = false, armed = false, armT = 0, toastT = 0;
+      if (!z) return;
+      var $i = function (id) { return document.getElementById(id); };
+      var fsB = $i('ubgFs'), lk = $i('ubgLike'), cp = $i('ubgCopy'), rp = $i('ubgReport'), toast = $i('ubgToast');
+      var soc = make({ u: cfg.u, k: cfg.k });
+      function show() { z.className = 'show'; clearTimeout(t); if (!hold) t = setTimeout(function () { z.className = ''; }, 3200); }
+      function say(msg) { if (!toast) return; toast.textContent = msg; toast.className = 'on'; clearTimeout(toastT); toastT = setTimeout(function () { toast.className = ''; }, 3200); }
+      if (fsB) {
+        if (!(d.requestFullscreen || d.webkitRequestFullscreen)) fsB.style.display = 'none';
+        var on = function () { return !!(document.fullscreenElement || document.webkitFullscreenElement); };
+        var paint = function () { var f = on(); z.setAttribute('data-fs', f ? '1' : '0'); fsB.setAttribute('aria-label', f ? 'Exit full screen' : 'Full screen'); fsB.title = f ? 'Exit full screen' : 'Full screen'; };
+        fsB.addEventListener('click', function () {
+          try { if (on()) (document.exitFullscreen || document.webkitExitFullscreen).call(document); else (d.requestFullscreen || d.webkitRequestFullscreen).call(d); } catch (e) { /* ignore */ }
+          show();
+        });
+        document.addEventListener('fullscreenchange', function () { paint(); show(); }); document.addEventListener('webkitfullscreenchange', function () { paint(); show(); });
+        paint();
+      }
+      if (lk) {
+        var paintLike = function (v) { lk.setAttribute('aria-pressed', v ? 'true' : 'false'); lk.title = v ? 'Liked. Click to remove your like' : 'Like this game'; lk.setAttribute('aria-label', lk.title); };
+        paintLike(soc.isLiked(cfg.id));
+        lk.addEventListener('click', function () {
+          var want = !soc.isLiked(cfg.id); paintLike(want);
+          lk.classList.remove('pop'); void lk.offsetWidth; lk.classList.add('pop');
+          soc.setLike(cfg.id, want).then(function (r) {
+            paintLike(r.liked);
+            say(!r.ok ? 'Could not save your like. Check your connection.' : r.liked ? 'Liked. Thanks!' : 'Like removed.');
+          });
+          show();
+        });
+      }
+      if (cp) cp.addEventListener('click', function () {
+        soc.copy(cfg.share).then(function (ok) { say(ok ? 'Link copied. Paste it to share this game.' : 'Could not copy. The link is ' + cfg.share); });
         show();
       });
-      z.addEventListener('mouseenter', show); z.addEventListener('mousemove', show); b.addEventListener('focus', show);
-      document.addEventListener('fullscreenchange', function () { paint(); show(); }); document.addEventListener('webkitfullscreenchange', function () { paint(); show(); });
-      paint(); show();
+      if (rp) {
+        var disarm = function () { armed = false; clearTimeout(armT); rp.classList.remove('arm'); };
+        if (soc.isReported(cfg.id)) rp.classList.add('done');
+        rp.addEventListener('click', function () {
+          show();
+          if (soc.isReported(cfg.id)) { say('You already reported this game today. Thanks!'); return; }
+          if (!armed) { armed = true; rp.classList.add('arm'); say('Is this game broken? Press the flag again to report it.'); armT = setTimeout(disarm, 4500); return; }
+          disarm(); rp.disabled = true;
+          soc.report(cfg.id).then(function (r) {
+            rp.disabled = false;
+            if (r === 'ok' || r === 'dup') { rp.classList.add('done'); say('Report sent. Thanks, we will check this game.'); }
+            else say('Could not send the report. Try again later.');
+          });
+        });
+      }
+      z.addEventListener('mouseenter', function () { hold = true; show(); });
+      z.addEventListener('mouseleave', function () { hold = false; show(); });
+      z.addEventListener('mousemove', show); z.addEventListener('focusin', show);
+      show();
     }
-    var css = '#ubgFsZone{position:fixed;right:12px;bottom:12px;width:44px;height:44px;z-index:2147483647}' +
-      '#ubgFs{width:44px;height:44px;border:0;border-radius:13px;background:rgba(15,20,40,.78);color:#fff;display:grid;place-items:center;cursor:pointer;padding:0;opacity:0;transform:translateY(10px) scale(.85);pointer-events:none;' +
+    var g = U.currentGame, soc = U.social, withSocial = !!(g && soc && soc.on);
+    var css = '#ubgFsZone{position:fixed;right:12px;bottom:12px;width:44px;height:44px;z-index:2147483647;font:600 13px/1.35 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}' +
+      '#ubgTools{position:absolute;right:0;bottom:0;display:flex;flex-direction:row-reverse;gap:8px}' +
+      '.ubgB{width:44px;height:44px;border:0;border-radius:13px;background:rgba(15,20,40,.78);color:#fff;display:grid;place-items:center;cursor:pointer;padding:0;opacity:0;transform:translateY(10px) scale(.85);pointer-events:none;' +
       'transition:opacity .25s ease,transform .35s cubic-bezier(.34,1.56,.64,1),background .2s;box-shadow:0 8px 20px rgba(0,0,0,.4),inset 0 0 0 1px rgba(255,255,255,.18);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}' +
-      '#ubgFsZone.show #ubgFs,#ubgFs:focus-visible{opacity:1;transform:none;pointer-events:auto}' +
-      '#ubgFs:hover{background:#2f5bff;transform:scale(1.1)}#ubgFs:active{transform:scale(.9);transition-duration:.07s}#ubgFs:focus-visible{outline:2px solid #fff;outline-offset:2px}' +
-      '#ubgFs svg{width:22px;height:22px;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}#ubgFs:hover svg{transform:scale(1.15)}' +
-      '#ubgFs .c{display:none}#ubgFsZone[data-fs="1"] .e{display:none}#ubgFsZone[data-fs="1"] .c{display:block}' +
-      '@media (hover:none){#ubgFsZone{display:none}}@media (prefers-reduced-motion:reduce){#ubgFs,#ubgFs svg{transition:none}}';
+      '.ubgB:nth-child(2){transition-delay:.04s}.ubgB:nth-child(3){transition-delay:.08s}.ubgB:nth-child(4){transition-delay:.12s}' +
+      '#ubgFsZone.show .ubgB,.ubgB:focus-visible{opacity:1;transform:none;pointer-events:auto}' +
+      '.ubgB:hover{background:#2f5bff;transform:scale(1.1)!important;transition-delay:0s}.ubgB:active{transform:scale(.9)!important;transition-duration:.07s}.ubgB:focus-visible{outline:2px solid #fff;outline-offset:2px}' +
+      '.ubgB svg{width:22px;height:22px;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}.ubgB:hover svg{transform:scale(1.15)}' +
+      '#ubgLike[aria-pressed="true"]{background:#ef4b6a}#ubgLike[aria-pressed="true"] svg{fill:#fff}#ubgLike.pop svg{animation:ubgpop .5s cubic-bezier(.34,1.56,.64,1)}' +
+      '@keyframes ubgpop{0%{transform:scale(1)}35%{transform:scale(1.55)}100%{transform:scale(1)}}' +
+      '#ubgReport.arm{background:#e0762a}#ubgReport.done{background:#18794e}#ubgReport.done svg{fill:#fff}#ubgReport:disabled{opacity:.6;cursor:progress}' +
+      '#ubgToast{position:absolute;right:0;bottom:56px;width:max-content;max-width:min(300px,80vw);background:rgba(15,20,40,.94);color:#fff;padding:9px 13px;border-radius:11px;opacity:0;transform:translateY(6px);pointer-events:none;' +
+      'transition:opacity .22s ease,transform .3s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 20px rgba(0,0,0,.4),inset 0 0 0 1px rgba(255,255,255,.14)}#ubgToast.on{opacity:1;transform:none}' +
+      '#ubgFsZone .c{display:none}#ubgFsZone[data-fs="1"] .e{display:none}#ubgFsZone[data-fs="1"] .c{display:block}' +
+      '@media (hover:none){#ubgFsZone{display:none}}@media (prefers-reduced-motion:reduce){.ubgB,.ubgB svg,#ubgToast{transition:none}#ubgLike.pop svg{animation:none}}';
     var ico = 'fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
-    return '<style>' + css + '</style><div id="ubgFsZone" data-fs="0"><button id="ubgFs" type="button" aria-label="Full screen" title="Full screen">' +
-      '<svg class="e" viewBox="0 0 24 24" ' + ico + '><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>' +
-      '<svg class="c" viewBox="0 0 24 24" ' + ico + '><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg></button></div>' +
-      '<script>(' + core.toString().replace(/<\/script/gi, '<\\/script') + ')();<\/script>';
+    var cfg = { u: withSocial ? soc.cfg.u : '', k: withSocial ? soc.cfg.k : '', id: g ? g.id : '', share: g ? g.share : '' };
+    var html = '<style>' + css + '</style><div id="ubgFsZone" data-fs="0"><div id="ubgTools">' +
+      '<button class="ubgB" id="ubgFs" type="button" aria-label="Full screen" title="Full screen">' +
+        '<svg class="e" viewBox="0 0 24 24" ' + ico + '><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>' +
+        '<svg class="c" viewBox="0 0 24 24" ' + ico + '><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg></button>' +
+      (withSocial ? '<button class="ubgB" id="ubgReport" type="button" aria-label="Report a broken game" title="Report a broken game"><svg viewBox="0 0 24 24" ' + ico + '><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg></button>' : '') +
+      (g ? '<button class="ubgB" id="ubgCopy" type="button" aria-label="Copy link to this game" title="Copy link to this game"><svg viewBox="0 0 24 24" ' + ico + '><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/></svg></button>' : '') +
+      (withSocial ? '<button class="ubgB" id="ubgLike" type="button" aria-pressed="false" aria-label="Like this game" title="Like this game"><svg viewBox="0 0 24 24" ' + ico + '><path d="M7 11v9H4.5A1.5 1.5 0 0 1 3 18.5v-6A1.5 1.5 0 0 1 4.5 11H7zM7 11l3.6-7.2A2.4 2.4 0 0 1 13 6.2V9.5h5.4a2 2 0 0 1 2 2.3l-1.1 6.5a2 2 0 0 1-2 1.7H7"/></svg></button>' : '') +
+      '</div><div id="ubgToast" role="status" aria-live="polite"></div></div>';
+    var make = (soc && soc.source) || 'function(){return{isLiked:function(){return false},isReported:function(){return false},copy:function(){return Promise.resolve(false)}}}';
+    return html + '<script>(' + core.toString().replace(/<\/script/gi, '<\\/script') + ')(' + JSON.stringify(cfg).replace(/</g, '\\u003c') + ',' + make.replace(/<\/script/gi, '<\\/script') + ');<\/script>';
   };
 
   /* ------------------------------------------------------------------ DOM refs */
   var sidebar = $('#sidebar'), main = $('#main'), content = $('.content');
-  var homeView = $('#homeView'), listView = $('#listView'), searchView = $('#searchView'), settingsView = $('#settingsView'), newsView = $('#newsView');
+  var homeView = $('#homeView'), listView = $('#listView'), searchView = $('#searchView'), settingsView = $('#settingsView'), newsView = $('#newsView'), playView = $('#playView');
   var searchBar = $('#searchBar'), clearBtn = $('#searchClear');
   var strip = $('#strip');
 
@@ -283,12 +438,14 @@
     f.appendChild(navItem('nav-fav', 'heart', 'Favourites', '#/favourites', ''));
     var rc = navItem('nav-recent', 'clock', 'Recently played', '#/recent'); f.appendChild(rc);
     f.appendChild(navItem('nav-settings', 'settings', 'Settings', '#/settings'));
+    var ib = navItem('nav-install', 'install', 'Install app', '#install'); ib.hidden = true; ib.addEventListener('click', function (e) { e.preventDefault(); installApp(); }); f.appendChild(ib);
     var sg = navItem('nav-suggest', 'suggest', 'Suggest a Game', C.suggestUrl);
     sg.target = '_blank'; sg.rel = 'noopener';
     sg.setAttribute('onclick', "openGame(this.href, 'Google Docs'); return false;");
     f.appendChild(sg);
     var nw = navItem('nav-news', 'news', 'News', '#/news', ''); f.appendChild(nw);
     sidebar.appendChild(f);
+    $$('.nav-item, .nav-sep', sidebar).forEach(function (n, i) { n.style.setProperty('--i', i); });      // the menu rows slide in one after another
     syncNewsBadge();
   }
 
@@ -313,6 +470,16 @@
     return sec;
   }
 
+  /* Arrow buttons of every row, in two passes (read everything, then write) so the browser lays the page out once, not once per row. */
+  function updateRows() {
+    var st = $$('.row-wrap').map(function (w) { var r = $('.row', w); return r ? { w: w, l: r.scrollLeft, c: r.clientWidth, s: r.scrollWidth } : null; });
+    st.forEach(function (x) {
+      if (!x) return;
+      var p = $('.row-arrow.prev', x.w), n = $('.row-arrow.next', x.w);
+      if (p) p.disabled = x.l < 4; if (n) n.disabled = x.l + x.c >= x.s - 4;
+    });
+  }
+
   /* "Continue playing": the games this browser opened most recently. */
   function recentGames() { return recents.map(function (t) { return byTitle[norm(t)]; }).filter(Boolean); }
   function recentSection() {
@@ -331,7 +498,7 @@
     if (!$('.hero', homeView)) return;
     var old = $('.sec-recent', homeView), fresh = recentSection();
     if (old && fresh) old.replaceWith(fresh); else if (old) old.remove(); else if (fresh) { var ch = $('.chips', homeView); if (ch) ch.after(fresh); else homeView.appendChild(fresh); }
-    if (fresh) requestAnimationFrame(function () { fresh._update(); });
+    if (fresh) requestAnimationFrame(updateRows);
   }
 
   var cols = 0;
@@ -399,7 +566,7 @@
       art.setAttribute('aria-label', 'Play ' + g.title);
       art.innerHTML = src ? '<img alt="">' : '<div class="thumb-fallback">' + esc(g.title) + '</div>';
       if (src) {
-        var im = $('img', art); im.src = src;
+        var im = $('img', art); if (i === 0) im.setAttribute('fetchpriority', 'high'); im.src = src;
         im.addEventListener('error', function () { var d = el('div', 'thumb-fallback', esc(g.title)); im.replaceWith(d); });
       }
       bg.style.backgroundImage = src ? 'url("' + src.replace(/"/g, '%22') + '")' : 'none';
@@ -468,6 +635,7 @@
     var live = liveTrending.length >= (C.stats.MIN_LIVE || 3);
     var secs = [live ? rowSection('Trending', liveTrending.slice(0, C.ROW_MAX), '#/popular', 'trending')
                      : rowSection('Popular', pick(C.trending).slice(0, C.ROW_MAX), '#/popular', 'popular')];   // hand-picked until real play data exists
+    if (likedRowOn()) secs.push(rowSection('Most liked', likedList().slice(0, C.ROW_MAX), '#/liked', 'liked'));
     if (newGames.length) secs.push(rowSection('New Games', newGames.slice(0, C.ROW_MAX), '#/new', 'new'));
     activeCats.filter(function (d) { return !d.fallback; }).slice(0, C.CATEGORY_ROWS).filter(function (d) { return (C.HOME_HIDE_CATEGORIES || []).indexOf(d.id) < 0; }).forEach(function (d) {
       secs.push(rowSection(d.name, d.games.slice(0, C.ROW_MAX), '#/category/' + d.id));
@@ -475,46 +643,66 @@
     secs.forEach(function (s) { homeView.appendChild(s); });
     homeView.appendChild(allSection());
     if (rs) secs.push(rs);
-    requestAnimationFrame(function () { secs.forEach(function (s) { s._update(); }); });
+    requestAnimationFrame(updateRows);
   }
 
   /* Every game on the site, at the bottom of the homepage. */
   var ALL_SORT_KEY = 'ubg45.allSort', allSort = store(ALL_SORT_KEY) || 'az';
-  if (['az', 'za', 'new'].indexOf(allSort) < 0) allSort = 'az';
-  function sortedAll(mode) {
-    var cmp = function (a, b) { return a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: 'base' }); };
-    var list = catalog.slice();
-    if (mode === 'za') list.sort(function (a, b) { return cmp(b, a); });
-    else if (mode === 'new') list.sort(function (a, b) {
-      var da = ST.addedOn(a.title) || '', db = ST.addedOn(b.title) || '';
-      return da < db ? 1 : da > db ? -1 : b.index - a.index;
-    });
-    else list.sort(cmp);
-    return list;
-  }
+  if (['az', 'za', 'new', 'popular', 'liked'].indexOf(allSort) < 0) allSort = 'az';
+  function sortedAll(mode) { return sortGames(catalog, mode === 'default' ? 'az' : mode); }
   function allSection() {
     var sec = el('section', 'sec all-sec');
     sec.id = 'allGames';
     sec.innerHTML = '<div class="sec-head"><h2><span class="h-ico all"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h6.5v6.5H4zM13.5 4H20v6.5h-6.5zM4 13.5h6.5V20H4zM13.5 13.5H20V20h-6.5z"/></svg></span>All Games</h2>' +
       '<span class="meta all-count">' + catalog.length + ' games</span>' +
-      '<label class="sort"><span>Sort</span><select aria-label="Sort all games"><option value="az">A to Z</option><option value="za">Z to A</option><option value="new">Newest first</option></select></label></div>' +
+      '<label class="sort"><span>Sort</span><select aria-label="Sort all games">' + sortOptions(['az', 'za', 'new', 'popular', 'liked']) + '</select></label></div>' +
       '<div class="tile-grid" id="allGrid"></div>';
     var sel = $('select', sec), gridEl = $('#allGrid', sec);
-    function fill() { gridEl.innerHTML = ''; var f = document.createDocumentFragment(); sortedAll(allSort).forEach(function (g) { f.appendChild(cloneOf(g)); }); gridEl.appendChild(f); syncFavs(); }
+    /* The list is built right after the page first appears (a few frames, in chunks), so the banner and rows show up sooner. */
+    var fillTok = 0;
+    function fill(now) {
+      var t = ++fillTok, list = sortedAll(allSort), i = 0, CH = now ? list.length : 120;
+      gridEl.innerHTML = '';
+      function step() {
+        if (t !== fillTok || !gridEl.isConnected) return;
+        var f = document.createDocumentFragment();
+        for (var k = 0; k < CH && i < list.length; k++, i++) f.appendChild(cloneOf(list[i]));
+        gridEl.appendChild(f);
+        if (i < list.length) requestAnimationFrame(step); else syncFavs();
+      }
+      if (now) step(); else requestAnimationFrame(function () { setTimeout(step, 0); });
+    }
+    if (!$('option[value="' + allSort + '"]', sel)) allSort = 'az';
     sel.value = allSort;
-    sel.addEventListener('change', function () { allSort = sel.value; store(ALL_SORT_KEY, allSort); fill(); });
-    fill();
+    sel.addEventListener('change', function () { allSort = sel.value; store(ALL_SORT_KEY, allSort); fill(true); });
+    fill(false);
     return sec;
   }
 
   var EMPTY_ACTIONS = '<div class="empty-actions"><button class="btn-s" type="button" data-act="random">Play a random game</button><a class="btn-s" href="#/" data-clear>Browse all games</a></div>';
-  function listPage(title, games, emptyHtml, meta) {
+  var listBase = [], listKey = '', listSort = 'default';
+  function fillList() {
+    var g = $('#viewGrid'), f = document.createDocumentFragment(); g.innerHTML = '';
+    sortGames(listBase, listSort).forEach(function (x) { f.appendChild(cloneOf(x)); });
+    g.appendChild(f);
+  }
+  function listPage(title, games, emptyHtml, meta, sortable) {
     $('#listTitle').textContent = title;
     $('#listMeta').textContent = meta != null ? meta : games.length + (games.length === 1 ? ' game' : ' games');
-    var g = $('#viewGrid'); g.innerHTML = '';
-    games.forEach(function (x) { g.appendChild(cloneOf(x)); });
+    listBase = games;
+    var wrap = $('#listSortWrap'), sel = $('#listSort');
+    wrap.hidden = !(sortable && games.length > 1);
+    if (sortable) {
+      var key = route.name + ':' + route.id; if (key !== listKey) { listKey = key; listSort = 'default'; }   // each page starts in its normal order
+      sel.innerHTML = sortOptions(['default', 'az', 'za', 'new', 'popular', 'liked']);
+      if (!$('option[value="' + listSort + '"]', sel)) listSort = 'default';
+      sel.value = listSort;
+    }
+    if (!sortable) listSort = 'default';
+    fillList();
     var e = $('#listEmpty'); e.hidden = games.length > 0; if (!games.length) e.innerHTML = emptyHtml || '<strong>Nothing here yet</strong>';
   }
+  $('#listSort').addEventListener('change', function () { listSort = this.value; fillList(); syncFavs(); popTiles($('#viewGrid'), 28); });
 
   function buildStrip() {
     strip.innerHTML = '';
@@ -530,9 +718,39 @@
     }
     items.forEach(function (g) {
       var c = cloneOf(g, 'mini'); c.title = g.title;
-      $$('.badge, .fav-btn, h3', c).forEach(function (n) { n.remove(); });
+      $$('.badge, .fav-btn, .share-btn, .like-chip, h3', c).forEach(function (n) { n.remove(); });
       strip.appendChild(c);
     });
+  }
+
+  /* ------------------------------------------------------------------ motion: a page you open settles in, its first tiles pop up one after another */
+  var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+  function popTiles(container, max) {
+    if (!container || (calm && calm.matches)) return;
+    var cards = $$(':scope > .game-card', container).slice(0, max || 24);
+    cards.forEach(function (c, i) { c.style.setProperty('--d', Math.min(i, 16) * 26 + 'ms'); c.classList.add('tile-in'); });
+    setTimeout(function () { cards.forEach(function (c) { c.classList.remove('tile-in'); c.style.removeProperty('--d'); }); }, 1300);
+  }
+  function settleIn(node) {
+    if (!node || (calm && calm.matches)) return;
+    node.classList.remove('view-in'); void node.offsetWidth; node.classList.add('view-in');
+    node.addEventListener('animationend', function (e) { if (e.target === node) node.classList.remove('view-in'); }, { once: true });
+  }
+  function bump(node) {
+    if (!node || (calm && calm.matches)) return;
+    node.classList.remove('bump'); void node.offsetWidth; node.classList.add('bump');
+    node.addEventListener('animationend', function () { node.classList.remove('bump'); }, { once: true });
+  }
+  var lastKey = null;
+  function enterView() {
+    var key = route.name + ':' + route.id;
+    if (key === lastKey) return;                         // data arriving (likes, trending) re-renders the same page: no replay
+    lastKey = key;
+    if (route.name === 'home') { popTiles($('.collage', homeView), 16); return; }
+    if (route.name === 'category' || route.name === 'new' || route.name === 'popular' || route.name === 'favourites' || route.name === 'recent' || route.name === 'liked') { settleIn(listView); popTiles($('#viewGrid'), 28); }
+    else if (route.name === 'play') settleIn(playView);
+    else if (route.name === 'news') settleIn(newsView);
+    else if (route.name === 'settings') settleIn(settingsView);
   }
 
   var TITLES = { new: 'New Games', popular: 'Popular Games', favourites: 'Favourites', recent: 'Recently Played' };
@@ -540,7 +758,7 @@
     var q = searchBar.value.trim();
     var searching = !!q;
     body.classList.toggle('searching', searching);
-    homeView.hidden = listView.hidden = searchView.hidden = settingsView.hidden = newsView.hidden = true;
+    homeView.hidden = listView.hidden = searchView.hidden = settingsView.hidden = newsView.hidden = playView.hidden = true;
     $('#stripWrap').hidden = searching || route.name === 'settings' || route.name === 'news';
     if (searching) { searchView.hidden = false; updateSearch(); markNav(null); return; }
     var g;
@@ -552,24 +770,30 @@
         listPage(liveTrending.length ? 'Trending & Popular Games' : TITLES.popular, g, '', g.length + ' games'); break;
       case 'category':
         var d = catById[route.id]; if (!d) { location.hash = '#/'; return; }
-        listPage(d.name + ' Games', d.games, '<strong>No games here yet</strong>'); break;
+        listPage(d.name + ' Games', d.games, '<strong>No games here yet</strong>', null, true); break;
+      case 'liked':
+        g = likedList();
+        listPage('Most liked games', g, '<strong>No liked games yet</strong>Like a game from its page or while you play it.' + EMPTY_ACTIONS); break;
+      case 'play':
+        playView.hidden = false; buildPlay(route.id); break;
       case 'settings':
         settingsView.hidden = false; buildSettings(); break;
       case 'news':
         newsView.hidden = false; buildNews(); break;
       case 'favourites':
         g = favs.map(function (t) { return byTitle[norm(t)]; }).filter(Boolean);
-        listPage(TITLES.favourites, g, '<strong>No favourites yet</strong>Click the heart on any game (or press F while it is focused) to save it here.' + EMPTY_ACTIONS); break;
+        listPage(TITLES.favourites, g, '<strong>No favourites yet</strong>Click the heart on any game (or press F while it is focused) to save it here.' + EMPTY_ACTIONS, null, true); break;
       case 'recent':
         g = recents.map(function (t) { return byTitle[norm(t)]; }).filter(Boolean);
         listPage(TITLES.recent, g, '<strong>Nothing played yet</strong>Games you open will show up here.' + EMPTY_ACTIONS); break;
       default:
         homeView.hidden = false; if (!homeView.firstChild || homeView._cols !== cols) { buildHome(); homeView._cols = cols; }
     }
-    if (route.name !== 'home' && route.name !== 'settings' && route.name !== 'news') listView.hidden = false;
+    if (route.name !== 'home' && route.name !== 'settings' && route.name !== 'news' && route.name !== 'play') listView.hidden = false;
     markNav(route);
     buildStrip();
     syncFavs();
+    enterView();
   }
 
   function markNav(r) {
@@ -582,8 +806,10 @@
   function parseHash() {
     var h = (location.hash || '').replace(/^#\/?/, '');
     var p = h.split('/');
-    if (p[0] === 'new' || p[0] === 'popular' || p[0] === 'favourites' || p[0] === 'recent' || p[0] === 'settings' || p[0] === 'news') route = { name: p[0], id: '' };
-    else if (p[0] === 'category' && p[1]) route = { name: 'category', id: (function (id) { return id === 'car' ? 'driving' : id; })(decodeURIComponent(p[1])) };   // Car was merged into Driving
+    var dec = function (x) { try { return decodeURIComponent(x); } catch (e) { return ''; } };
+    if (p[0] === 'new' || p[0] === 'popular' || p[0] === 'favourites' || p[0] === 'recent' || p[0] === 'settings' || p[0] === 'news' || p[0] === 'liked') route = { name: p[0], id: '' };
+    else if (p[0] === 'category' && p[1]) route = { name: 'category', id: (function (id) { return id === 'car' ? 'driving' : id; })(dec(p[1])) };   // Car was merged into Driving
+    else if (p[0] === 'play' && dec(p[1] || '')) route = { name: 'play', id: dec(p[1]).toLowerCase() };
     else route = { name: 'home', id: '' };
   }
   window.addEventListener('hashchange', function () {
@@ -591,6 +817,110 @@
     if (searchBar.value) { searchBar.value = ''; searchBar.dispatchEvent(new Event('input', { bubbles: true })); }
     closeDrawer(); render(); window.scrollTo(0, 0);
   });
+
+  /* ------------------------------------------------------------------ game page (#/play/<slug>): what a shared link opens */
+  var IC = {
+    play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8.5 5.6v12.8a1 1 0 0 0 1.5.9l10-6.4a1 1 0 0 0 0-1.7l-10-6.4a1 1 0 0 0-1.5.8z"/></svg>',
+    like: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 11v9H4.5A1.5 1.5 0 0 1 3 18.5v-6A1.5 1.5 0 0 1 4.5 11H7zM7 11l3.6-7.2A2.4 2.4 0 0 1 13 6.2V9.5h5.4a2 2 0 0 1 2 2.3l-1.1 6.5a2 2 0 0 1-2 1.7H7"/></svg>',
+    fav: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-8-5-8-10.8a4.5 4.5 0 0 1 8-2.8 4.5 4.5 0 0 1 8 2.8c0 5.8-8 10.8-8 10.8z"/></svg>',
+    link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/></svg>',
+    flag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>'
+  };
+  function relatedGames(g, max) {
+    var seen = {}, out = []; seen[g.index] = 1;
+    catDefs.filter(function (d) { return d.games.indexOf(g) >= 0 && !d.fallback; }).sort(function (a, b) { return a.games.length - b.games.length; }).forEach(function (d) {
+      sortGames(d.games, 'popular').forEach(function (x) { if (out.length < max && !seen[x.index]) { seen[x.index] = 1; out.push(x); } });
+    });
+    return out;
+  }
+  function buildPlay(slug) {
+    var g = bySlug[slug];
+    playView.innerHTML = '';
+    if (!g) {
+      playView.innerHTML = '<div class="empty"><strong>Game not found</strong>There is no game called “' + esc(slug.replace(/-/g, ' ')) + '” on UBG45. The link may be mistyped, or the game was renamed or removed.' + EMPTY_ACTIONS + '</div>';
+      return;
+    }
+    var imgEl = $('img', g.el), src = imgEl && imgEl.getAttribute('src'), id = ST.slug(g.title);
+    var cats = catDefs.filter(function (d) { return d.games.indexOf(g) >= 0 && !d.fallback; });
+    var sec = el('section', 'hero play-hero');
+    sec.setAttribute('aria-labelledby', 'playTitle');
+    var n = likeOf(g), added = ST.addedOn(g.title), facts = '';
+    if (n > 0) facts += '<span class="fact"><b>' + fmtN(n) + '</b> ' + (n === 1 ? 'like' : 'likes') + '</span>';
+    if (g.isNew) facts += '<span class="fact">New game</span>';
+    else if (added && added > '2001-01-01') facts += '<span class="fact">Added ' + esc(dayLabel(added).abs) + '</span>';
+    sec.innerHTML =
+      '<div class="hero-bg"></div>' +
+      '<div class="hero-art" role="button" tabindex="0" aria-label="Play ' + esc(g.title) + '">' + (src ? '<img alt="">' : '<div class="thumb-fallback">' + esc(g.title) + '</div>') + '</div>' +
+      '<div class="hero-copy"><p class="hero-kicker">Free game</p><h1 id="playTitle">' + esc(g.title) + '</h1>' +
+      '<div class="play-cats">' + (cats.length ? cats.slice(0, 4).map(function (d) { return '<a class="pc" href="#/category/' + d.id + '">' + esc(d.name) + '</a>'; }).join('') : '<span class="pc">Arcade</span>') + '</div>' +
+      '<p class="hero-sub">Opens in a new tab. No download needed.</p>' +
+      '<div class="hero-actions"><button class="btn-play" id="playGo" type="button">' + IC.play + 'Play now</button>' +
+      (SOC.on ? '<button class="btn-ghost sm" id="playLike" type="button" aria-pressed="false">' + IC.like + '<span class="lbl">Like</span><span class="cnt"></span></button>' : '') +
+      '<button class="btn-ghost sm" id="playFav" type="button" aria-pressed="false" data-title="' + esc(g.title) + '">' + IC.fav + '<span class="lbl">Favourite</span></button>' +
+      '<button class="btn-ghost sm" id="playCopy" type="button">' + IC.link + '<span class="lbl">Copy link</span></button>' +
+      (SOC.on ? '<button class="btn-ghost sm" id="playReport" type="button">' + IC.flag + '<span class="lbl">Report</span></button>' : '') +
+      '</div></div>' + (facts ? '<div class="hero-facts">' + facts + '</div>' : '');
+    playView.appendChild(sec);
+    var art = $('.hero-art', sec), bg = $('.hero-bg', sec);
+    if (src) {
+      var im = $('img', art); im.src = src;
+      im.addEventListener('error', function () { var d = el('div', 'thumb-fallback', esc(g.title)); im.replaceWith(d); });
+      bg.style.backgroundImage = 'url("' + src.replace(/"/g, '%22') + '")';
+    }
+    function play() { g.el.click(); }
+    $('#playGo', sec).addEventListener('click', play);
+    art.addEventListener('click', play);
+    art.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(); } });
+    $('#playFav', sec).addEventListener('click', function () { toggleFav(g.title); });
+    $('#playCopy', sec).addEventListener('click', function () {
+      SOC.copy(U.shareUrl(id)).then(function (ok) { toast(ok ? 'Link copied. Paste it to share ' + g.title + '.' : 'Could not copy the link. Copy it from the address bar.'); });
+    });
+    var lb = $('#playLike', sec);
+    function paintLike() {
+      if (!lb) return;
+      var on = SOC.isLiked(id), c = likeOf(g);
+      lb.setAttribute('aria-pressed', String(on)); $('.lbl', lb).textContent = on ? 'Liked' : 'Like';
+      $('.cnt', lb).textContent = c > 0 ? fmtN(c) : ''; $('.cnt', lb).hidden = !(c > 0);
+    }
+    if (lb) {
+      paintLike();
+      lb.addEventListener('click', function () {
+        var want = !SOC.isLiked(id); lb.disabled = true;
+        lb.classList.remove('pop'); void lb.offsetWidth; lb.classList.add('pop');
+        SOC.setLike(id, want).then(function (r) {
+          lb.disabled = false;
+          if (!r.ok) { toast('Could not save your like. Check your connection.'); paintLike(); return; }
+          var cur = likeCounts[id] || 0, nx = Math.max(0, cur + (r.liked ? 1 : -1));
+          if (nx) likeCounts[id] = nx; else delete likeCounts[id];
+          applyLikes(); homeView._cols = 0; paintLike();                       // the home page rebuilds next time it is shown
+          toast(r.liked ? 'Liked. Thanks!' : 'Like removed.');
+        });
+      });
+      sec._paintLike = paintLike;
+    }
+    var rb = $('#playReport', sec), armT = 0;
+    if (rb) {
+      var lblR = $('.lbl', rb);
+      var disarm = function () { clearTimeout(armT); rb.classList.remove('arm'); lblR.textContent = SOC.isReported(id) ? 'Reported' : 'Report'; };
+      if (SOC.isReported(id)) lblR.textContent = 'Reported';
+      rb.addEventListener('click', function () {
+        if (SOC.isReported(id)) { toast('You already reported this game today. Thanks!'); return; }
+        if (!rb.classList.contains('arm')) { rb.classList.add('arm'); lblR.textContent = 'Press again to report'; toast('Is this game broken? Press the button again to report it.'); armT = setTimeout(disarm, 4500); return; }
+        clearTimeout(armT); rb.disabled = true;
+        SOC.report(id).then(function (r) {
+          rb.disabled = false; rb.classList.remove('arm');
+          if (r === 'ok' || r === 'dup') { lblR.textContent = 'Reported'; toast('Report sent. Thanks, we will check this game.'); }
+          else { lblR.textContent = 'Report'; toast('Could not send the report. Try again later.'); }
+        });
+      });
+    }
+    var rel = relatedGames(g, C.ROW_MAX || 24);
+    if (rel.length >= 3) {
+      var row = rowSection('More like this', rel, cats[0] ? '#/category/' + cats[0].id : '', null);
+      playView.appendChild(row); requestAnimationFrame(updateRows);
+    }
+    syncFavs();
+  }
 
   /* ------------------------------------------------------------------ news page */
   var NEWS_SEEN = 'ubg45.newsSeen';
@@ -1053,23 +1383,68 @@
         if (body.classList.contains('side-settle')) { homeView.classList.remove('refit'); void homeView.offsetWidth; homeView.classList.add('refit'); setTimeout(function () { homeView.classList.remove('refit'); }, 450); }
       }
     }
-    $$('.row-wrap').forEach(function (w2) { var r = $('.row', w2); if (r) r.dispatchEvent(new Event('scroll')); });
+    updateRows();
   }
   if (window.ResizeObserver) new ResizeObserver(function () { layout(); }).observe(main);
   else window.addEventListener('resize', layout);
 
+  /* ------------------------------------------------------------------ install as an app (PWA) */
+  var installEvt = null, isIos = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  function standalone() { return (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true; }
+  function syncInstall() { var a = document.getElementById('nav-install'); if (a) a.hidden = standalone() || !(installEvt || isIos); }
+  function installApp() {
+    if (installEvt) {
+      var ev = installEvt; installEvt = null; syncInstall();
+      ev.prompt(); ev.userChoice.then(function (r) { if (r && r.outcome !== 'accepted') { installEvt = ev; syncInstall(); } }, function () { /* ignore */ });
+    } else if (isIos) toast('To install: tap the Share button, then “Add to Home Screen”.', 6000);
+  }
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); installEvt = e; syncInstall(); });
+  window.addEventListener('appinstalled', function () { installEvt = null; syncInstall(); toast('UBG45 is installed. Open it from your home screen or apps list.', 4500); });
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname))) {
+    window.addEventListener('load', function () {
+      if (C.pwa === false) { navigator.serviceWorker.getRegistrations().then(function (rs) { var mine = new URL('./', location.href).href; rs.forEach(function (r) { if (r.scope === mine) r.unregister(); }); }).catch(function () { /* ignore */ }); return; }
+      navigator.serviceWorker.register('sw.js').catch(function () { /* the site works without it */ });
+    });
+  }
+
   /* ------------------------------------------------------------------ boot */
-  var bySlug = {};
-  catalog.forEach(function (g) { var k = ST.slug(g.title); if (!bySlug[k]) bySlug[k] = g; });
   buildSidebar();
+  syncInstall();
   parseHash();
   applyMode();
   layout();
   render();
-  syncFavs();
+  syncFavs(); favsReady = true;
+
+  // Likes: cached totals show instantly, fresh ones replace them. Only chips and the "Most liked" row depend on them.
+  var likeSig = '';
+  function likeVisSig(map) {
+    var min = LK.MIN_CHIP || 3, parts = [], k;
+    for (k in map) if (map[k] >= min) parts.push(k + ':' + map[k]);
+    var sig = parts.sort().join(',') + '|' + (likedRowOn() ? likedList().map(function (g) { return g.index; }).join(',') : '');
+    if (listSort === 'liked' || allSort === 'liked' || route.name === 'play' || route.name === 'liked') sig += '|' + JSON.stringify(map);
+    return sig;
+  }
+  function setLikes(map) {
+    var before = likeSig; likeCounts = map;
+    var sig = likeVisSig(map) + '|' + (hasLikes() ? 1 : 0);
+    if (sig === before) return;
+    likeSig = sig; applyLikes(); homeView._cols = 0;
+    if (!searchBar.value.trim() && route.name !== 'settings' && route.name !== 'news') render();
+  }
+  var likeFetchedAt = 0;
+  function refreshLikes(force) { if (!SOC.on) return; likeFetchedAt = Date.now(); SOC.counts(setLikes, force); }
+  refreshLikes(false);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden && Date.now() - likeFetchedAt > 20000) refreshLikes(true); });
+  window.addEventListener('storage', function (e) {          // a like or report made in a game tab: update this page
+    if (e.key !== 'ubg45.liked') return;
+    if (route.name === 'play') { var h = $('.play-hero', playView); if (h && h._paintLike) h._paintLike(); }
+    refreshLikes(true);
+  });
 
   // Live Trending: cached numbers show instantly, fresh ones replace them. Failure leaves the page as it is.
   ST.get(function (rows) {
+    statRows = {}; rows.forEach(function (r) { statRows[r.id] = r; });
     var ids = {}, list = [];
     ST.trending(rows).forEach(function (r) { var g = bySlug[r.id]; if (g && !ids[g.index]) { ids[g.index] = 1; list.push(g); } });
     var sig = function (a) { return a.map(function (g) { return g.index; }).join(','); };

@@ -22,3 +22,14 @@ UBG45 stores anonymous play counts in your Supabase project **ubg43-global-trend
 ## New tags
 `tools/stamp-added.py` (run by the GitHub workflow on every push) records the date each game first appears and refreshes the `?v=` version
 on the css/js tags in index.html. A game shows "New" for 14 days.
+
+## Likes, reports and the weekly game check
+
+- **Likes and reports** use the same Supabase project as Trending (tables `ubg45_likes` and `ubg45_reports`, written only through the capped
+  functions `ubg45_like` and `ubg45_report`). No accounts and nothing personal is stored. The "Most liked" row, the heart counts on tiles and the
+  "Most liked" sort only appear once real likes exist (limits in `ubg45-config.js` under `likes`).
+- **Weekly game check**: `.github/workflows/check-games.yml` runs every Monday (or press *Run workflow* in the Actions tab). It opens every game
+  address; a game that fails two checks in a row is written to `ubg45-health.js` and disappears from the site until it passes again. The result is in
+  `HEALTH.md`, together with the games players reported most. Safety rules: nothing changes if the checker is offline or if more than 25% of games
+  fail at once, and games listed in `tools/health-ignore.txt` are never hidden. Add `?showhidden` to the site address to see hidden games.
+- **Install as app** (`manifest.webmanifest`, `sw.js`, `pwa/`): set `pwa: false` in `ubg45-config.js` to switch the service worker off for everyone.
