@@ -1,0 +1,43 @@
+name: Recheck game addresses (quick)
+# Asks every address in tools/recheck-urls.txt for its status from a GitHub machine, and tests whether monkeygg2.github.io resolves at all.
+# Runs when tools/recheck-request.txt changes on main (or by hand). Results go to the branch "recheck-results".
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [tools/recheck-request.txt]
+permissions:
+  contents: write
+concurrency:
+  group: recheck-urls
+  cancel-in-progress: false
+jobs:
+  recheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Recheck
+        run: |
+          mkdir -p out
+          { echo "== DNS"; for h in monkeygg2.github.io ubg42.github.io ubg45.github.io; do echo "$h -> $(getent hosts $h | head -1)"; done
+            echo "== CNAME"; for h in monkeygg2.github.io ubg42.github.io; do echo "$h: $(dig +short CNAME $h 2>/dev/null | head -2 | tr '\n' ' ') / A: $(dig +short A $h 2>/dev/null | head -2 | tr '\n' ' ')"; done
+          } > out/dns.txt
+          while read -r u; do
+            [ -z "$u" ] && continue
+            code=$(curl -s -o /tmp/body -w '%{http_code}' -L --max-time 25 -A 'Mozilla/5.0 (X11; Linux x86_64) Chrome/124 Safari/537.36' "$u" || true)
+            note=$(head -c 400 /tmp/body | tr '\n' ' ' | grep -o "There isn't a GitHub Pages site here\|Page Not Found\|<title>[^<]*" | head -1)
+            printf '%s\t%s\t%s\n' "$code" "$u" "$note"
+          done < tools/recheck-urls.txt > out/status.tsv
+          wc -l out/status.tsv
+      - name: Publish
+        run: |
+          cp -r out /tmp/out
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch --orphan recheck-results
+          git rm -rf --quiet . 2>/dev/null || true
+          cp -r /tmp/out/. .
+          git add -A
+          git commit -q -m "Recheck $(date -u +%F)"
+          git push -f origin recheck-results
