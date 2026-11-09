@@ -1,0 +1,54 @@
+name: Verify games in a real browser
+# Opens game pages in Chromium (with open internet) and records which ones actually draw something.
+# Runs when you press "Run workflow", or when tools/verify-request.txt changes on main. Results are pushed to the branch "verify-results".
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [tools/verify-request.txt]
+permissions:
+  contents: write
+concurrency:
+  group: verify-games
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch classroom-15x
+        uses: actions/checkout@v4
+        with:
+          repository: ubg45/classroom-15x
+          path: _c15x
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser
+        run: |
+          pip install playwright pillow
+          python -m playwright install --with-deps chromium
+      - name: Which address does this site live at?
+        run: |
+          mkdir -p verify-out
+          for u in https://ubg45.github.io/ https://ubg45.github.io/ubg45/ https://ubg45.github.io/ubg45/index.html https://ubg45.github.io/games/ https://ubg45.github.io/ubg45/games/territorial-io/ https://ubg45.github.io/ubg45/ubg45.css; do
+            printf '%s %s\n' "$(curl -s -o /dev/null -w '%{http_code}' -L --max-time 20 "$u")" "$u"
+          done | tee verify-out/site-probe.txt
+          git remote -v | head -1 | tee -a verify-out/site-probe.txt
+      - name: Test classroom-15x games
+        run: python tools/verify-games.py --mode lessons --lessons _c15x --out verify-out --workers 6
+      - name: Test our own games
+        run: python tools/verify-games.py --mode ours --out verify-out --workers 6
+      - name: Publish results
+        run: |
+          cp -r verify-out /tmp/verify-out
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch --orphan verify-results
+          git rm -rf --quiet . 2>/dev/null || true
+          rm -rf _c15x verify-out
+          cp -r /tmp/verify-out/. .
+          git add -A
+          git commit -q -m "Verification results $(date -u +%F)"
+          git push -f origin verify-results
