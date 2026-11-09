@@ -1,0 +1,3280 @@
+{
+ "mode": "lessons",
+ "when": "2026-11-09T21:38:56Z",
+ "summary": {
+  "ok": 126,
+  "timeout": 4
+ },
+ "results": [
+  {
+   "key": "lesson003",
+   "title": "lesson003",
+   "url": "http://127.0.0.1:41023/games/lesson003/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "10 Minutes Till Dawn",
+   "text": "",
+   "first": {
+    "top": 0.59,
+    "colors": 144,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.595,
+    "colors": 145,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [
+    "404 http://127.0.0.1:41023/storage/js/cloak.js"
+   ],
+   "seconds": 41.0,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson004",
+   "title": "lesson004",
+   "url": "http://127.0.0.1:41023/games/lesson004/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.243,
+    "colors": 955,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.248,
+    "colors": 968,
+    "blank": false
+   },
+   "errors": 1,
+   "failed_requests": 2,
+   "bad_responses": [],
+   "seconds": 40.8,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson005",
+   "title": "lesson005",
+   "url": "http://127.0.0.1:41023/games/lesson005/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "]]>",
+   "first": {
+    "top": 0.238,
+    "colors": 2705,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.496,
+    "colors": 432,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 48.8,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson006",
+   "title": "lesson006",
+   "url": "http://127.0.0.1:41023/games/lesson006/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "2048 0 Get Hint Auto-run 2 2",
+   "first": {
+    "top": 0.72,
+    "colors": 96,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.72,
+    "colors": 96,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 39.8,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson008",
+   "title": "lesson008",
+   "url": "http://127.0.0.1:41023/games/lesson008/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.415,
+    "colors": 1159,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.415,
+    "colors": 1159,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 42.5,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson009",
+   "title": "lesson009",
+   "url": "http://127.0.0.1:41023/games/lesson009/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.874,
+    "colors": 108,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.874,
+    "colors": 108,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 42.9,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson010",
+   "title": "lesson010",
+   "url": "http://127.0.0.1:41023/games/lesson010/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.076,
+    "colors": 319,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.086,
+    "colors": 109,
+    "blank": false
+   },
+   "errors": 2,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 60.9,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson012",
+   "title": "lesson012",
+   "url": "http://127.0.0.1:41023/games/lesson012/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.88,
+    "colors": 278,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.843,
+    "colors": 337,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 44.6,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson014",
+   "title": "lesson014",
+   "url": "http://127.0.0.1:41023/games/lesson014/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Archery World Tour",
+   "text": "",
+   "first": {
+    "top": 0.028,
+    "colors": 2556,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.026,
+    "colors": 2561,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [
+    "404 https://cdn.jsdelivr.net/gh/bubbls/youtube-playables@main/archery-world-tour/undefined/pages/home.html",
+    "403 https://cdn.jsdelivr.net/gh/bubbls/youtube-playables@main/archery-world-tour/audio/music.mp3",
+    "404 https://cdn.jsdelivr.net/gh/bubbls/youtube-playables@main/archery-world-tour/audio/sound.mp3"
+   ],
+   "seconds": 44.1,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson015",
+   "title": "lesson015",
+   "url": "http://127.0.0.1:41023/games/lesson015/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "PICO-8 Cartridge",
+   "text": "",
+   "first": {
+    "top": 0.537,
+    "colors": 181,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.537,
+    "colors": 616,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 41.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson016",
+   "title": "lesson016",
+   "url": "http://127.0.0.1:41023/games/lesson016/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.79,
+    "colors": 59,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.79,
+    "colors": 59,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 40.6,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson017",
+   "title": "lesson017",
+   "url": "http://127.0.0.1:41023/games/lesson017/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.463,
+    "colors": 757,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.463,
+    "colors": 758,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 41.0,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson018",
+   "title": "lesson018",
+   "url": "http://127.0.0.1:41023/games/lesson018/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.879,
+    "colors": 429,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.879,
+    "colors": 429,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 2,
+   "bad_responses": [],
+   "seconds": 40.9,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson019",
+   "title": "lesson019",
+   "url": "http://127.0.0.1:41023/games/lesson019/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.403,
+    "colors": 319,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.281,
+    "colors": 758,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 41.0,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson020",
+   "title": "lesson020",
+   "url": "http://127.0.0.1:41023/games/lesson020/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Baldi's Basics",
+   "text": "",
+   "first": {
+    "top": 0.763,
+    "colors": 27,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.706,
+    "colors": 1128,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 2,
+   "bad_responses": [
+    "404 http://127.0.0.1:41023/games/lesson020/firebase-app.js",
+    "404 http://127.0.0.1:41023/js/main.js"
+   ],
+   "seconds": 41.8,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson021",
+   "title": "lesson021",
+   "url": "http://127.0.0.1:41023/games/lesson021/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Play Basketball FRVR - Free Basketball Hoop Shooter",
+   "text": "",
+   "first": {
+    "top": 0.627,
+    "colors": 691,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.626,
+    "colors": 616,
+    "blank": false
+   },
+   "errors": 1,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 42.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson023",
+   "title": "lesson023",
+   "url": "http://127.0.0.1:41023/games/lesson023/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Basketball Stars",
+   "text": "",
+   "first": {
+    "top": 0.035,
+    "colors": 2424,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.876,
+    "colors": 172,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 45.1,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson024",
+   "title": "lesson024",
+   "url": "http://127.0.0.1:41023/games/lesson024/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "YT Game Wrapper WebGL Template",
+   "text": "",
+   "first": {
+    "top": 0.763,
+    "colors": 600,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.779,
+    "colors": 417,
+    "blank": false
+   },
+   "errors": 1,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 41.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson025",
+   "title": "lesson025",
+   "url": "http://127.0.0.1:41023/games/lesson025/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Basket Bros",
+   "text": "About BasketBros Alt link: www.lookinthe.net. Fun, fast-paced 1 on 1 basketball game with lots of action. Pick from a variety of characters and let the play beg",
+   "first": {
+    "top": 0.265,
+    "colors": 2581,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.931,
+    "colors": 130,
+    "blank": false
+   },
+   "errors": 4,
+   "failed_requests": 2,
+   "bad_responses": [
+    "404 http://127.0.0.1:41023/games/lesson025/assets/favicon.png",
+    "404 http://127.0.0.1:41023/games/lesson025/vqpdso5mdr0n80kkknmkbi3ntg&e=1",
+    "403 https://cdn.api.btloader.com/device?orgid=5130683165442048&fullVersionList=%5B%7B%22brand%22%3A%22Chromium%22%2C%22version%22%3A%22158.0.812",
+    "404 http://127.0.0.1:41023/games/lesson025/vqpdso5mdr0n80kkknmkbi3ntg&e=1"
+   ],
+   "seconds": 45.5,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson026",
+   "title": "lesson026",
+   "url": "http://127.0.0.1:41023/games/lesson026/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Basket Random",
+   "text": "",
+   "first": {
+    "top": 0.977,
+    "colors": 98,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.875,
+    "colors": 169,
+    "blank": false
+   },
+   "errors": 1,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 42.4,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson027",
+   "title": "lesson027",
+   "url": "http://127.0.0.1:41023/games/lesson027/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.979,
+    "colors": 100,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.238,
+    "colors": 3720,
+    "blank": false
+   },
+   "errors": 3,
+   "failed_requests": 9,
+   "bad_responses": [
+    "404 http://127.0.0.1:41023/games/lesson027/8b55f4f729be4e70b6155f27d2e04690/?domain=127.0.0.1:41023&v=1.5.82&localTime=21",
+    "404 https://ice.360yield.com/hb?jsonp=%7B%22bid_request%22%3A%7B%22secure%22%3A1%2C%22id%22%3A%229b9d36e2a13ab6%22%2C%22version%22%3A%227.1.0-JS",
+    "403 https://c1.adform.net/serving/cookie/match?party=14&cid=3FA56E1D-34A1-4A41-A565-B332BC05A6BA&gdpr=1&gdpr_consent=BOWJjG9OWJjG9CLAAAENBx-AAAA"
+   ],
+   "seconds": 42.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson029",
+   "title": "lesson029",
+   "url": "http://127.0.0.1:41023/games/lesson029/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Big NEON Tower vs Tiny Square",
+   "text": "",
+   "first": {
+    "top": 0.949,
+    "colors": 89,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.739,
+    "colors": 254,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 40.9,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson030",
+   "title": "lesson030",
+   "url": "http://127.0.0.1:41023/games/lesson030/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Big Shot Boxing",
+   "text": "",
+   "first": {
+    "top": 0.079,
+    "colors": 1678,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.079,
+    "colors": 1678,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 41.1,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson032",
+   "title": "lesson032",
+   "url": "http://127.0.0.1:41023/games/lesson032/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Bit Planes",
+   "text": "Bit Planes Controls: Arrows ↑↓ — thrust level. Arrows ←→ — elevator controls. Space — fire a gun. X — deploy a missile. C — catapult / parachute and get new pla",
+   "first": {
+    "top": 0.53,
+    "colors": 159,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.53,
+    "colors": 164,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [
+    "404 http://127.0.0.1:41023/games/lesson032/88afda9805de2898ba809d7a95dad66b.svg",
+    "404 http://127.0.0.1:41023/games/lesson032/d05bb93fed7c4efcd74b1209b20d1341.svg",
+    "404 http://127.0.0.1:41023/games/lesson032/8a2f9fe2f680d7212a3c8ccdaa1b1be9.svg",
+    "404 http://127.0.0.1:41023/games/lesson032/375aed5f67144a7cc4573d4bdb45d415.svg"
+   ],
+   "seconds": 41.3,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson033",
+   "title": "lesson033",
+   "url": "http://127.0.0.1:41023/games/lesson033/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.25,
+    "colors": 447,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.239,
+    "colors": 794,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 2,
+   "bad_responses": [],
+   "seconds": 41.2,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson034",
+   "title": "lesson034",
+   "url": "http://127.0.0.1:41023/games/lesson034/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.453,
+    "colors": 1349,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.453,
+    "colors": 1349,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 40.8,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson036",
+   "title": "lesson036",
+   "url": "http://127.0.0.1:41023/games/lesson036/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Minecraft Parkour",
+   "text": "",
+   "first": {
+    "top": 0.035,
+    "colors": 1653,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.035,
+    "colors": 1653,
+    "blank": false
+   },
+   "errors": 1,
+   "failed_requests": 1,
+   "bad_responses": [
+    "404 http://127.0.0.1:41023/gadgets/evthdlr?t=err&gadget=undefined&container=undefined&jsurl=-top-&line=795&session=1794258973972&count=0&msg=Unc"
+   ],
+   "seconds": 42.2,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson037",
+   "title": "lesson037",
+   "url": "http://127.0.0.1:41023/games/lesson037/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Block the Pig",
+   "text": "",
+   "first": {
+    "top": 0.615,
+    "colors": 624,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.615,
+    "colors": 624,
+    "blank": false
+   },
+   "errors": 3,
+   "failed_requests": 0,
+   "bad_responses": [
+    "404 http://127.0.0.1:41023/games/lesson037/http%3A%2F%2F127.0.0.1%3A41023%2Fgames%2Flesson037%2F"
+   ],
+   "seconds": 40.8,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson038",
+   "title": "lesson038",
+   "url": "http://127.0.0.1:41023/games/lesson038/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.193,
+    "colors": 608,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.193,
+    "colors": 608,
+    "blank": false
+   },
+   "errors": 2,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 44.5,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson039",
+   "title": "lesson039",
+   "url": "http://127.0.0.1:41023/games/lesson039/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.178,
+    "colors": 1211,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.178,
+    "colors": 1162,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 44.9,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson040",
+   "title": "lesson040",
+   "url": "http://127.0.0.1:41023/games/lesson040/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.756,
+    "colors": 358,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.515,
+    "colors": 637,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 43.5,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson041",
+   "title": "lesson041",
+   "url": "http://127.0.0.1:41023/games/lesson041/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.879,
+    "colors": 76,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.221,
+    "colors": 544,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 5,
+   "bad_responses": [],
+   "seconds": 49.8,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson042",
+   "title": "lesson042",
+   "url": "http://127.0.0.1:41023/games/lesson042/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.441,
+    "colors": 799,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.441,
+    "colors": 1034,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 7,
+   "bad_responses": [],
+   "seconds": 42.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson044",
+   "title": "lesson044",
+   "url": "http://127.0.0.1:41023/games/lesson044/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Boxing Random",
+   "text": "",
+   "first": {
+    "top": 0.977,
+    "colors": 100,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.977,
+    "colors": 100,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 45.5,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson045",
+   "title": "lesson045",
+   "url": "http://127.0.0.1:41023/games/lesson045/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.343,
+    "colors": 2116,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.343,
+    "colors": 2120,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 48.2,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson046",
+   "title": "lesson046",
+   "url": "http://127.0.0.1:41023/games/lesson046/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Burger and Frights",
+   "text": "SHOW CREDITS",
+   "first": {
+    "top": 0.228,
+    "colors": 420,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.31,
+    "colors": 659,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 57.4,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson047",
+   "title": "lesson047",
+   "url": "http://127.0.0.1:41023/games/lesson047/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.645,
+    "colors": 206,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.149,
+    "colors": 167,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 53.0,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson048",
+   "title": "lesson048",
+   "url": "http://127.0.0.1:41023/games/lesson048/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.955,
+    "colors": 119,
+    "blank": false
+   },
+   "after_click": {
+    "top": 1.0,
+    "colors": 1,
+    "blank": true
+   },
+   "errors": 0,
+   "failed_requests": 3,
+   "bad_responses": [],
+   "seconds": 56.6,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson049",
+   "title": "lesson049",
+   "url": "http://127.0.0.1:41023/games/lesson049/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Capybara Clicker",
+   "text": "",
+   "first": {
+    "top": 0.067,
+    "colors": 1151,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.067,
+    "colors": 1110,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 55.8,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson050",
+   "title": "lesson050",
+   "url": "http://127.0.0.1:41023/games/lesson050/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "🐱❤️🍰 2️⃣",
+   "text": "",
+   "first": {
+    "top": 0.696,
+    "colors": 208,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.691,
+    "colors": 214,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [
+    "404 http://127.0.0.1:41023/games/lesson050/stylesheet.3adae015.css",
+    "403 https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@0f95cc77a7b2663210b37232e2e6e0d15514be62/cats%20love%20cake%202/",
+    "403 https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@0f95cc77a7b2663210b37232e2e6e0d15514be62/cats%20love%20cake%202/"
+   ],
+   "seconds": 58.4,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson051",
+   "title": "lesson051",
+   "url": "http://127.0.0.1:41023/games/lesson051/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "PICO-8 Cartridge",
+   "text": "",
+   "first": {
+    "top": 0.537,
+    "colors": 118,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.537,
+    "colors": 147,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 43.3,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson052",
+   "title": "lesson052",
+   "url": "http://127.0.0.1:41023/games/lesson052/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.827,
+    "colors": 311,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.358,
+    "colors": 572,
+    "blank": false
+   },
+   "errors": 2,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 42.5,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson053",
+   "title": "lesson053",
+   "url": "http://127.0.0.1:41023/games/lesson053/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.229,
+    "colors": 2437,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.229,
+    "colors": 2437,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 45.0,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson054",
+   "title": "lesson054",
+   "url": "http://127.0.0.1:41023/games/lesson054/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Choppy Orc",
+   "text": "",
+   "first": {
+    "top": 0.344,
+    "colors": 513,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.338,
+    "colors": 636,
+    "blank": false
+   },
+   "errors": 2,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 40.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson055",
+   "title": "lesson055",
+   "url": "http://127.0.0.1:41023/games/lesson055/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "PK\u0003\u0004\u0014\b\b\bƒ66[\u0012word/numbering.xml¥”KnÂ0\u0010†OÐ; ï!\u0001µˆF\u0004\u0016Eí¦»¶\u0007\u0018l“Xø¥±Ããöu \u000f U\u0015ÒU\u0012ÿoÆ“ß3_ ” ì8:atJÆ£˜ ¸¦† ¥äëóu8#\u0003çA3Fó” ¹#ËÅÃ|ŸèB­9†}ƒ€Ð.Q4%¹÷6‰\"Gs®ÀŒå:\u00047\u0006\u0015øð‰Y¤",
+   "first": {
+    "top": 0.193,
+    "colors": 120,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.193,
+    "colors": 120,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 41.6,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson056",
+   "title": "lesson056",
+   "url": "http://127.0.0.1:41023/games/lesson056/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Core Ball，Level 4",
+   "text": "CoreBall level 1 RESET",
+   "first": {
+    "top": 0.982,
+    "colors": 24,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.959,
+    "colors": 32,
+    "blank": false
+   },
+   "errors": 1,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 40.1,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson057",
+   "title": "lesson057",
+   "url": "http://127.0.0.1:41023/games/lesson057/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "External Content Notice | rawgit.hack",
+   "text": "rawgit.hack Status Source code Report abuse Go from Code to Production in Seconds Cloud Run deploys apps in any language instantly. Scales to zero. Pay only whe",
+   "first": {
+    "top": 0.864,
+    "colors": 275,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.864,
+    "colors": 275,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 2,
+   "bad_responses": [],
+   "seconds": 40.2,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson058",
+   "title": "lesson058",
+   "url": "http://127.0.0.1:41023/games/lesson058/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Crossy Road",
+   "text": "Loading EditUndoBrk Loading 8bitwonder",
+   "first": {
+    "top": 0.096,
+    "colors": 1072,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.096,
+    "colors": 1072,
+    "blank": false
+   },
+   "errors": 3,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 40.6,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson059",
+   "title": "lesson059",
+   "url": "http://127.0.0.1:41023/games/lesson059/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.725,
+    "colors": 151,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.725,
+    "colors": 151,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 39.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson060",
+   "title": "lesson060",
+   "url": "http://127.0.0.1:41023/games/lesson060/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Cut the Rope",
+   "text": "",
+   "first": {
+    "top": 0.095,
+    "colors": 1424,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.095,
+    "colors": 1424,
+    "blank": false
+   },
+   "errors": 3,
+   "failed_requests": 2,
+   "bad_responses": [
+    "404 http://127.0.0.1:41023/gadgets/evthdlr?t=err&gadget=undefined&container=undefined&jsurl=-top-&line=839&session=1794259241816&count=0&msg=Unc",
+    "404 http://127.0.0.1:41023/gadgets/evthdlr?t=err&gadget=undefined&container=undefined&jsurl=-top-&line=1231&session=1794259241816&count=1&msg=Un",
+    "404 http://127.0.0.1:41023/gadgets/evthdlr?t=err&gadget=undefined&container=undefined&jsurl=-top-&line=0&session=1794259241816&count=2&msg=Scrip"
+   ],
+   "seconds": 41.8,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson061",
+   "title": "lesson061",
+   "url": "http://127.0.0.1:41023/games/lesson061/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.016,
+    "colors": 2926,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.072,
+    "colors": 1547,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 42.3,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson062",
+   "title": "lesson062",
+   "url": "http://127.0.0.1:41023/games/lesson062/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.491,
+    "colors": 755,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.754,
+    "colors": 384,
+    "blank": false
+   },
+   "errors": 2,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 40.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson063",
+   "title": "lesson063",
+   "url": "http://127.0.0.1:41023/games/lesson063/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Demolition Derby Crash Racing",
+   "text": "",
+   "first": {
+    "top": 0.665,
+    "colors": 590,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.057,
+    "colors": 2550,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 7,
+   "bad_responses": [
+    "405 https://cdn.jsdelivr.net/gh/cooldude2349/everything@main/demoderby/null.html?https://t.poki.io/l"
+   ],
+   "seconds": 68.3,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson064",
+   "title": "lesson064",
+   "url": "http://127.0.0.1:41023/games/lesson064/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "google.com",
+   "text": "b",
+   "first": {
+    "top": 0.932,
+    "colors": 40,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.245,
+    "colors": 1130,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [
+    "404 https://cdn.jsdelivr.net/gh/bubbls/robobs@tree/main/StreamingAssets/Audio/deep-house-club-168596%20(1).mp3",
+    "404 https://cdn.jsdelivr.net/gh/bubbls/robobs@tree/main/StreamingAssets/Audio/game-music-minecraft-roblox-fortnite-background-intro-theme-272225",
+    "404 https://cdn.jsdelivr.net/gh/bubbls/robobs@tree/main/StreamingAssets/Audio/deep-house-club-168596%20(1).mp3",
+    "404 https://cdn.jsdelivr.net/gh/bubbls/robobs@tree/main/StreamingAssets/Audio/game-music-minecraft-roblox-fortnite-background-intro-theme-272225"
+   ],
+   "seconds": 96.4,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson065",
+   "title": "lesson065",
+   "url": "http://127.0.0.1:41023/games/lesson065/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Dogeminer",
+   "text": "Welcome to DOGEMINER The Dogecoin Mining Simulator START PLAYING Notice: By playing this game you are agreeing to the use of cookies in order to save your progr",
+   "first": {
+    "top": 0.465,
+    "colors": 594,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.465,
+    "colors": 594,
+    "blank": false
+   },
+   "errors": 1,
+   "failed_requests": 8,
+   "bad_responses": [
+    "404 http://127.0.0.1:41023/games/lesson065/img/empty.png"
+   ],
+   "seconds": 54.9,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson066",
+   "title": "lesson066",
+   "url": "http://127.0.0.1:41023/games/lesson066/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "CodePen - A Pen by bound20",
+   "text": "doodle jump use ← → to move and space to (re) start... Play game over! You scored 114 points! Restart Tweet score Post on FB 114",
+   "first": {
+    "top": 0.744,
+    "colors": 217,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.744,
+    "colors": 207,
+    "blank": false
+   },
+   "errors": 1,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 63.3,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson068",
+   "title": "lesson068",
+   "url": "http://127.0.0.1:41023/games/lesson068/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Drift Boss",
+   "text": "",
+   "first": {
+    "top": 0.444,
+    "colors": 426,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.351,
+    "colors": 1102,
+    "blank": false
+   },
+   "errors": 1,
+   "failed_requests": 2,
+   "bad_responses": [
+    "404 http://127.0.0.1:41023/gadgets/evthdlr?t=err&gadget=undefined&container=undefined&jsurl=-top-&line=796&session=1794259350442&count=0&msg=Unc",
+    "404 https://cdn.jsdelivr.net/gh/bubbls/ruffle@87ee8bdf0c0a91c39f0fc9375993f5498be7411e/media/graphics/font/mainfont.ttf"
+   ],
+   "seconds": 51.5,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson070",
+   "title": "lesson070",
+   "url": "http://127.0.0.1:41023/games/lesson070/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.209,
+    "colors": 483,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.192,
+    "colors": 1687,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 3,
+   "bad_responses": [],
+   "seconds": 41.9,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson071",
+   "title": "lesson071",
+   "url": "http://127.0.0.1:41023/games/lesson071/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.207,
+    "colors": 1213,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.207,
+    "colors": 1383,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 47.2,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson072",
+   "title": "lesson072",
+   "url": "http://127.0.0.1:41023/games/lesson072/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Duck Life Battle",
+   "text": "",
+   "first": {
+    "top": 0.752,
+    "colors": 596,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.057,
+    "colors": 1474,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 3,
+   "bad_responses": [],
+   "seconds": 46.9,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson073",
+   "title": "lesson073",
+   "url": "http://127.0.0.1:41023/games/lesson073/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Edys Car Simulator",
+   "text": "",
+   "first": {
+    "top": 0.094,
+    "colors": 829,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.094,
+    "colors": 833,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 52.1,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson074",
+   "title": "lesson074",
+   "url": "http://127.0.0.1:41023/games/lesson074/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "The Final Earth 2",
+   "text": "",
+   "first": {
+    "top": 0.729,
+    "colors": 381,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.73,
+    "colors": 370,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 52.6,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson075",
+   "title": "lesson075",
+   "url": "http://127.0.0.1:41023/games/lesson075/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.684,
+    "colors": 614,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.698,
+    "colors": 544,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 2,
+   "bad_responses": [],
+   "seconds": 54.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson076",
+   "title": "lesson076",
+   "url": "http://127.0.0.1:41023/games/lesson076/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Fireboy & Watergirl 2 Light Temple",
+   "text": "5 PLAY Fireboy Watergirl Light Temple",
+   "first": {
+    "top": 0.122,
+    "colors": 406,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.122,
+    "colors": 483,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [
+    "403 https://api.gameanalytics.com/v2/ed3b3830e7bf26382c0982c266cb6b67/events"
+   ],
+   "seconds": 47.9,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson077",
+   "title": "lesson077",
+   "url": "http://127.0.0.1:41023/games/lesson077/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Fireboy & Watergirl 3 Ice Temple",
+   "text": "tc-150 PLAY Fireboy Watergirl Ice Temple",
+   "first": {
+    "top": 0.088,
+    "colors": 1072,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.088,
+    "colors": 1072,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [
+    "403 https://api.gameanalytics.com/v2/8abc93fc5af7366c20445b7bc1c3f513/events"
+   ],
+   "seconds": 45.2,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson080",
+   "title": "lesson080",
+   "url": "http://127.0.0.1:41023/games/lesson080/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.225,
+    "colors": 894,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.225,
+    "colors": 891,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 47.1,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson081",
+   "title": "lesson081",
+   "url": "http://127.0.0.1:41023/games/lesson081/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.963,
+    "colors": 19,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.322,
+    "colors": 1353,
+    "blank": false
+   },
+   "errors": 2,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 48.5,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson082",
+   "title": "lesson082",
+   "url": "http://127.0.0.1:41023/games/lesson082/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Unity WebGL Player | GMTK",
+   "text": "",
+   "first": {
+    "top": 0.736,
+    "colors": 162,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.736,
+    "colors": 516,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 45.0,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson084",
+   "title": "lesson084",
+   "url": "http://127.0.0.1:41023/games/lesson084/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.068,
+    "colors": 1569,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.419,
+    "colors": 140,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 45.0,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson085",
+   "title": "lesson085",
+   "url": "http://127.0.0.1:41023/games/lesson085/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.087,
+    "colors": 1154,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.072,
+    "colors": 1234,
+    "blank": false
+   },
+   "errors": 4,
+   "failed_requests": 2,
+   "bad_responses": [
+    "404 http://127.0.0.1:41023/games/lesson085/grr%20i%20hate%20opensocilasassdsadsadsa",
+    "403 http://www.minijuegos.com/helpers/game/xdmbridge.php?xdm_url=https://ssl.minijuegosgratis.com/lechuck/js/easyxdm/&xdm_e=http%3A%2F%2F127.0.0"
+   ],
+   "seconds": 49.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson086",
+   "title": "lesson086",
+   "url": "http://127.0.0.1:41023/games/lesson086/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Gym Stack GS2",
+   "text": "",
+   "first": {
+    "top": 0.339,
+    "colors": 417,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.334,
+    "colors": 418,
+    "blank": false
+   },
+   "errors": 1,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 51.5,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson087",
+   "title": "lesson087",
+   "url": "http://127.0.0.1:41023/games/lesson087/",
+   "verdict": "timeout",
+   "detail": "Page.screenshot: Timeout 30000ms exceeded. Call log: - taking page screenshot ",
+   "pass1": "timeout"
+  },
+  {
+   "key": "lesson088",
+   "title": "lesson088",
+   "url": "http://127.0.0.1:41023/games/lesson088/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Icy Purple Head",
+   "text": "",
+   "first": {
+    "top": 0.674,
+    "colors": 369,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.132,
+    "colors": 1292,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 50.8,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson089",
+   "title": "lesson089",
+   "url": "http://127.0.0.1:41023/games/lesson089/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.84,
+    "colors": 165,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.915,
+    "colors": 87,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 40.5,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson090",
+   "title": "lesson090",
+   "url": "http://127.0.0.1:41023/games/lesson090/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Deep Sleep",
+   "text": "",
+   "first": {
+    "top": 0.913,
+    "colors": 86,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.553,
+    "colors": 732,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 41.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson091",
+   "title": "lesson091",
+   "url": "http://127.0.0.1:41023/games/lesson091/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.163,
+    "colors": 409,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.937,
+    "colors": 39,
+    "blank": false
+   },
+   "errors": 1,
+   "failed_requests": 1,
+   "bad_responses": [
+    "404 https://n-2xvhdwtm7zjla2ugq6opqqecmc6ix7q6rp5gxxa-0lu-script.googleusercontent.com/main.min.js"
+   ],
+   "seconds": 43.2,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson094",
+   "title": "lesson094",
+   "url": "http://127.0.0.1:41023/games/lesson094/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.079,
+    "colors": 2493,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.079,
+    "colors": 2484,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 45.6,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson095",
+   "title": "lesson095",
+   "url": "http://127.0.0.1:41023/games/lesson095/",
+   "verdict": "timeout",
+   "detail": "Page.screenshot: Timeout 30000ms exceeded. Call log: - taking page screenshot ",
+   "pass1": "timeout"
+  },
+  {
+   "key": "lesson096",
+   "title": "lesson096",
+   "url": "http://127.0.0.1:41023/games/lesson096/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.232,
+    "colors": 460,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.232,
+    "colors": 452,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 46.3,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson097",
+   "title": "lesson097",
+   "url": "http://127.0.0.1:41023/games/lesson097/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.977,
+    "colors": 32,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.348,
+    "colors": 4153,
+    "blank": false
+   },
+   "errors": 10,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 53.5,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson099",
+   "title": "lesson099",
+   "url": "http://127.0.0.1:41023/games/lesson099/",
+   "verdict": "timeout",
+   "detail": "Page.screenshot: Timeout 30000ms exceeded. Call log: - taking page screenshot ",
+   "pass1": "timeout"
+  },
+  {
+   "key": "lesson100",
+   "title": "lesson100",
+   "url": "http://127.0.0.1:41023/games/lesson100/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Merge Round Racers",
+   "text": "",
+   "first": {
+    "top": 0.395,
+    "colors": 193,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.087,
+    "colors": 1313,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 5,
+   "bad_responses": [
+    "404 https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@e9e43011bc2c9be418a4f5cc79f8b4d9fcd6c2ce/merge%20round%20racers/null.html?https://devs-api.pok",
+    "404 https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@e9e43011bc2c9be418a4f5cc79f8b4d9fcd6c2ce/merge%20round%20racers/null.html?https://geo.poki.io/"
+   ],
+   "seconds": 51.5,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson101",
+   "title": "lesson101",
+   "url": "http://127.0.0.1:41023/games/lesson101/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "EaglercraftX",
+   "text": "",
+   "first": {
+    "top": 0.903,
+    "colors": 15,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.295,
+    "colors": 159,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 51.1,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson103",
+   "title": "lesson103",
+   "url": "http://127.0.0.1:41023/games/lesson103/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Moto Road Rash 3D",
+   "text": "Moto Road Rash 3D",
+   "first": {
+    "top": 0.865,
+    "colors": 553,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.865,
+    "colors": 553,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 42.2,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson104",
+   "title": "lesson104",
+   "url": "http://127.0.0.1:41023/games/lesson104/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.089,
+    "colors": 1099,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.036,
+    "colors": 1428,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 46.6,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson105",
+   "title": "lesson105",
+   "url": "http://127.0.0.1:41023/games/lesson105/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Moto X3M 2",
+   "text": "",
+   "first": {
+    "top": 0.197,
+    "colors": 1276,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.147,
+    "colors": 1882,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 41.8,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson107",
+   "title": "lesson107",
+   "url": "http://127.0.0.1:41023/games/lesson107/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "MotoX3M 6 Spooky Land",
+   "text": "",
+   "first": {
+    "top": 0.245,
+    "colors": 1162,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.156,
+    "colors": 1281,
+    "blank": false
+   },
+   "errors": 1,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 45.5,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson108",
+   "title": "lesson108",
+   "url": "http://127.0.0.1:41023/games/lesson108/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.108,
+    "colors": 1284,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.037,
+    "colors": 1739,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 42.3,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson111",
+   "title": "lesson111",
+   "url": "http://127.0.0.1:41023/games/lesson111/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Unity WebGL Player | OneBit Adventure",
+   "text": "Unable to load file https://rawcdn.githack.com/bubbls/UGS-Assets/85dcab9025d29ef0b92c8f9d06477547f9b5931c/onebit/onebit/build/f14e31b82414f5f8e7ab28f7f3909ea5.j",
+   "first": {
+    "top": 0.516,
+    "colors": 32,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.516,
+    "colors": 32,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 6,
+   "bad_responses": [],
+   "seconds": 41.3,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson114",
+   "title": "lesson114",
+   "url": "http://127.0.0.1:41023/games/lesson114/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.275,
+    "colors": 3001,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.271,
+    "colors": 3024,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 2,
+   "bad_responses": [],
+   "seconds": 43.0,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson115",
+   "title": "lesson115",
+   "url": "http://127.0.0.1:41023/games/lesson115/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.275,
+    "colors": 2978,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.271,
+    "colors": 3002,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 2,
+   "bad_responses": [],
+   "seconds": 47.1,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson116",
+   "title": "lesson116",
+   "url": "http://127.0.0.1:41023/games/lesson116/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "Cope harder - odd.gay PLAY ENRUTRSPFRNLPTDEIT",
+   "first": {
+    "top": 0.454,
+    "colors": 602,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.331,
+    "colors": 598,
+    "blank": false
+   },
+   "errors": 3,
+   "failed_requests": 0,
+   "bad_responses": [
+    "404 http://127.0.0.1:41023/games/lesson116/assets/banners.json"
+   ],
+   "seconds": 44.5,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson117",
+   "title": "lesson117",
+   "url": "http://127.0.0.1:41023/games/lesson117/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.257,
+    "colors": 4055,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.257,
+    "colors": 3158,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 3,
+   "bad_responses": [],
+   "seconds": 43.1,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson119",
+   "title": "lesson119",
+   "url": "http://127.0.0.1:41023/games/lesson119/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.896,
+    "colors": 533,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.174,
+    "colors": 760,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 42.6,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson120",
+   "title": "lesson120",
+   "url": "http://127.0.0.1:41023/games/lesson120/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.27,
+    "colors": 2992,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.26,
+    "colors": 3146,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 2,
+   "bad_responses": [],
+   "seconds": 44.1,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson121",
+   "title": "lesson121",
+   "url": "http://127.0.0.1:41023/games/lesson121/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.858,
+    "colors": 343,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.231,
+    "colors": 1195,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 2,
+   "bad_responses": [],
+   "seconds": 41.2,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson122",
+   "title": "lesson122",
+   "url": "http://127.0.0.1:41023/games/lesson122/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.171,
+    "colors": 695,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.173,
+    "colors": 760,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 2,
+   "bad_responses": [],
+   "seconds": 43.3,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson123",
+   "title": "lesson123",
+   "url": "http://127.0.0.1:41023/games/lesson123/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Ragdoll Hit - Poki",
+   "text": "",
+   "first": {
+    "top": 0.693,
+    "colors": 240,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.671,
+    "colors": 268,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 8,
+   "bad_responses": [
+    "403 https://rawcdn.githack.com/genizy/google-class/main/ragdoll-hit/null.json?https://t.poki.io/l"
+   ],
+   "seconds": 43.4,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson124",
+   "title": "lesson124",
+   "url": "http://127.0.0.1:41023/games/lesson124/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Recoil",
+   "text": "Recoil Martin Magni",
+   "first": {
+    "top": 0.112,
+    "colors": 208,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.112,
+    "colors": 208,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 2,
+   "bad_responses": [
+    "404 https://cdn.jsdelivr.net/gh/bubbls/ruffle@392483d4b2cf5cca5e95b4c3aa1cc4e2f10c548f/baloo2.woff",
+    "404 https://275022854-836183720046385513.preview.editmysite.com/uploads/b/139890129-376454683626216828/files/core.js"
+   ],
+   "seconds": 43.5,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson126",
+   "title": "lesson126",
+   "url": "http://127.0.0.1:41023/games/lesson126/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Retro Bowl",
+   "text": "",
+   "first": {
+    "top": 0.353,
+    "colors": 212,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.353,
+    "colors": 212,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 2,
+   "bad_responses": [
+    "404 https://cdn.jsdelivr.net/gh/selenite-cc/selenite-old@9c743188888af0986c8c7b293dbac8f9e421a4ee/retrobowl/html5game/optiondata.dat",
+    "404 https://cdn.jsdelivr.net/gh/selenite-cc/selenite-old@9c743188888af0986c8c7b293dbac8f9e421a4ee/retrobowl/html5game/savedata.ini",
+    "404 https://cdn.jsdelivr.net/gh/selenite-cc/selenite-old@9c743188888af0986c8c7b293dbac8f9e421a4ee/retrobowl/html5game/savedata.ini",
+    "404 https://cdn.jsdelivr.net/gh/selenite-cc/selenite-old@9c743188888af0986c8c7b293dbac8f9e421a4ee/retrobowl/html5game/savedata2.ini"
+   ],
+   "seconds": 41.5,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson127",
+   "title": "lesson127",
+   "url": "http://127.0.0.1:41023/games/lesson127/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Created with GameMaker: Studio",
+   "text": "If the keys do not work, then click on this text and continue playing.",
+   "first": {
+    "top": 0.349,
+    "colors": 189,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.336,
+    "colors": 156,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 41.2,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson128",
+   "title": "lesson128",
+   "url": "http://127.0.0.1:41023/games/lesson128/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "ROCKETPULT",
+   "text": "",
+   "first": {
+    "top": 0.176,
+    "colors": 232,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.176,
+    "colors": 239,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 40.8,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson129",
+   "title": "lesson129",
+   "url": "http://127.0.0.1:41023/games/lesson129/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Rocket Soccer",
+   "text": "",
+   "first": {
+    "top": 0.031,
+    "colors": 3209,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.03,
+    "colors": 3402,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 7,
+   "bad_responses": [
+    "403 https://rawcdn.githack.com/bubbls/UGS-Assets/e243262026164138d75667f9f138283a7b58d723/rocket%20soccer%20derby/null.html?https://t.poki.io/l"
+   ],
+   "seconds": 54.0,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson130",
+   "title": "lesson130",
+   "url": "http://127.0.0.1:41023/games/lesson130/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Rolly Vortex",
+   "text": "",
+   "first": {
+    "top": 0.677,
+    "colors": 124,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.677,
+    "colors": 97,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 53.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson131",
+   "title": "lesson131",
+   "url": "http://127.0.0.1:41023/games/lesson131/",
+   "verdict": "timeout",
+   "detail": "Page.screenshot: Timeout 30000ms exceeded. Call log: - taking page screenshot ",
+   "pass1": "timeout"
+  },
+  {
+   "key": "lesson132",
+   "title": "lesson132",
+   "url": "http://127.0.0.1:41023/games/lesson132/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Rooftop Snipers 2",
+   "text": "",
+   "first": {
+    "top": 0.028,
+    "colors": 868,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.029,
+    "colors": 1283,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 4,
+   "bad_responses": [
+    "403 https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets/roof%20snipe%202/",
+    "403 https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets/roof%20snipe%202/"
+   ],
+   "seconds": 66.2,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson133",
+   "title": "lesson133",
+   "url": "http://127.0.0.1:41023/games/lesson133/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Room Clicker",
+   "text": "",
+   "first": {
+    "top": 0.696,
+    "colors": 214,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.206,
+    "colors": 1708,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 41.5,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson134",
+   "title": "lesson134",
+   "url": "http://127.0.0.1:41023/games/lesson134/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.054,
+    "colors": 764,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.081,
+    "colors": 905,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 69.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson135",
+   "title": "lesson135",
+   "url": "http://127.0.0.1:41023/games/lesson135/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.889,
+    "colors": 206,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.601,
+    "colors": 911,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 41.6,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson136",
+   "title": "lesson136",
+   "url": "http://127.0.0.1:41023/games/lesson136/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.825,
+    "colors": 110,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.691,
+    "colors": 245,
+    "blank": false
+   },
+   "errors": 1,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 50.1,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson137",
+   "title": "lesson137",
+   "url": "http://127.0.0.1:41023/games/lesson137/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Slope 3",
+   "text": "",
+   "first": {
+    "top": 0.112,
+    "colors": 234,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.605,
+    "colors": 482,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 3,
+   "bad_responses": [],
+   "seconds": 59.1,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson138",
+   "title": "lesson138",
+   "url": "http://127.0.0.1:41023/games/lesson138/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.08,
+    "colors": 458,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.08,
+    "colors": 458,
+    "blank": false
+   },
+   "errors": 2,
+   "failed_requests": 3,
+   "bad_responses": [
+    "403 https://hb.vntsm.io/content.html",
+    "404 https://edge.atmtd.com/pub/vntsm/afihbs.js",
+    "400 https://floors.atmtd.com/floors.json?dist=vntsm"
+   ],
+   "seconds": 45.2,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson139",
+   "title": "lesson139",
+   "url": "http://127.0.0.1:41023/games/lesson139/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.277,
+    "colors": 1998,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.274,
+    "colors": 1994,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 2,
+   "bad_responses": [],
+   "seconds": 66.8,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson140",
+   "title": "lesson140",
+   "url": "http://127.0.0.1:41023/games/lesson140/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.702,
+    "colors": 2421,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.208,
+    "colors": 749,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [
+    "404 http://127.0.0.1:41023/games/lesson140/json/null.json?https://config.uca.cloud.unity3d.com/",
+    "404 http://127.0.0.1:41023/games/lesson140/json/null.json?https://config.uca.cloud.unity3d.com",
+    "404 http://127.0.0.1:41023/games/lesson140/js/main.min.js?//html5.api.gamedistribution.com/main.min.js",
+    "404 http://127.0.0.1:41023/games/lesson140/json/null.json?https://cdp.cloud.unity3d.com/v1/events"
+   ],
+   "seconds": 67.5,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson142",
+   "title": "lesson142",
+   "url": "http://127.0.0.1:41023/games/lesson142/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.837,
+    "colors": 151,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.716,
+    "colors": 642,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 42.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson143",
+   "title": "lesson143",
+   "url": "http://127.0.0.1:41023/games/lesson143/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Stack Fire Ball",
+   "text": "",
+   "first": {
+    "top": 0.966,
+    "colors": 70,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.063,
+    "colors": 935,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 46.3,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson144",
+   "title": "lesson144",
+   "url": "http://127.0.0.1:41023/games/lesson144/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Stacktris",
+   "text": "",
+   "first": {
+    "top": 0.903,
+    "colors": 186,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.909,
+    "colors": 227,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 5,
+   "bad_responses": [
+    "404 https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@7edd971a7c7283829db983c25289230aa9c782d1/stacktris/null.html?https://devs-api.poki.com/gameinf",
+    "404 https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@7edd971a7c7283829db983c25289230aa9c782d1/stacktris/null.html?https://geo.poki.io/"
+   ],
+   "seconds": 43.1,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson145",
+   "title": "lesson145",
+   "url": "http://127.0.0.1:41023/games/lesson145/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Stick archers battle",
+   "text": "",
+   "first": {
+    "top": 0.193,
+    "colors": 724,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.312,
+    "colors": 868,
+    "blank": false
+   },
+   "errors": 9,
+   "failed_requests": 11,
+   "bad_responses": [],
+   "seconds": 49.3,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson146",
+   "title": "lesson146",
+   "url": "http://127.0.0.1:41023/games/lesson146/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Stickman Duel",
+   "text": "",
+   "first": {
+    "top": 0.638,
+    "colors": 291,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.071,
+    "colors": 1180,
+    "blank": false
+   },
+   "errors": 2,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 46.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson147",
+   "title": "lesson147",
+   "url": "http://127.0.0.1:41023/games/lesson147/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Stickman Gta City",
+   "text": "",
+   "first": {
+    "top": 0.078,
+    "colors": 1170,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.079,
+    "colors": 1301,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 59.6,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson149",
+   "title": "lesson149",
+   "url": "http://127.0.0.1:41023/games/lesson149/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.99,
+    "colors": 15,
+    "blank": true
+   },
+   "after_click": {
+    "top": 0.909,
+    "colors": 101,
+    "blank": false
+   },
+   "errors": 2,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 69.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson156",
+   "title": "lesson156",
+   "url": "http://127.0.0.1:41023/games/lesson156/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.639,
+    "colors": 139,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.635,
+    "colors": 352,
+    "blank": false
+   },
+   "errors": 2,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 59.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson157",
+   "title": "lesson157",
+   "url": "http://127.0.0.1:41023/games/lesson157/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "SUPERHOT",
+   "text": "",
+   "first": {
+    "top": 0.859,
+    "colors": 76,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.105,
+    "colors": 124,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 89.4,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson158",
+   "title": "lesson158",
+   "url": "http://127.0.0.1:41023/games/lesson158/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "SuperLiquidSoccer",
+   "text": "",
+   "first": {
+    "top": 0.199,
+    "colors": 419,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.206,
+    "colors": 406,
+    "blank": false
+   },
+   "errors": 2,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 64.1,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson160",
+   "title": "lesson160",
+   "url": "http://127.0.0.1:41023/games/lesson160/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.542,
+    "colors": 1188,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.529,
+    "colors": 1304,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 56.4,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson161",
+   "title": "lesson161",
+   "url": "http://127.0.0.1:41023/games/lesson161/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "",
+   "text": "",
+   "first": {
+    "top": 0.519,
+    "colors": 421,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.49,
+    "colors": 418,
+    "blank": false
+   },
+   "errors": 2,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 53.8,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson163",
+   "title": "lesson163",
+   "url": "http://127.0.0.1:41023/games/lesson163/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Effing Worms",
+   "text": "",
+   "first": {
+    "top": 0.266,
+    "colors": 371,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.266,
+    "colors": 371,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 40.0,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson166",
+   "title": "lesson166",
+   "url": "http://127.0.0.1:41023/games/lesson166/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Chat Trap",
+   "text": "Reset Cat Trap",
+   "first": {
+    "top": 0.609,
+    "colors": 221,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.609,
+    "colors": 228,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 0,
+   "bad_responses": [],
+   "seconds": 41.0,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson168",
+   "title": "lesson168",
+   "url": "http://127.0.0.1:41023/games/lesson168/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Unity WebGL Player | Cluster Rush",
+   "text": "",
+   "first": {
+    "top": 0.815,
+    "colors": 14,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.815,
+    "colors": 14,
+    "blank": false
+   },
+   "errors": 0,
+   "failed_requests": 1,
+   "bad_responses": [],
+   "seconds": 42.4,
+   "pass1": "ok"
+  },
+  {
+   "key": "lesson170",
+   "title": "lesson170",
+   "url": "http://127.0.0.1:41023/games/lesson170/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "page_title": "Lesson 170",
+   "text": "",
+   "first": {
+    "top": 0.505,
+    "colors": 12,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.343,
+    "colors": 404,
+    "blank": false
+   },
+   "errors": 1,
+   "failed_requests": 2,
+   "bad_responses": [],
+   "seconds": 45.8,
+   "pass1": "ok"
+  }
+ ]
+}
