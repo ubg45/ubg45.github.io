@@ -56,7 +56,7 @@ def save_shot(png, path, w=480):
     im.save(path, 'JPEG', quality=58, optimize=True)
 
 
-async def probe(browser, t, wait_ms, shots_dir, sem):
+async def probe(browser, t, wait_ms, shots_dir, sem, clicks=1, shot_w=480):
     async with sem:
         res = {'key': t['key'], 'title': t.get('title', ''), 'url': t['url'], 'verdict': 'timeout', 'detail': ''}
         ctx = await browser.new_context(viewport={'width': 1280, 'height': 720}, ignore_https_errors=False)
@@ -93,8 +93,10 @@ async def probe(browser, t, wait_ms, shots_dir, sem):
                 title = (await page.title())[:80]
             except Exception:
                 pass
-            await page.mouse.click(640, 360)
-            await page.wait_for_timeout(3500)
+            spots = [(640, 360), (640, 440), (400, 360), (880, 360), (640, 280), (640, 600)]
+            for i in range(max(1, clicks)):
+                await page.mouse.click(*spots[i % len(spots)])
+                await page.wait_for_timeout(3500 if clicks <= 1 else 4000)
             shot2 = await page.screenshot()
             a1, a2 = analyse(shot1), analyse(shot2)
             res.update(status=status, page_title=title, text=text[:160], first=a1, after_click=a2, errors=len(errs), failed_requests=len(failed),
@@ -106,7 +108,10 @@ async def probe(browser, t, wait_ms, shots_dir, sem):
             else:
                 res.update(verdict='ok')
             if shots_dir:
-                save_shot(shot2 if (a1['blank'] and not a2['blank']) else shot1, os.path.join(shots_dir, re.sub(r'[^A-Za-z0-9._-]+', '_', t['key'])[-90:] + '.jpg'))
+                base = os.path.join(shots_dir, re.sub(r'[^A-Za-z0-9._-]+', '_', t['key'])[-90:])
+                save_shot(shot2 if (a1['blank'] and not a2['blank']) else shot1, base + '.jpg', shot_w)
+                if clicks > 1:
+                    save_shot(shot1, base + '_a.jpg', shot_w); save_shot(shot2, base + '_b.jpg', shot_w)
         except Exception as e:
             res.update(verdict='timeout', detail=re.sub(r'\s+', ' ', str(e))[:160])
         finally:
@@ -117,13 +122,13 @@ async def probe(browser, t, wait_ms, shots_dir, sem):
         return res
 
 
-async def run(targets, workers, wait_ms, shots_dir, passes=2):
+async def run(targets, workers, wait_ms, shots_dir, passes=2, clicks=1, shot_w=480):
     from playwright.async_api import async_playwright
     async with async_playwright() as p:
         browser = await p.chromium.launch(args=LAUNCH_ARGS)
         sem = asyncio.Semaphore(workers)
         done = {}
-        first = await asyncio.gather(*[probe(browser, t, wait_ms, shots_dir, sem) for t in targets])
+        first = await asyncio.gather(*[probe(browser, t, wait_ms, shots_dir, sem, clicks, shot_w) for t in targets])
         for r in first:
             r['pass1'] = r['verdict']; done[r['key']] = r
         print('pass 1:', dict(collections.Counter(r['verdict'] for r in first)), flush=True)
@@ -131,7 +136,7 @@ async def run(targets, workers, wait_ms, shots_dir, passes=2):
             again = [t for t in targets if done[t['key']]['verdict'] != 'ok']
             if again:
                 await asyncio.sleep(20)
-                second = await asyncio.gather(*[probe(browser, t, wait_ms * 2, shots_dir, sem) for t in again])
+                second = await asyncio.gather(*[probe(browser, t, wait_ms * 2, shots_dir, sem, clicks, shot_w) for t in again])
                 for r in second:
                     r['pass1'] = done[r['key']]['pass1']; done[r['key']] = r
                 print('pass 2 (retry of %d):' % len(again), dict(collections.Counter(r['verdict'] for r in second)), flush=True)
@@ -158,10 +163,14 @@ def main(argv=None):
     ap.add_argument('--wait', type=int, default=9000, help='milliseconds to let a page load before the first photo')
     ap.add_argument('--limit', type=int, default=0)
     ap.add_argument('--passes', type=int, default=2)
+    ap.add_argument('--only', default='', help='text file listing the lesson folders (or addresses) to test; others are skipped')
+    ap.add_argument('--clicks', type=int, default=1, help='how many times to click while testing (confirm runs use 4)')
+    ap.add_argument('--shot-width', type=int, default=480)
+    ap.add_argument('--tag', default='', help='added to the results file name, e.g. confirm')
     a = ap.parse_args(argv)
 
     os.makedirs(a.out, exist_ok=True)
-    shots = os.path.join(a.out, 'shots-' + a.mode); os.makedirs(shots, exist_ok=True)
+    shots = os.path.join(a.out, 'shots-' + a.mode + (('-' + a.tag) if a.tag else '')); os.makedirs(shots, exist_ok=True)
     srv = None
     if a.mode == 'ours':
         targets = read_games(a.index)
@@ -175,13 +184,16 @@ def main(argv=None):
             shutil.copytree(os.path.join(res, d), os.path.join(site, 'games', d))
         srv, base = serve(site)
         targets = [{'key': d, 'title': d, 'url': '%s/games/%s/' % (base, d)} for d in names]
+    if a.only:
+        want = [l.strip() for l in open(a.only) if l.strip() and not l.startswith('#')]
+        targets = [t for t in targets if t['key'] in want]
     if a.limit:
         targets = targets[:a.limit]
     print('testing %d pages (%s)' % (len(targets), a.mode), flush=True)
-    results = asyncio.run(run(targets, a.workers, a.wait, shots, a.passes))
+    results = asyncio.run(run(targets, a.workers, a.wait, shots, a.passes, a.clicks, a.shot_width))
     summary = dict(collections.Counter(r['verdict'] for r in results))
     json.dump({'mode': a.mode, 'when': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), 'summary': summary, 'results': results},
-              open(os.path.join(a.out, 'results-%s.json' % a.mode), 'w', encoding='utf-8'), indent=1, ensure_ascii=False)
+              open(os.path.join(a.out, 'results-%s.json' % (a.mode + (('-' + a.tag) if a.tag else ''))), 'w', encoding='utf-8'), indent=1, ensure_ascii=False)
     print('summary:', summary)
     if srv:
         srv.shutdown()

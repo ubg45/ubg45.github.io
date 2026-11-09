@@ -1,0 +1,45 @@
+name: Confirm classroom-15x games (long test)
+# A slower, stricter second look at the classroom-15x games that passed the first test: waits longer, clicks several times and keeps bigger photos.
+# Runs when tools/confirm-request.txt changes on main (or by hand). Results go to the branch "verify-confirm".
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [tools/confirm-request.txt]
+permissions:
+  contents: write
+concurrency:
+  group: verify-confirm
+  cancel-in-progress: false
+jobs:
+  confirm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 170
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch classroom-15x
+        uses: actions/checkout@v4
+        with:
+          repository: ubg45/classroom-15x
+          path: _c15x
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser
+        run: |
+          pip install playwright pillow
+          python -m playwright install --with-deps chromium
+      - name: Long test
+        run: python tools/verify-games.py --mode lessons --lessons _c15x --out verify-out --workers 4 --wait 22000 --clicks 4 --passes 1 --shot-width 720 --only tools/confirm-lessons.txt --tag confirm
+      - name: Publish results
+        run: |
+          cp -r verify-out /tmp/verify-out
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch --orphan verify-confirm
+          git rm -rf --quiet . 2>/dev/null || true
+          rm -rf _c15x verify-out
+          cp -r /tmp/verify-out/. .
+          git add -A
+          git commit -q -m "Long test results $(date -u +%F)"
+          git push -f origin verify-confirm

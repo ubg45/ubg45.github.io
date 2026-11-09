@@ -12,7 +12,7 @@
 var VERSION = 'ubg45-sw-v2';
 var PAGES = VERSION + '-pages', FILES = VERSION + '-files';
 var MAX_FILES = 220;
-var SCOPE = self.registration.scope;                       // e.g. https://ubg45.github.io/ubg45/
+var SCOPE = self.registration.scope;                       // e.g. https://ubg45.github.io/
 var ASSET = /^(ubg45[a-z0-9-]*\.(?:js|css)|favicon\.(?:svg|ico)|manifest\.webmanifest|(?:fonts|pwa|img)\/.+)$/i;
 
 self.addEventListener('install', function (e) {
