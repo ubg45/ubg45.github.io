@@ -1,0 +1,40 @@
+name: Slow check of the big game (Vice City)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [tools/vicecity-request.txt]
+permissions:
+  contents: write
+concurrency:
+  group: verify-vicecity
+  cancel-in-progress: false
+jobs:
+  vc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: ubg45/classroom-15x
+          path: _c15x
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          pip install playwright pillow
+          python -m playwright install --with-deps chromium
+      - run: python tools/verify-vicecity.py --lessons _c15x --out verify-out --minutes 12
+      - name: Publish
+        run: |
+          cp -r verify-out /tmp/vo
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch --orphan vicecity-results
+          git rm -rf --quiet . 2>/dev/null || true
+          rm -rf _c15x verify-out
+          cp -r /tmp/vo/. .
+          git add -A
+          git commit -q -m "Vice City check $(date -u +%F)"
+          git push -f origin vicecity-results
