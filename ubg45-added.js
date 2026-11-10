@@ -502,5 +502,6 @@
   "superhot": "2026-11-10",
   "super liquid soccer": "2026-11-10",
   "temple of boom": "2026-11-10",
-  "cat trap": "2026-11-10"
+  "cat trap": "2026-11-10",
+  "vice city": "2026-11-10"
 };

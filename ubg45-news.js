@@ -10,10 +10,11 @@
  */
 (window.UBG45 = window.UBG45 || {}).news = [
   {
-    date: '2026-11-10', tag: 'update', title: 'Games clear-out: dead games gone, 68 working games added',
-    text: 'We tested every game in a real browser. Games whose pages no longer exist are off the site, and 68 games that we tested and confirmed working have taken their place.',
+    date: '2026-11-10', tag: 'update', title: 'Games clear-out: dead games gone, 69 working games added',
+    text: 'We tested every game in a real browser. Games whose pages no longer exist are off the site, and 69 games that we tested and confirmed working have taken their place.',
     points: [
       'New: 10 Minutes Till Dawn, Among Us, Rocket Soccer Derby, SUPERHOT, Learn to Fly, Moto X3M, Papa\'s Pizzeria, Cut the Rope, Doodle Jump, Fireboy and Watergirl and many more.',
+      'Vice City is here too. The first time you open it, it downloads about 630 MB (your device keeps it after that), so use a good connection.',
       'These games now run from UBG45 itself, so they stay up even when other sites disappear.',
       'Several tiles with missing pictures now have real artwork.'
     ]
