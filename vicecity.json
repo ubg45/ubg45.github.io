@@ -1,0 +1,227 @@
+{
+ "log": [
+  {
+   "t": 20,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_01.png"
+  },
+  {
+   "t": 40,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_02.png"
+  },
+  {
+   "t": 60,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_03.png"
+  },
+  {
+   "t": 80,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_04.png"
+  },
+  {
+   "t": 100,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_05.png"
+  },
+  {
+   "t": 120,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_06.png"
+  },
+  {
+   "t": 140,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_07.png"
+  },
+  {
+   "t": 161,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_08.png"
+  },
+  {
+   "t": 182,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_09.png"
+  },
+  {
+   "t": 204,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_10.png"
+  },
+  {
+   "t": 225,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_11.png"
+  },
+  {
+   "t": 256,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_12.png"
+  },
+  {
+   "t": 279,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_13.png"
+  },
+  {
+   "t": 301,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_14.png"
+  },
+  {
+   "t": 324,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_15.png"
+  },
+  {
+   "t": 345,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_16.png"
+  },
+  {
+   "t": 367,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_17.png"
+  },
+  {
+   "t": 388,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_18.png"
+  },
+  {
+   "t": 409,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_19.png"
+  },
+  {
+   "t": 451,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_20.png"
+  },
+  {
+   "t": 480,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_21.png"
+  },
+  {
+   "t": 519,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_22.png"
+  },
+  {
+   "t": 548,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_23.png"
+  },
+  {
+   "t": 585,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_24.png"
+  },
+  {
+   "t": 616,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_25.png"
+  },
+  {
+   "t": 671,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_26.png"
+  },
+  {
+   "t": 711,
+   "text": "",
+   "visible": [
+    "CANVAS:1280x720"
+   ],
+   "shot": "vc_27.png"
+  }
+ ],
+ "errors": [
+  "GamepadEmulator is not defined"
+ ],
+ "failed": [
+  "https://cdn.jsdelivr.net/cdn-cgi/rum?",
+  "https://cdn.jsdelivr.net/gh/web-ports/vice-city@796678be4ed26a13c1256be98781ca9b90beb981/gamepademulator.js"
+ ]
+}
