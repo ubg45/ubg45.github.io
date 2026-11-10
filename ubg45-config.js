@@ -44,7 +44,7 @@
     MIN_CATEGORY_SIZE: 3, // categories with fewer games are hidden
 
     // Collage on the homepage. The first two become the large tiles.
-    featured: ['Level 67', 'Moto X3M', 'Slope', 'Geometry Dash', 'Subway Surfers', 'Drift Hunters', 'Cookie Clicker',
+    featured: ['Moto X3M', 'Slope', 'Geometry Dash', 'Subway Surfers', 'Drift Hunters', 'Cookie Clicker',
       'Among Us', 'Eggy Car', 'Block Blast', 'Retro Bowl', '1v1.lol', 'Tunnel Rush', 'Run 3', 'Tiny Fishing',
       'Steal a Brainrot', 'Basket Random', 'Stickman Hook', 'Temple Run 2', 'Crossy Road', 'Drive Mad',
       'Snow Rider 3D', 'Paper.io 2', 'OvO', 'Eaglercraft 1.12.2', 'Getting Over It', 'Monkey Mart', 'Fruit Ninja',
@@ -52,7 +52,7 @@
       'Red Ball 4', 'Wordle Unlimited', '2048', 'Raft Wars', 'Drift Boss', 'Soccer Legends 2021', 'Flappy Bird'],
 
     // Hand-picked favourites (not live statistics). Used for the "Popular" row until real Trending data exists.
-    trending: ['Slope', 'Moto X3M', 'Subway Surfers', 'Geometry Dash', 'Drift Hunters', 'Cookie Clicker', 'Level 67',
+    trending: ['Slope', 'Moto X3M', 'Subway Surfers', 'Geometry Dash', 'Drift Hunters', 'Cookie Clicker',
       'Among Us', 'Block Blast', 'Eggy Car', 'Tunnel Rush', 'Retro Bowl', '1v1.lol', 'Run 3', 'Tiny Fishing',
       'Steal a Brainrot', 'Basket Random', 'Stickman Hook', 'Temple Run 2', 'Crossy Road', 'Drive Mad',
       'Snow Rider 3D', 'Paper.io 2', 'OvO', 'Eaglercraft 1.12.2', 'Getting Over It', 'Monkey Mart', 'Fruit Ninja'],
