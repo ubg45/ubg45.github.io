@@ -1,0 +1,7 @@
+200 https://ubg45.github.io/
+404 https://ubg45.github.io/ubg45/
+404 https://ubg45.github.io/ubg45/index.html
+404 https://ubg45.github.io/games/
+404 https://ubg45.github.io/ubg45/games/territorial-io/
+404 https://ubg45.github.io/ubg45/ubg45.css
+origin	https://github.com/ubg45/ubg45.github.io (fetch)
