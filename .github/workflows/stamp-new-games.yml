@@ -4,7 +4,7 @@ name: Stamp new games
 on:
   push:
     branches: [main]
-    paths: [index.html, ubg45.css, ubg45.js, ubg45-config.js, ubg45-news.js, ubg45-stats.js, ubg45-social.js, ubg45-health.js, ubg45-settings.js]
+    paths: [index.html, ubg45.css, ubg45.js, ubg45-config.js, ubg45-news.js, ubg45-stats.js, ubg45-social.js, ubg45-info.js, ubg45-gametab.js, ubg45-health.js, ubg45-settings.js]
 permissions:
   contents: write
 jobs:

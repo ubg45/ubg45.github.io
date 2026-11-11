@@ -30,7 +30,7 @@ def load():
     m = re.search(r'\)\.added\s*=\s*(\{.*\});', open(OUT, encoding='utf-8').read(), re.S)
     return json.loads(m.group(1)) if m else {}
 
-ASSETS = ['ubg45.css', 'ubg45-settings.js', 'ubg45-config.js', 'ubg45-added.js', 'ubg45-news.js', 'ubg45-stats.js', 'ubg45-social.js', 'ubg45-health.js', 'ubg45.js']
+ASSETS = ['ubg45.css', 'ubg45-settings.js', 'ubg45-config.js', 'ubg45-added.js', 'ubg45-news.js', 'ubg45-stats.js', 'ubg45-social.js', 'ubg45-info.js', 'ubg45-gametab.js', 'ubg45-health.js', 'ubg45.js']
 
 def bust():
     """Add/refresh ?v=<hash> on the site's own css/js tags so browsers always fetch the newest files."""

@@ -202,6 +202,10 @@
   }
   applyBadges();
 
+  /* Like and share animations (ubg45-gametab.js) and the style of the game information panel. */
+  var FX = U.makeFx ? U.makeFx() : { like: function () {}, share: function () {}, done: function () {}, press: function () {}, roll: function (e, t) { e.textContent = t; }, burst: function () {} };
+  if (U.fxCss) { var fxStyle = document.createElement('style'); fxStyle.textContent = U.fxCss + (U.infoCss || ''); document.head.appendChild(fxStyle); }
+
   /* Small confirmation message at the bottom of the page. */
   var toastEl = el('div', 'toast'), toastT = 0;
   toastEl.setAttribute('role', 'status'); toastEl.setAttribute('aria-live', 'polite'); body.appendChild(toastEl);
@@ -265,6 +269,7 @@
       var gs = byTitle[norm(sh.closest('.game-card').getAttribute('data-title'))]; if (gs) shareGame(gs);
       sh.classList.remove('pop'); void sh.offsetWidth; sh.classList.add('pop');
       sh.addEventListener('animationend', function () { sh.classList.remove('pop'); }, { once: true });
+      FX.burst(sh, 'share');
       return;
     }
     var b = e.target.closest && e.target.closest('.fav-btn');
@@ -287,7 +292,7 @@
     var originalOpen = window.openGame;
     window.openGame = function (url) {
       var g = byUrl[url];
-      U.currentGame = g ? { title: g.title, id: ST.slug(g.title), share: U.shareUrl ? U.shareUrl(ST.slug(g.title)) : '' } : null;   // read by U.gameFs while the game tab is written
+      U.currentGame = g ? { title: g.title, id: ST.slug(g.title), share: U.shareUrl ? U.shareUrl(ST.slug(g.title)) : '', facts: U.gameFacts ? U.gameFacts(g) : null } : null;   // read by U.gamePage / U.gameFs while the game tab is written
       if (g) { ST.begin(g.title); }
       if (g) { recents = [g.title].concat(recents.filter(function (t) { return t !== g.title; })).slice(0, C.RECENT_MAX); store(RECENT_KEY, recents); setTimeout(function () { if (typeof refreshRecent === 'function') refreshRecent(); }, 350); }
       try { return originalOpen.apply(this, arguments); } finally { U.currentGame = null; }
@@ -833,6 +838,17 @@
     });
     return out;
   }
+  /* Everything the information panel shows about a game (used by the game tab and by the game page). */
+  function gameFacts(g) {
+    var id = ST.slug(g.title), im = $('img', g.el), src = im && im.getAttribute('src');
+    var info = (U.info && (U.info[id] || U.info[ST.slug(g.title.replace(/\s*[-:].*$/, ''))])) || {};
+    var related = relatedGames(g, 8).map(function (r) { var ri = $('img', r.el); return { title: r.title, url: r.url, thumb: ri && ri.getAttribute('src') }; });
+    return {
+      title: g.title, id: id, likes: likeOf(g), social: !!SOC.on, isNew: !!g.isNew, added: ST.addedOn(g.title) || '', info: info, related: related,
+      cats: catDefs.filter(function (d) { return d.games.indexOf(g) >= 0 && !d.fallback; }).map(function (d) { return d.name; }), thumb: src
+    };
+  }
+  U.gameFacts = gameFacts;
   function buildPlay(slug) {
     var g = bySlug[slug];
     playView.innerHTML = '';
@@ -857,7 +873,7 @@
       '<div class="hero-actions"><button class="btn-play" id="playGo" type="button">' + IC.play + 'Play now</button>' +
       (SOC.on ? '<button class="btn-ghost sm" id="playLike" type="button" aria-pressed="false">' + IC.like + '<span class="lbl">Like</span><span class="cnt"></span></button>' : '') +
       '<button class="btn-ghost sm" id="playFav" type="button" aria-pressed="false" data-title="' + esc(g.title) + '">' + IC.fav + '<span class="lbl">Favourite</span></button>' +
-      '<button class="btn-ghost sm" id="playCopy" type="button">' + IC.link + '<span class="lbl">Copy link</span></button>' +
+      '<button class="btn-ghost sm" id="playCopy" type="button">' + (U.infoIcons ? U.infoIcons.share : IC.link) + '<span class="lbl">Share</span></button>' +
       (SOC.on ? '<button class="btn-ghost sm" id="playReport" type="button">' + IC.flag + '<span class="lbl">Report</span></button>' : '') +
       '</div></div>' + (facts ? '<div class="hero-facts">' + facts + '</div>' : '');
     playView.appendChild(sec);
@@ -872,27 +888,36 @@
     art.addEventListener('click', play);
     art.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(); } });
     $('#playFav', sec).addEventListener('click', function () { toggleFav(g.title); });
-    $('#playCopy', sec).addEventListener('click', function () {
-      SOC.copy(U.shareUrl(id)).then(function (ok) { toast(ok ? 'Link copied. Paste it to share ' + g.title + '.' : 'Could not copy the link. Copy it from the address bar.'); });
+    var cb = $('#playCopy', sec), cbLbl = $('.lbl', cb);
+    cb.addEventListener('click', function () {
+      FX.share(cb);
+      SOC.copy(U.shareUrl(id)).then(function (ok) {
+        if (ok) { FX.done(cb); cbLbl.textContent = 'Copied'; setTimeout(function () { cbLbl.textContent = 'Share'; }, 1900); }
+        toast(ok ? 'Link copied. Paste it to share ' + g.title + '.' : 'Could not copy the link. Copy it from the address bar.');
+      });
     });
     var lb = $('#playLike', sec);
     function paintLike() {
       if (!lb) return;
       var on = SOC.isLiked(id), c = likeOf(g);
       lb.setAttribute('aria-pressed', String(on)); $('.lbl', lb).textContent = on ? 'Liked' : 'Like';
-      $('.cnt', lb).textContent = c > 0 ? fmtN(c) : ''; $('.cnt', lb).hidden = !(c > 0);
+      $('.cnt', lb).textContent = fmtN(c); $('.cnt', lb).hidden = false;
+      var all = $$('.igLikes', playView); all.forEach(function (x) { x.textContent = fmtN(c); });
     }
     if (lb) {
       paintLike();
       lb.addEventListener('click', function () {
         var want = !SOC.isLiked(id); lb.disabled = true;
-        lb.classList.remove('pop'); void lb.offsetWidth; lb.classList.add('pop');
+        FX.like(lb, want);
+        var cntEl = $('.cnt', lb), cur0 = likeCounts[id] || 0, shownN = Math.max(0, cur0 + (want ? 1 : -1));
+        lb.setAttribute('aria-pressed', String(want)); $('.lbl', lb).textContent = want ? 'Liked' : 'Like';
+        FX.roll(cntEl, fmtN(shownN), want);                                  // the number moves straight away; the server confirms below
         SOC.setLike(id, want).then(function (r) {
           lb.disabled = false;
           if (!r.ok) { toast('Could not save your like. Check your connection.'); paintLike(); return; }
           var cur = likeCounts[id] || 0, nx = Math.max(0, cur + (r.liked ? 1 : -1));
           if (nx) likeCounts[id] = nx; else delete likeCounts[id];
-          applyLikes(); homeView._cols = 0; paintLike();                       // the home page rebuilds next time it is shown
+          applyLikes(); homeView._cols = 0; setTimeout(paintLike, 420);       // the home page rebuilds next time it is shown
           toast(r.liked ? 'Liked. Thanks!' : 'Like removed.');
         });
       });
@@ -914,6 +939,7 @@
         });
       });
     }
+    var about = el('div', 'play-info'); about.innerHTML = U.infoHtml ? U.infoHtml(gameFacts(g)) : ''; playView.appendChild(about);
     var rel = relatedGames(g, C.ROW_MAX || 24);
     if (rel.length >= 3) {
       var row = rowSection('More like this', rel, cats[0] ? '#/category/' + cats[0].id : '', null);

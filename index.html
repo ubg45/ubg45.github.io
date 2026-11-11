@@ -826,22 +826,20 @@
 function openGame(url, title) {
   var newTab = window.open('about:blank', '_blank');
   if (!newTab) { window.location.href = url; return; }
+  var safeUrl = String(url).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+  var page = window.UBG45 && UBG45.gamePage ? UBG45.gamePage(url)
+    : '<style>body{margin:0;overflow:hidden}iframe{width:100vw;height:100vh;border:none}</style><iframe src="' + safeUrl + '" frameborder="0" allow="fullscreen; autoplay; gamepad; clipboard-write" allowfullscreen></iframe>' + (window.UBG45 && UBG45.gameFs ? UBG45.gameFs() : '');
   newTab.document.write(`
     <!DOCTYPE html>
-    <html lang="en">
+    <html lang="en"${document.documentElement.getAttribute('data-theme') === 'dark' ? ' data-theme="dark"' : ''}>
     <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
       <title>Google Docs</title>
       ${window.UBG45 && UBG45.gameHead ? UBG45.gameHead() : ''}
-      <style>
-        body { margin: 0; overflow: hidden; }
-        iframe { width: 100vw; height: 100vh; border: none; }
-      </style>
     </head>
     <body>
-      <iframe src="${url}" frameborder="0" allow="fullscreen; autoplay; gamepad; clipboard-write" allowfullscreen></iframe>
-      ${window.UBG45 && UBG45.gameFs ? UBG45.gameFs() : ''}
+      ${page}
     </body>
     </html>
   `);
@@ -1203,12 +1201,14 @@ rainbowElements.forEach(text => {
 }
 </style>
 
-<script src="ubg45-config.js?v=92210915" defer></script>
+<script src="ubg45-config.js?v=0e88324e" defer></script>
 <script src="ubg45-added.js?v=2d5f174c" defer></script>
-<script src="ubg45-news.js?v=37fcdef9" defer></script>
+<script src="ubg45-news.js?v=fbf92af3" defer></script>
 <script src="ubg45-stats.js?v=de74d8aa" defer></script>
 <script src="ubg45-health.js?v=7385aed2" defer></script>
 <script src="ubg45-social.js?v=1ea14bc4" defer></script>
-<script src="ubg45.js?v=87c7de05" defer></script>
+<script src="ubg45-info.js?v=06d8785f" defer></script>
+<script src="ubg45-gametab.js?v=6f0868cd" defer></script>
+<script src="ubg45.js?v=7566b40e" defer></script>
 </body>
 </html>

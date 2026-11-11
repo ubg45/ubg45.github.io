@@ -10,6 +10,16 @@
  */
 (window.UBG45 = window.UBG45 || {}).news = [
   {
+    date: '2026-11-11', tag: 'feature', title: 'New game page: info, controls and what it works on',
+    text: 'When you open a game, you now get more than the game. Scroll down (or press Info) to read about it.',
+    points: [
+      'Under every game: the controls, how many players, which devices it works on (laptop, Chromebook, iPad, phone) and, where we know it, when the original game came out and who made it.',
+      'The worldwide like count is now shown on every game, with a new animated Like button. Share has a new animation too.',
+      'The same information is on each game\'s own page, so it shows up when you send a friend the link.',
+      'More games like this: open another game from the bottom of the page.'
+    ]
+  },
+  {
     date: '2026-11-10', tag: 'update', title: 'Games clear-out: dead games gone, 69 working games added',
     text: 'We tested every game in a real browser. Games whose pages no longer exist are off the site, and 69 games that we tested and confirmed working have taken their place.',
     points: [

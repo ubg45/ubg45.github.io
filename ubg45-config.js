@@ -32,7 +32,7 @@
     },
     // LIKES: anonymous, one per browser per game (see ubg45-social.js). Nothing is shown until real likes exist.
     likes: {
-      MIN_CHIP: 3,          // a tile shows its heart count once a game has at least this many likes
+      MIN_CHIP: 1,          // a tile shows its like count once a game has at least this many likes
       MIN_ROW_LIKES: 2,     // a game needs this many likes to appear in "Most liked" ...
       MIN_ROW_GAMES: 3      // ... and the row only appears once this many games qualify
     },
