@@ -185,14 +185,21 @@
     '.ig-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start}',
     '.ig-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow);transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .25s}',
     '.ig-card:hover{transform:translateY(-3px)}',
+    '.ig-grid>.ig-card{animation:igCard .55s cubic-bezier(.2,.8,.2,1) both}.ig-grid>.ig-card:nth-child(2){animation-delay:.08s}.ig-grid>.ig-card:nth-child(3){animation-delay:.16s}',
+    '@keyframes igCard{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}',
+    '.ig-dev li{animation:igPill .5s cubic-bezier(.2,.8,.2,1) both}.ig-dev li:nth-child(2){animation-delay:.07s}.ig-dev li:nth-child(3){animation-delay:.14s}.ig-dev li:nth-child(4){animation-delay:.21s}',
+    '@keyframes igPill{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}',
+    '.ig-lk .ic{transition:transform .6s cubic-bezier(.34,1.56,.64,1)}.ig-card:hover .ig-lk .ic{transform:rotate(180deg)}',
     '.ig-card h3{margin:0 0 10px;font:700 12.5px/1 var(--display);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}',
     '.ig-card dl{margin:0;display:grid;gap:0}.ig-card dl>div{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-top:1px solid var(--line-2);font-size:14.5px}',
     '.ig-card dl>div:first-child{border-top:0;padding-top:2px}.ig-card dt{color:var(--muted)}.ig-card dd{margin:0;font-weight:600;text-align:right}',
     '.ig-new{font-style:normal;font-size:11px;font-weight:700;color:#fff;background:var(--new);padding:2px 7px;border-radius:999px;margin-left:4px;vertical-align:1px}',
     '.ig-lk{display:inline-flex;align-items:center;gap:6px;color:#e0405f}.ig-lk .ic{width:17px;height:17px}.ig-lk b{color:var(--ink);font-variant-numeric:tabular-nums}',
-    '.ig-ctl,.ig-dev{list-style:none;margin:0;padding:0;display:grid;gap:9px}',
-    '.ig-ctl li{display:flex;align-items:center;gap:12px;font-size:14.5px}.ig-ctl .keys{display:flex;flex-wrap:wrap;align-items:center;gap:4px;min-width:112px}.ig-ctl .act{color:var(--ink-2)}.ig-ctl .plain{color:var(--ink-2);line-height:1.5}',
-    '.ig-ctl kbd{font:700 12.5px/1 var(--font);padding:6px 9px;border-radius:8px;background:var(--soft);color:var(--ink);box-shadow:inset 0 -2px 0 var(--soft-3),0 0 0 1px var(--line);white-space:nowrap}',
+    '.ig-dev{list-style:none;margin:0;padding:0;display:grid;gap:9px}',
+    '.ig-ctl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:minmax(0,max-content) minmax(0,1fr);gap:10px 14px;align-items:center}',
+    '.ig-ctl li{display:contents;font-size:14.5px}.ig-ctl .keys{display:flex;flex-wrap:wrap;align-items:center;gap:4px;max-width:210px}.ig-ctl .act{color:var(--ink-2);line-height:1.35}.ig-ctl .plain{grid-column:1/-1;color:var(--ink-2);line-height:1.5}',
+    '.ig-ctl kbd{font:700 12.5px/1 var(--font);padding:6px 9px;border-radius:8px;background:var(--soft);color:var(--ink);box-shadow:inset 0 -2px 0 var(--soft-3),0 0 0 1px var(--line);white-space:nowrap;cursor:default;transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .15s;user-select:none}',
+    '.ig-ctl kbd:hover{transform:translateY(-2px)}.ig-ctl kbd:active{transform:translateY(1px);box-shadow:inset 0 0 0 var(--soft-3),0 0 0 1px var(--line);transition-duration:.05s}',
     '.ig-ctl kbd.ms{background:var(--blue-soft);color:var(--blue);box-shadow:inset 0 -2px 0 rgba(47,91,255,.25),0 0 0 1px rgba(47,91,255,.18)}',
     '.ig-ctl .or{font-size:11px;color:var(--muted);padding:0 1px}',
     '.ig-dev li{display:flex;align-items:center;gap:11px}.ig-dev .di{width:34px;height:34px;border-radius:10px;background:var(--soft);display:grid;place-items:center;flex:none;color:var(--ink-2)}.ig-dev .di svg{width:19px;height:19px}',
@@ -208,8 +215,8 @@
     '.ig-rel .rn{display:block;margin-top:6px;font-size:13px;font-weight:600;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
     '.ig-credit{margin:18px 0 0;font-size:12.5px;color:var(--muted);text-align:center}',
     '@media (max-width:980px){.ig-grid{grid-template-columns:1fr 1fr}.ig-grid>.ig-card:last-child{grid-column:1/-1}}',
-    '@media (max-width:640px){.ig-grid{grid-template-columns:1fr}.ig-h h2{font-size:19px}.ig-ctl .keys{min-width:96px}}',
-    '@media (prefers-reduced-motion:reduce){.ig,.ig-card,.ig-rel .rel{animation:none;transition:none}}'
+    '@media (max-width:640px){.ig-grid{grid-template-columns:1fr}.ig-h h2{font-size:19px}.ig-ctl{grid-template-columns:1fr;gap:4px}.ig-ctl .act{margin:0 0 8px}.ig-ctl .keys{max-width:none}}',
+    '@media (prefers-reduced-motion:reduce){.ig,.ig-card,.ig-rel .rel,.ig-grid>.ig-card,.ig-dev li,.ig-ctl kbd,.ig-lk .ic{animation:none!important;transition:none!important}}'
   ].join('');
 
   /* ---------------------------------------------------------------- the game tab */
