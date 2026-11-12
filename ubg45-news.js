@@ -10,6 +10,17 @@
  */
 (window.UBG45 = window.UBG45 || {}).news = [
   {
+    date: '2026-11-12', tag: 'update', title: 'A new look: glowing backdrop, 3D tiles and smoother details',
+    text: 'The whole site got a visual upgrade. The layout is the same, it just feels more alive.',
+    points: [
+      'Game tiles now tilt towards your mouse with a soft light that follows it.',
+      'A slowly moving colour glow sits behind every page (light and dark).',
+      'Headings, the menu, News, Settings and the footer have new accents, and a thin line under the top bar shows how far down the page you are.',
+      'The game of the day art floats, and the Play button gives a gentle pulse.',
+      'On phones the heart and link buttons are smaller so they no longer cover game names.'
+    ]
+  },
+  {
     date: '2026-11-11', tag: 'feature', title: 'New game page: info, controls and what it works on',
     text: 'When you open a game, you now get more than the game. Scroll down (or press Info) to read about it.',
     points: [
