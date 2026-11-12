@@ -583,17 +583,16 @@
       live.forEach(function (a) { a.cancel(); }); live = [];
       var t = ++token;
       if (!animate || !sec.animate || (still && still.matches)) { fill(i); return; }
-      live = [
-        copy.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateX(-18px)' }], { duration: 200, easing: 'ease-in', fill: 'forwards' }),
-        art.animate([{ opacity: 1, transform: 'rotate(-4deg)' }, { opacity: 0, transform: 'rotate(-14deg) scale(.82)' }], { duration: 200, easing: 'ease-in', fill: 'forwards' }),
-        bg.animate([{ opacity: .55 }, { opacity: 0 }], { duration: 200, fill: 'forwards' })
-      ];
+      var parts = $$(':scope > *', copy), E_IN = 'cubic-bezier(.22, 1, .36, 1)', E_SPRING = 'cubic-bezier(.34, 1.56, .64, 1)';
+      live = parts.map(function (n, k) { return n.animate([{ opacity: 1, transform: 'none', filter: 'blur(0)' }, { opacity: 0, transform: 'translateY(-10px)', filter: 'blur(4px)' }], { duration: 170, delay: k * 18, easing: 'ease-in', fill: 'forwards' }); });
+      live.push(art.animate([{ opacity: 1, transform: 'rotate(-4deg)' }, { opacity: 0, transform: 'perspective(600px) rotateY(80deg) rotate(-4deg) scale(.86)' }], { duration: 230, easing: 'ease-in', fill: 'forwards' }));
+      live.push(bg.animate([{ opacity: .55 }, { opacity: 0 }], { duration: 230, fill: 'forwards' }));
       Promise.all(live.map(function (a) { return a.finished; })).then(function () {
         if (t !== token) return;
         fill(i); live.forEach(function (a) { a.cancel(); }); live = [];
-        copy.animate([{ opacity: 0, transform: 'translateX(18px)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.22, 1, .36, 1)' });
-        art.animate([{ opacity: 0, transform: 'rotate(8deg) scale(.8)' }, { opacity: 1, transform: 'rotate(-4deg)' }], { duration: 520, easing: 'cubic-bezier(.34, 1.56, .64, 1)' });
-        bg.animate([{ opacity: 0 }, { opacity: .55 }], { duration: 520 });
+        $$(':scope > *', copy).forEach(function (n, k) { n.animate([{ opacity: 0, transform: 'translateY(18px)', filter: 'blur(5px)' }, { opacity: 1, transform: 'none', filter: 'blur(0)' }], { duration: 520, delay: k * 70, easing: E_IN, fill: 'backwards' }); });
+        art.animate([{ opacity: 0, transform: 'perspective(600px) rotateY(-80deg) rotate(-10deg) scale(.86)' }, { opacity: 1, transform: 'rotate(-4deg)' }], { duration: 700, easing: E_SPRING });
+        bg.animate([{ opacity: 0, transform: 'scale(1.25)' }, { opacity: .55, transform: 'scale(1.1)' }], { duration: 900, easing: E_IN });
       }).catch(function () { /* interrupted by a newer change */ });
     }
     fill(0);
@@ -730,11 +729,17 @@
 
   /* ------------------------------------------------------------------ motion: a page you open settles in, its first tiles pop up one after another */
   var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
-  function popTiles(container, max) {
+  var waveAt = 0;
+  function popTiles(container, max, resume) {                  // resume: ms already played, when the page is rebuilt mid-wave (late data) so tiles carry on instead of jumping
     if (!container || (calm && calm.matches)) return;
+    if (!resume) waveAt = Date.now();
     var cards = $$(':scope > .game-card', container).slice(0, max || 24);
-    cards.forEach(function (c, i) { c.style.setProperty('--d', Math.min(i, 16) * 26 + 'ms'); c.classList.add('tile-in'); });
-    setTimeout(function () { cards.forEach(function (c) { c.classList.remove('tile-in'); c.style.removeProperty('--d'); }); }, 1300);
+    var box = container.getBoundingClientRect(), tw = Math.max(60, (cards[0] && cards[0].getBoundingClientRect().width) || 130);
+    cards.forEach(function (c, i) {
+      var r = c.getBoundingClientRect(), col = Math.round((r.left - box.left) / tw), row = Math.round((r.top - box.top) / tw);
+      c.style.setProperty('--d', Math.min(Math.max(col, 0) + Math.max(row, 0) * 1.4 + (isFinite(col + row) ? 0 : i), 14) * 42 - (resume || 0) + 'ms'); c.classList.add('tile-in');   // a wave that sweeps from the top-left corner
+    });
+    setTimeout(function () { cards.forEach(function (c) { c.classList.remove('tile-in'); c.style.removeProperty('--d'); }); }, 1700);
   }
   function settleIn(node) {
     if (!node || (calm && calm.matches)) return;
@@ -749,7 +754,14 @@
   var lastKey = null;
   function enterView() {
     var key = route.name + ':' + route.id;
-    if (key === lastKey) return;                         // data arriving (likes, trending) re-renders the same page: no replay
+    if (key === lastKey) {                               // data arriving (likes, trending) re-renders the same page: no replay, but a wave still under way carries on
+      var el0 = Date.now() - waveAt;
+      if (waveAt && el0 < 1500) {
+        if (route.name === 'home') popTiles($('.collage', homeView), 16, el0);
+        else if ($('#viewGrid')) popTiles($('#viewGrid'), 28, el0);
+      }
+      return;
+    }
     lastKey = key;
     if (route.name === 'home') { popTiles($('.collage', homeView), 16); return; }
     if (route.name === 'category' || route.name === 'new' || route.name === 'popular' || route.name === 'favourites' || route.name === 'recent' || route.name === 'liked') { settleIn(listView); popTiles($('#viewGrid'), 28); }

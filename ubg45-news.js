@@ -10,6 +10,17 @@
  */
 (window.UBG45 = window.UBG45 || {}).news = [
   {
+    date: '2026-11-13', tag: 'update', title: 'Smoother, livelier animations',
+    text: 'Almost everything that moves on the site got a better animation.',
+    points: [
+      'Game tiles sweep in as a wave from the top-left, and tiles further down glide up as you scroll to them.',
+      'The big banner flips to the next game: the picture turns around and the words rise one after another. Its numbers count up when you arrive.',
+      'The search bar lights up with a slowly turning colour ring while you type, and suggestions drop in one by one.',
+      'The menu slides in row by row, cards in News and Settings glow where your mouse is, and the Play button leans toward your cursor.',
+      'Games without a picture yet now get a nicer placeholder tile. If your device is set to reduce motion, all of this stays still.'
+    ]
+  },
+  {
     date: '2026-11-12', tag: 'update', title: 'A new look: glowing backdrop, 3D tiles and smoother details',
     text: 'The whole site got a visual upgrade. The layout is the same, it just feels more alive.',
     points: [

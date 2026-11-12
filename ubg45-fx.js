@@ -3,7 +3,50 @@
   'use strict';
   var fine = false, calm = false;
   try { fine = matchMedia('(hover: hover) and (pointer: fine)').matches; calm = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { /* ignore */ }
-  if (!fine || calm) return;
+  if (calm) return;
+
+  /* Menu rows slide in one after another the first time the page opens. */
+  function stagger() {
+    var nav = document.querySelector('.sidebar'); if (!nav) return;
+    Array.prototype.forEach.call(nav.querySelectorAll('.nav-item'), function (n, i) { n.style.setProperty('--i', Math.min(i, 22)); });
+    nav.classList.add('nav-stagger');
+    setTimeout(function () { nav.classList.remove('nav-stagger'); }, 1600);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', stagger); else stagger();
+
+  /* The numbers in the banner count up once, the first time they appear. */
+  var counted = {};
+  function countUp(b) {
+    var txt = (b.textContent || '').trim(); if (!/^\d{1,5}$/.test(txt) || counted[txt + ':' + (b.parentNode && b.parentNode.textContent)]) return;
+    counted[txt + ':' + (b.parentNode && b.parentNode.textContent)] = 1;
+    var to = +txt, t0 = performance.now(), dur = 900;
+    (function step(t) { var k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3); b.textContent = String(Math.round(to * e)); if (k < 1) requestAnimationFrame(step); else b.textContent = txt; })(t0);
+  }
+  try {
+    new MutationObserver(function (muts) {
+      muts.forEach(function (m) { Array.prototype.forEach.call(m.addedNodes, function (n) { if (n.nodeType === 1 && n.querySelectorAll) Array.prototype.forEach.call(n.querySelectorAll('.hero .fact b'), countUp); }); });
+    }).observe(document.body, { childList: true, subtree: true });
+  } catch (e) { /* ignore */ }
+
+  if (!fine) return;
+
+  /* Light follows the mouse over cards. */
+  var spotSel = '.set-card, .news-body, .play-info .ig-card';
+  document.addEventListener('pointermove', function (e) {
+    var c = e.target.closest && e.target.closest(spotSel); if (!c) return;
+    var r = c.getBoundingClientRect(); c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  }, { passive: true });
+
+  /* Banner buttons lean toward the mouse. */
+  var mag = null;
+  document.addEventListener('pointermove', function (e) {
+    var b = e.target.closest && e.target.closest('.hero .btn-play, .hero .btn-ghost');
+    if (mag && mag !== b) { mag.style.removeProperty('--tx'); mag.style.removeProperty('--ty'); mag = null; }
+    if (!b) return; mag = b;
+    var r = b.getBoundingClientRect(), x = (e.clientX - r.left - r.width / 2) / r.width, y = (e.clientY - r.top - r.height / 2) / r.height;
+    b.style.setProperty('--tx', (x * 10).toFixed(1) + 'px'); b.style.setProperty('--ty', (y * 7).toFixed(1) + 'px');
+  }, { passive: true });
+
   var cur = null, raf = 0, ev = null;
   function reset(c) { if (!c) return; c.classList.remove('tilting'); c.style.removeProperty('--rx'); c.style.removeProperty('--ry'); }
   function apply() {
