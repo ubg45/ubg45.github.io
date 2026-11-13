@@ -1100,3 +1100,6 @@ footer::before { content: ""; position: absolute; left: 0; right: 0; top: 0; hei
   .game-card:hover .thumb-fallback::after { animation: fbBreath 2.4s ease-in-out infinite; }
   @keyframes fbBreath { 50% { scale: 1.12; background: rgba(255, 255, 255, .16); } }
 }
+
+/* Tiles show only the picture, the name, the badges and the favourite heart: no link button and no like count on top of the picture. */
+.game-card .share-btn, .game-card .like-chip { display: none !important; }

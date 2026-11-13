@@ -160,8 +160,7 @@
     c.setAttribute('aria-label', 'Play ' + g.title);
     c.appendChild(el('button', 'fav-btn', '<svg viewBox="0 0 24 24"><path d="M12 21s-8-5.2-8-11a4.6 4.6 0 0 1 8-3 4.6 4.6 0 0 1 8 3c0 5.8-8 11-8 11z"/></svg>')).setAttribute('type', 'button');
     $('.fav-btn', c).setAttribute('tabindex', '-1');
-    var sb = c.appendChild(el('button', 'share-btn', '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/></svg>'));
-    sb.setAttribute('type', 'button'); sb.setAttribute('tabindex', '-1'); sb.setAttribute('aria-label', 'Copy link to ' + g.title); sb.title = 'Copy link';
+    /* (the link/share button on tiles was removed on request: sharing lives in the game tab and on the game page) */
   });
 
   function thumbFallback(img) {
@@ -225,10 +224,7 @@
   function applyLikes() {
     var min = LK.MIN_CHIP || 3;
     catalog.forEach(function (g) {
-      var c = g.el, old = $(':scope > .like-chip', c); if (old) old.remove();
-      var n = likeOf(g); if (n < min) return;
-      var chip = el('span', 'like-chip', HEART + '<b>' + fmtN(n) + '</b>'); chip.title = n + (n === 1 ? ' like' : ' likes');
-      c.insertBefore(chip, $(':scope > .fav-btn', c));
+      var c = g.el, old = $(':scope > .like-chip', c); if (old) old.remove();        // the like count on tiles was removed on request: counts show in the game tab and on the game page
     });
   }
 
