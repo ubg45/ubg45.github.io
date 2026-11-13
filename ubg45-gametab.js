@@ -354,9 +354,17 @@
     if (info) info.addEventListener('click', function (e) {
       var a = e.target.closest && e.target.closest('a.rel'); if (!a) return;
       e.preventDefault();
-      var u = a.getAttribute('data-u');
-      try { if (window.opener && window.opener.openGame) { window.opener.openGame(u, 'Google Docs'); return; } } catch (er) { /* opener closed */ }
-      window.open(u, '_blank');
+      var u = a.getAttribute('data-u'), site = null;
+      try { if (window.opener && !window.opener.closed && typeof window.opener.openGame === 'function') site = window.opener; } catch (er) { /* site tab closed */ }
+      // The new tab is opened HERE, by the tab you just clicked in (browsers block a tab opened by a page you did not click),
+      // then the UBG45 page fills it with the game, the bar and the info, so it looks and behaves like every other game tab.
+      var w = null; try { w = window.open('about:blank', '_blank'); } catch (er) { /* ignore */ }
+      if (!w) { say('Your browser blocked the new tab. Allow pop-ups for this site and try again.'); return; }
+      if (site) { try { site.openGame(u, 'Google Docs', w); return; } catch (er) { /* fall through to the plain page */ } }
+      try {                                                    // the UBG45 tab was closed: still open it as a blank-address game page
+        w.document.write('<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Google Docs</title><style>body{margin:0;overflow:hidden}iframe{width:100vw;height:100vh;border:none}</style></head><body><iframe src="' + String(u).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;') + '" frameborder="0" allow="fullscreen; autoplay; gamepad; clipboard-write" allowfullscreen></iframe></body></html>');
+        w.document.close();
+      } catch (er) { try { w.location.href = u; } catch (e2) { /* ignore */ } }
     });
   }
 

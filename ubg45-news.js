@@ -10,6 +10,14 @@
  */
 (window.UBG45 = window.UBG45 || {}).news = [
   {
+    date: '2026-11-13', tag: 'fix', title: 'Fixed: "More games like this" opened the wrong kind of page',
+    text: 'Clicking a game under the info of another game could turn your UBG45 tab into the game, with no bar and the real web address showing.',
+    points: [
+      'Now the game opens in its own new blank-address tab with the bar and info, exactly like a game you open from the site.',
+      'The scroll fix for the game area is also in: scrolling with the mouse over the game no longer moves the page, while the bar and the info still scroll.'
+    ]
+  },
+  {
     date: '2026-11-13', tag: 'update', title: 'Smoother, livelier animations',
     text: 'Almost everything that moves on the site got a better animation.',
     points: [

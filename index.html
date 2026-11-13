@@ -823,9 +823,12 @@
 </div>
 
 <script>
-function openGame(url, title) {
-  var newTab = window.open('about:blank', '_blank');
+function openGame(url, title, target) {
+  // target: a blank tab that was already opened by the caller (a game tab opening another game opens it itself, because the
+  // browser only lets the page you just clicked in open a new tab)
+  var newTab = target || window.open('about:blank', '_blank');
   if (!newTab) { window.location.href = url; return; }
+  if (target) { try { target.opener = window; } catch (e) { /* ignore */ } }      // so the new tab can open further games through this page too
   var safeUrl = String(url).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
   var page = window.UBG45 && UBG45.gamePage ? UBG45.gamePage(url)
     : '<style>body{margin:0;overflow:hidden}iframe{width:100vw;height:100vh;border:none}</style><iframe src="' + safeUrl + '" frameborder="0" allow="fullscreen; autoplay; gamepad; clipboard-write" allowfullscreen></iframe>' + (window.UBG45 && UBG45.gameFs ? UBG45.gameFs() : '');
@@ -1203,12 +1206,12 @@ rainbowElements.forEach(text => {
 
 <script src="ubg45-config.js?v=0e88324e" defer></script>
 <script src="ubg45-added.js?v=2d5f174c" defer></script>
-<script src="ubg45-news.js?v=cf27c880" defer></script>
+<script src="ubg45-news.js?v=9dfc7ee0" defer></script>
 <script src="ubg45-stats.js?v=de74d8aa" defer></script>
 <script src="ubg45-health.js?v=7385aed2" defer></script>
 <script src="ubg45-social.js?v=1ea14bc4" defer></script>
 <script src="ubg45-info.js?v=06d8785f" defer></script>
-<script src="ubg45-gametab.js?v=13f51bb0" defer></script>
+<script src="ubg45-gametab.js?v=4e5cdfd3" defer></script>
 <script src="ubg45-fx.js?v=c930e8d4" defer></script>
 <script src="ubg45.js?v=8a8d5e12" defer></script>
 </body>
