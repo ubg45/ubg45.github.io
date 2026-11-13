@@ -287,6 +287,14 @@
       // the game is a separate page, so when the mouse leaves quickly we may not be told: any movement outside the game releases the lock
       document.addEventListener('mousemove', function (e) { if (root.classList.contains('ubgLock') && !(e.target.closest && e.target.closest('#ubgStage'))) lock(false); }, true);
       window.addEventListener('blur', function () { lock(false); });
+      // second safety net (some browsers ignore the lock): if the page moves while the mouse is over the game, put it straight back
+      var lastY = window.scrollY || 0;
+      window.addEventListener('scroll', function () {
+        var y = window.scrollY || 0;
+        if (Date.now() < (tabCore.freeUntil || 0)) { lastY = y; return; }
+        var over = false; try { over = stage.matches(':hover') && !(document.fullscreenElement || document.webkitFullscreenElement); } catch (e) { /* ignore */ }
+        if (over && y !== lastY) window.scrollTo({ top: lastY, behavior: 'instant' }); else lastY = y;
+      }, { passive: true });
     }
     // full screen (the game area only, so the bar stays out of the way)
     var fsB = $('ubgFs');
@@ -341,7 +349,7 @@
     }
     // scroll to the information
     var ib = $('ubgInfoBtn'), info = $('ubgInfo');
-    if (ib && info) ib.addEventListener('click', function () { fx.press(ib); try { info.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) { info.scrollIntoView(); } });
+    if (ib && info) ib.addEventListener('click', function () { tabCore.freeUntil = Date.now() + 1500; fx.press(ib); try { info.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) { info.scrollIntoView(); } });
     // other games from the same area open in a new tab, like they do on the site
     if (info) info.addEventListener('click', function (e) {
       var a = e.target.closest && e.target.closest('a.rel'); if (!a) return;
