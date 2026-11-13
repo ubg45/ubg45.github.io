@@ -229,7 +229,7 @@
   function abs(u) { try { return new URL(u, document.baseURI).href; } catch (e) { return u; } }
 
   var TAB_CSS = [
-    '*{box-sizing:border-box}html{color-scheme:light dark;scroll-behavior:smooth}',
+    '*{box-sizing:border-box}html{color-scheme:light dark;scroll-behavior:smooth;scrollbar-gutter:stable}html.ubgLock{overflow:hidden}html:has(#ubgStage:hover){overflow:hidden}',
     'body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 var(--font);-webkit-font-smoothing:antialiased}',
     '#ubgStage{position:relative;height:calc(100vh - 62px);height:calc(100dvh - 62px);min-height:300px;background:#0b1020;overflow:hidden}',
     '#ubgStage:fullscreen{height:100%;width:100%}',
@@ -277,6 +277,17 @@
     }
     // game: keyboard goes to it straight away
     if (frame) { frame.addEventListener('load', function () { try { frame.focus(); } catch (e) { /* ignore */ } if (stage) stage.className = 'ready'; }); setTimeout(function () { try { frame.focus(); } catch (e) { /* ignore */ } }, 400); }
+    // scrolling with the mouse over the game never scrolls the page (the game gets the wheel); over the bar and the info it scrolls as normal
+    if (stage) {
+      var root = document.documentElement, lock = function (on) { root.classList.toggle('ubgLock', on); };
+      stage.addEventListener('pointerenter', function () { lock(true); });
+      stage.addEventListener('mouseenter', function () { lock(true); });
+      stage.addEventListener('pointerleave', function () { lock(false); });
+      stage.addEventListener('mouseleave', function () { lock(false); });
+      // the game is a separate page, so when the mouse leaves quickly we may not be told: any movement outside the game releases the lock
+      document.addEventListener('mousemove', function (e) { if (root.classList.contains('ubgLock') && !(e.target.closest && e.target.closest('#ubgStage'))) lock(false); }, true);
+      window.addEventListener('blur', function () { lock(false); });
+    }
     // full screen (the game area only, so the bar stays out of the way)
     var fsB = $('ubgFs');
     if (fsB) {
