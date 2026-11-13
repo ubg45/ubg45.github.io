@@ -942,7 +942,7 @@ a.pc:hover { background: rgba(255,255,255,.3); transform: translateY(-1px); }
 
 /* Soft colour clouds that drift very slowly behind the page */
 body::before {
-  content: ""; position: fixed; inset: -10vmax; z-index: -1; pointer-events: none;
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
   background:
     radial-gradient(40vmax 34vmax at 12% 18%, var(--aur-a), transparent 70%),
     radial-gradient(36vmax 30vmax at 88% 12%, var(--aur-b), transparent 70%),
@@ -967,13 +967,10 @@ html { scrollbar-width: thin; scrollbar-color: var(--soft-3) transparent; }
 .hero-art { box-shadow: 0 22px 40px -14px rgba(0, 0, 0, .6), 0 0 0 1px rgba(255, 255, 255, .25); }
 
 /* Tiles: sheen that follows the pointer, deeper hover, and a gentle tilt (values set by ubg45-fx.js) */
-.game-card:not(.mini)::before {
-  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; transition: opacity .25s;
-  background: radial-gradient(circle at var(--mx, 50%) var(--my, 30%), rgba(255, 255, 255, .34), rgba(255, 255, 255, .08) 32%, transparent 58%);
-  mix-blend-mode: soft-light;
+.game-card.tilting:not(.mini)::before {                /* only the tile under the mouse has the sheen (a blend-mode layer on every tile made scrolling slow) */
+  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 30%), rgba(255, 255, 255, .26), rgba(255, 255, 255, .07) 34%, transparent 60%);
 }
-.game-card:not(.mini):hover::before { opacity: 1; }
-.game-card:not(.mini) { transform-style: preserve-3d; }
 .game-card.tilting:not(.mini) {
   transform: perspective(760px) translateY(-6px) scale(1.035) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
   transition: transform .12s ease-out, box-shadow .22s ease;
@@ -1000,8 +997,6 @@ footer { position: relative; background: linear-gradient(var(--surface), var(--s
 footer::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: var(--grad); opacity: .55; }
 
 @media (prefers-reduced-motion: no-preference) {
-  body::before { animation: ubgAurora 38s ease-in-out infinite alternate; }
-  @keyframes ubgAurora { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(3vmax, 2vmax, 0) scale(1.08); } }
   .hero-art { animation: hero-in .7s cubic-bezier(.2, 1.2, .4, 1) backwards, heroFloat 6.5s ease-in-out .8s infinite; }
   @keyframes heroFloat { 0%, 100% { translate: 0 0; } 50% { translate: 0 -7px; } }
   .hero .btn-play { animation: playPulse 3.4s ease-out infinite; }
@@ -1010,7 +1005,7 @@ footer::before { content: ""; position: absolute; left: 0; right: 0; top: 0; hei
   .hero-bg { animation: heroDrift 18s ease-in-out infinite alternate; }
   @keyframes heroDrift { from { translate: -14px 0; } to { translate: 14px -8px; } }
 }
-@media (max-width: 720px) { body::before { inset: -20vmax; } .sec-head::before { height: 22px; } }
+@media (max-width: 720px) { .sec-head::before { height: 22px; } }
 @media (prefers-reduced-motion: reduce) { .game-card.tilting:not(.mini) { transform: translateY(-4px); } }
 
 /* Phones and tablets: the heart and link buttons sit in the top corner, smaller, so they never cover the game name */
@@ -1029,10 +1024,9 @@ footer::before { content: ""; position: absolute; left: 0; right: 0; top: 0; hei
    Entrances use "backwards" fill or separate properties (translate / scale / opacity), so hover and press styles keep working.
    ===================================================================================================================== */
 @media (prefers-reduced-motion: no-preference) {
-  @keyframes view-in { from { opacity: 0; transform: translateY(20px) scale(.985); filter: blur(5px); } }
-  @keyframes tile-in { 0% { opacity: 0; transform: translateY(30px) scale(.84) rotate(-2.5deg); filter: blur(6px); } 60% { filter: blur(0); } }
+  @keyframes view-in { from { opacity: 0; transform: translateY(20px) scale(.985); } }
+  @keyframes tile-in { 0% { opacity: 0; transform: translateY(30px) scale(.84) rotate(-2.5deg); } }
   .tile-in { animation-duration: .7s !important; animation-timing-function: cubic-bezier(.34, 1.45, .5, 1) !important; }
-  @keyframes tile-rise { from { opacity: 0; translate: 0 34px; scale: .9; filter: blur(5px); } to { opacity: 1; translate: 0 0; scale: 1; filter: blur(0); } }
   @keyframes hero-in { from { opacity: 0; transform: perspective(700px) rotateY(-55deg) rotate(-12deg) scale(.7) translateY(14px); } to { opacity: 1; transform: rotate(-4deg); } }
   @keyframes hero-copy-in { from { opacity: 0; transform: translateY(18px); filter: blur(6px); } to { opacity: 1; transform: none; filter: blur(0); } }
   .hero-copy > * { animation-name: hero-copy-in; animation-duration: .7s; animation-timing-function: cubic-bezier(.22, 1, .36, 1); }
@@ -1044,12 +1038,7 @@ footer::before { content: ""; position: absolute; left: 0; right: 0; top: 0; hei
   @keyframes artSheen { 0%, 55% { translate: -140% 0; } 80%, 100% { translate: 140% 0; } }
   .hero-kicker svg { animation: star-pop 2.6s ease-in-out infinite; }
 
-  /* tiles glide up as they scroll into view (browsers without scroll timelines simply show them) */
-  @supports (animation-timeline: view()) {
-    #homeView .row > .game-card:not(.tile-in), #allGrid > .game-card:not(.tile-in), #viewGrid > .game-card:not(.tile-in) {
-      animation: tile-rise linear backwards; animation-timeline: view(); animation-range: entry 0% entry 70%;
-    }
-  }
+  /* (tiles used to glide up as they scrolled into view; removed: it made scrolling the full game list laggy) */
 
   /* sidebar rows slide in one by one the first time the menu appears (class added by ubg45-fx.js) */
   .nav-stagger .nav-item { animation: nav-in .55s cubic-bezier(.34, 1.56, .64, 1) backwards; animation-delay: calc(var(--i, 0) * 28ms + 120ms); }
@@ -1101,8 +1090,8 @@ footer::before { content: ""; position: absolute; left: 0; right: 0; top: 0; hei
   letter-spacing: -.01em;
 }
 .thumb-fallback::before {
-  content: ""; position: absolute; inset: 0; opacity: .5; pointer-events: none;
-  background-image: radial-gradient(rgba(255, 255, 255, .22) 1.2px, transparent 1.6px); background-size: 14px 14px; mask-image: linear-gradient(160deg, #000, transparent 70%); -webkit-mask-image: linear-gradient(160deg, #000, transparent 70%);
+  content: ""; position: absolute; inset: 0; opacity: .35; pointer-events: none;
+  background-image: radial-gradient(rgba(255, 255, 255, .22) 1.2px, transparent 1.6px); background-size: 14px 14px;
 }
 .thumb-fallback::after {
   content: ""; position: absolute; left: 50%; bottom: -34%; width: 120%; aspect-ratio: 1; translate: -50% 0; border-radius: 50%; background: rgba(255, 255, 255, .10); pointer-events: none;

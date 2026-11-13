@@ -14,6 +14,7 @@
     text: 'Clicking a game under the info of another game could turn your UBG45 tab into the game, with no bar and the real web address showing.',
     points: [
       'Now the game opens in its own new blank-address tab with the bar and info, exactly like a game you open from the site.',
+      'Scrolling through the full list of games is smooth again: a few of the new effects were slowing it down, so they are lighter now.',
       'The scroll fix for the game area is also in: scrolling with the mouse over the game no longer moves the page, while the bar and the info still scroll.'
     ]
   },
