@@ -274,7 +274,7 @@
     '#ubgInfo{padding:6px 16px 44px}',
     '#ubgToast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,16px) scale(.96);max-width:min(440px,92vw);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;z-index:50;',
     'transition:opacity .22s,transform .35s cubic-bezier(.34,1.56,.64,1);box-shadow:0 14px 34px -8px rgba(0,0,0,.5)}#ubgToast.on{opacity:1;transform:translate(-50%,0) scale(1)}',
-    '@media (hover:none){#ubgStage{touch-action:none}}',
+    '@media (hover:none){#ubgStage{touch-action:none}#ubgShow{height:34px;opacity:.75;padding:0 20px}}',
     '@media (max-width:720px){#ubgBar{padding:0 10px;gap:6px}#ubgBar .tt small{display:none}.ub .t{display:none}.ub{padding:0 11px}#ubgInfoBtn .t{display:inline}#ubgInfoBtn{padding:0 12px}}',
     '@media (max-width:430px){#ubgInfoBtn .t{display:none}#ubgBar .tt b{font-size:15px}}',
     '@media (prefers-reduced-motion:reduce){.ub,.ub .ic,#ubgToast,#ubgRep,#ubgShow{transition:none;animation:none}#ubgRefresh.spin .ic,#ubgRep .rp-ok *{animation:none!important;stroke-dashoffset:0!important}#ubgInfoBtn .ic,#ubgStage::before{animation:none}}'
