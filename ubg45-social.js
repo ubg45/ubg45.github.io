@@ -55,10 +55,10 @@
       },
 
       /* One report per game per day per browser. Resolves 'ok', 'dup' (already reported today), 'off' (not configured) or 'err'. */
-      report: function (id) {
+      report: function (id, reason) {
         if (api.isReported(id)) return Promise.resolve('dup');
         if (!api.on) return Promise.resolve('off');
-        return rpc('ubg45_report', { p_game: id }).then(function () {
+        return rpc('ubg45_report', reason ? { p_game: id, p_reason: reason } : { p_game: id }).catch(function (e) { if (reason) return rpc('ubg45_report', { p_game: id }); throw e; }).then(function () {
           var t = today(), m = rd(RK), n = {}; Object.keys(m).forEach(function (k) { if (m[k] === t) n[k] = t; }); n[id] = t; wr(RK, n);
           return 'ok';
         }, function () { return 'err'; });

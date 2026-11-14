@@ -84,6 +84,9 @@
       '<svg class="ic ic-ok" viewBox="0 0 24 24" ' + P + '><path class="tick" d="M5 12.5l4.6 4.6L19.2 7.4"/></svg>',
     flag: '<svg class="ic" viewBox="0 0 24 24" ' + P + '><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>',
     fs: '<svg class="ic e" viewBox="0 0 24 24" ' + P + '><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><svg class="ic c" viewBox="0 0 24 24" ' + P + '><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>',
+    refresh: '<svg class="ic" viewBox="0 0 24 24" ' + P + '><path d="M20 11a8 8 0 1 0-2.4 5.7M20 4v7h-7"/></svg>',
+    hide: '<svg class="ic" viewBox="0 0 24 24" ' + P + '><path d="M6 6l6 6 6-6M6 13l6 6 6-6"/></svg>',
+    up2: '<svg class="ic" viewBox="0 0 24 24" ' + P + '><path d="M6 18l6-6 6 6M6 11l6-6 6 6"/></svg>',
     down: '<svg class="ic" viewBox="0 0 24 24" ' + P + '><path d="M6 9l6 6 6-6"/></svg>',
     globe: '<svg class="ic" viewBox="0 0 24 24" ' + P + '><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9S9.4 5.6 12 3z"/></svg>',
     laptop: '<svg viewBox="0 0 24 24" ' + P + '><rect x="4.5" y="5" width="15" height="10.5" rx="1.6"/><path d="M2.5 19h19"/></svg>',
@@ -252,13 +255,29 @@
     '#ubgInfoBtn{background:var(--blue);color:#fff}#ubgInfoBtn:hover{background:var(--blue);filter:brightness(1.1)}#ubgInfoBtn .ic{animation:ubgNudge 2.2s ease-in-out infinite}',
     '@keyframes ubgNudge{0%,60%,100%{transform:translateY(0)}75%{transform:translateY(3px)}88%{transform:translateY(-1px)}}',
     '#ubgFs .c{display:none}#ubgBar[data-fs="1"] #ubgFs .e{display:none}#ubgBar[data-fs="1"] #ubgFs .c{display:block}',
+    '#ubgRefresh.spin .ic{animation:ubgRot .8s cubic-bezier(.3,1.1,.4,1)}@keyframes ubgRot{to{transform:rotate(360deg)}}',
+    'html.ubgHid #ubgBar{display:none}html.ubgHid #ubgStage{height:100vh;height:100dvh}',
+    '#ubgShow{position:fixed;left:50%;bottom:0;transform:translateX(-50%);z-index:6;display:none;align-items:center;gap:6px;height:24px;padding:0 16px;border:0;border-radius:12px 12px 0 0;background:rgba(14,18,32,.78);color:#fff;font:600 12px/1 var(--font);cursor:pointer;opacity:.5;transition:opacity .2s,height .25s cubic-bezier(.34,1.56,.64,1)}',
+    '#ubgShow .ic{width:15px;height:15px}#ubgShow:hover,#ubgShow:focus-visible{opacity:1;height:32px;outline:0}html.ubgHid #ubgShow{display:flex;animation:ubgShowIn .45s cubic-bezier(.34,1.56,.64,1) backwards}@keyframes ubgShowIn{from{transform:translate(-50%,100%)}}',
+    '#ubgRep{position:fixed;z-index:20;width:min(340px,calc(100vw - 20px));background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:18px;box-shadow:0 22px 50px -12px rgba(0,0,0,.55);padding:16px;animation:ubgPop .28s cubic-bezier(.34,1.56,.64,1)}#ubgRep[hidden]{display:none}',
+    '@keyframes ubgPop{from{opacity:0;transform:translateY(8px) scale(.94)}}',
+    '#ubgRep .rp-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}#ubgRep .rp-h b{font:700 16px/1.2 var(--display)}',
+    '#ubgRep .rp-x{border:0;background:var(--soft);color:var(--ink);width:30px;height:30px;border-radius:9px;font-size:18px;line-height:1;cursor:pointer}#ubgRep .rp-x:hover{background:var(--soft-2)}',
+    '#ubgRep .rp-s{color:var(--muted);font-size:13px;margin:0 0 10px}',
+    '#ubgRep .ro{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px solid var(--line);background:transparent;color:var(--ink);border-radius:12px;padding:10px 12px;margin-top:6px;font:500 14px/1.2 var(--font);cursor:pointer;transition:border-color .15s,background .15s,transform .2s cubic-bezier(.34,1.56,.64,1)}',
+    '#ubgRep .ro:hover{background:var(--soft);transform:translateX(2px)}#ubgRep .ro i{flex:none;width:16px;height:16px;border-radius:50%;border:2px solid var(--muted);transition:all .15s}',
+    '#ubgRep .ro.on{border-color:var(--blue);background:var(--soft)}#ubgRep .ro.on i{border-color:var(--blue);background:radial-gradient(circle,var(--blue) 0 38%,transparent 42%)}',
+    '#ubgRep .rp-a{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}#ubgRep .go{background:var(--blue);color:#fff}#ubgRep .go:disabled{opacity:.45;cursor:not-allowed}',
+    '#ubgRep .rp-e{color:#d6402f;font-size:13px;margin:10px 0 0;font-weight:600}',
+    '#ubgRep .rp-ok{text-align:center;padding:10px 0 4px}#ubgRep .rp-ok svg{width:54px;height:54px;color:#18a76b}#ubgRep .rp-ok .tick{stroke-dasharray:30;stroke-dashoffset:30;animation:ubgTick .5s .15s ease-out forwards}#ubgRep .rp-ok circle{stroke-dasharray:70;stroke-dashoffset:70;animation:ubgTick .6s ease-out forwards}',
+    '@keyframes ubgTick{to{stroke-dashoffset:0}}#ubgRep .rp-ok p{margin:8px 0 0;font-weight:600}#ubgRep .rp-ok small{color:var(--muted)}',
     '#ubgInfo{padding:6px 16px 44px}',
     '#ubgToast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,16px) scale(.96);max-width:min(440px,92vw);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;z-index:50;',
     'transition:opacity .22s,transform .35s cubic-bezier(.34,1.56,.64,1);box-shadow:0 14px 34px -8px rgba(0,0,0,.5)}#ubgToast.on{opacity:1;transform:translate(-50%,0) scale(1)}',
     '@media (hover:none){#ubgStage{touch-action:none}}',
     '@media (max-width:720px){#ubgBar{padding:0 10px;gap:6px}#ubgBar .tt small{display:none}.ub .t{display:none}.ub{padding:0 11px}#ubgInfoBtn .t{display:inline}#ubgInfoBtn{padding:0 12px}}',
     '@media (max-width:430px){#ubgInfoBtn .t{display:none}#ubgBar .tt b{font-size:15px}}',
-    '@media (prefers-reduced-motion:reduce){.ub,.ub .ic,#ubgToast{transition:none}#ubgInfoBtn .ic,#ubgStage::before{animation:none}}'
+    '@media (prefers-reduced-motion:reduce){.ub,.ub .ic,#ubgToast,#ubgRep,#ubgShow{transition:none;animation:none}#ubgRefresh.spin .ic,#ubgRep .rp-ok *{animation:none!important;stroke-dashoffset:0!important}#ubgInfoBtn .ic,#ubgStage::before{animation:none}}'
   ].join('');
 
   /* Runs inside the game tab. Everything it needs is passed in (the tab shares nothing with the site except localStorage). */
@@ -276,7 +295,25 @@
       var lb = $('ubgLike'); if (lb) lb.title = (soc.isLiked(cfg.id) ? 'You like this game. ' : 'Like this game. ') + likes + (likes === 1 ? ' person' : ' people') + ' worldwide ' + (likes === 1 ? 'likes' : 'like') + ' it';
     }
     // game: keyboard goes to it straight away
-    if (frame) { frame.addEventListener('load', function () { try { frame.focus(); } catch (e) { /* ignore */ } if (stage) stage.className = 'ready'; }); setTimeout(function () { try { frame.focus(); } catch (e) { /* ignore */ } }, 400); }
+    var slowT = 0, docEl = document.documentElement;
+    function onLoad() { clearTimeout(slowT); try { frame.focus(); } catch (e) { /* ignore */ } if (stage) stage.className = 'ready'; }
+    function waitFor() { clearTimeout(slowT); slowT = setTimeout(function () { if (stage) stage.className = 'ready'; }, 20000); }   // never leave the spinner up for ever
+    if (frame) { frame.addEventListener('load', onLoad); waitFor(); setTimeout(function () { try { frame.focus(); } catch (e) { /* ignore */ } }, 400); }
+    // refresh: a fresh copy of the game frame (works for any game, also when it is hosted on another site)
+    var rf = $('ubgRefresh');
+    if (rf && frame) rf.addEventListener('click', function () {
+      fx.press(rf); rf.classList.remove('spin'); void rf.offsetWidth; rf.classList.add('spin');
+      var old = frame, nf = old.cloneNode(false);
+      if (stage) stage.className = '';
+      nf.addEventListener('load', onLoad); frame = nf; waitFor();
+      try { old.parentNode.replaceChild(nf, old); } catch (e) { return; }
+      say('Reloading the game…'); setTimeout(function () { try { nf.focus(); } catch (e) { /* ignore */ } }, 400);
+    });
+    // hide the bar for more room (a small tab at the bottom brings it back)
+    var hd = $('ubgHide'), sw = $('ubgShow');
+    function setHidden(v) { docEl.classList.toggle('ubgHid', v); closeRep(); if (v) { window.scrollTo(0, 0); try { frame.focus(); } catch (e) { /* ignore */ } } else if (sw) sw.blur(); }
+    if (hd) hd.addEventListener('click', function () { fx.press(hd); setHidden(true); });
+    if (sw) sw.addEventListener('click', function () { setHidden(false); });
     // scrolling with the mouse over the game never scrolls the page (the game gets the wheel); over the bar and the info it scrolls as normal
     if (stage) {
       var root = document.documentElement, lock = function (on) { root.classList.toggle('ubgLock', on); };
@@ -331,21 +368,72 @@
       if (touch && navigator.share) { navigator.share({ title: cfg.title + ' on UBG45', url: cfg.share }).catch(function () { /* cancelled */ }); return; }
       soc.copy(cfg.share).then(function (ok) { if (ok) { fx.done(sh); var t = sh.querySelector('.t'); if (t) { t.textContent = 'Copied'; setTimeout(function () { t.textContent = 'Share'; }, 1900); } } say(ok ? 'Link copied. Paste it to share this game.' : 'Could not copy. The link is ' + cfg.share); });
     });
-    // report a broken game (press twice)
-    var rp = $('ubgReport');
-    if (rp) {
-      var armed = false, armT = 0, disarm = function () { armed = false; clearTimeout(armT); rp.classList.remove('arm'); };
-      if (soc.isReported(cfg.id)) rp.classList.add('done');
-      rp.addEventListener('click', function () {
-        fx.press(rp);
-        if (soc.isReported(cfg.id)) { say('You already reported this game today. Thanks!'); return; }
-        if (!armed) { armed = true; rp.classList.add('arm'); say('Is this game broken? Press the flag again to report it.'); armT = setTimeout(disarm, 4500); return; }
-        disarm(); rp.disabled = true;
-        soc.report(cfg.id).then(function (r) {
-          rp.disabled = false;
-          if (r === 'ok' || r === 'dup') { rp.classList.add('done'); say('Report sent. Thanks, we will check this game.'); } else say('Could not send the report. Try again later.');
+    // report a broken game: pick what is wrong, then send
+    var rp = $('ubgReport'), pan = $('ubgRep'), repSel = '', repBusy = false;
+    var REASONS = [['load', "Won't load or shows a blank screen"], ['crash', 'Freezes or crashes'], ['controls', "Controls don't work"], ['ads', 'Pop-ups or unwanted redirects'], ['unsuitable', 'Not suitable for school'], ['other', 'Something else']];
+    var OKSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path class="tick" d="M7.5 12.5l3.2 3.2 5.8-6.4"/></svg>';
+    function closeRep() { if (pan && !pan.hidden && !repBusy) { pan.hidden = true; if (rp) rp.setAttribute('aria-expanded', 'false'); } }
+    function placeRep() {
+      if (!rp || !pan) return;
+      var vw = docEl.clientWidth || innerWidth, r = rp.getBoundingClientRect(), w = pan.offsetWidth || 340, right = Math.max(10, Math.min(vw - r.right, vw - w - 10));
+      pan.style.right = right + 'px';
+      var ol = pan.offsetLeft; if (ol < 10) pan.style.right = (right - (10 - ol)) + 'px';       // measured, so it also holds with a reserved scrollbar gutter
+      if (r.top > 330) { pan.style.bottom = (innerHeight - r.top + 10) + 'px'; pan.style.top = 'auto'; } else { pan.style.top = (r.bottom + 10) + 'px'; pan.style.bottom = 'auto'; }
+    }
+    function repDone(text, sub) {
+      var body = $('ubgRepBody'); if (!body) return;
+      body.innerHTML = '<div class="rp-ok">' + OKSVG + '<p></p><small></small></div>';
+      body.querySelector('p').textContent = text; body.querySelector('small').textContent = sub || '';
+      setTimeout(function () { repBusy = false; closeRep(); }, 2600);
+    }
+    function repForm() {
+      var body = $('ubgRepBody'); if (!body) return;
+      repSel = ''; repBusy = false;
+      var h = '<p class="rp-s">What is wrong with ' + '<b class="gn"></b>' + '? Pick one.</p><div role="radiogroup" aria-label="What is wrong">';
+      REASONS.forEach(function (r) { h += '<button type="button" class="ro" role="radio" aria-checked="false" data-r="' + r[0] + '"><i></i><span>' + r[1] + '</span></button>'; });
+      h += '</div><p class="rp-e" id="ubgRepErr" role="alert" hidden></p><div class="rp-a"><button type="button" class="ub" id="ubgRepNo">Cancel</button><button type="button" class="ub go" id="ubgRepGo" disabled>Send report</button></div>';
+      body.innerHTML = h; body.querySelector('.gn').textContent = cfg.title;
+      var go = $('ubgRepGo'), err = $('ubgRepErr');
+      body.querySelectorAll('.ro').forEach(function (b) {
+        b.addEventListener('click', function () {
+          if (repBusy) return;
+          repSel = b.getAttribute('data-r'); fx.press(b);
+          body.querySelectorAll('.ro').forEach(function (o) { var on = o === b; o.classList.toggle('on', on); o.setAttribute('aria-checked', on ? 'true' : 'false'); });
+          go.disabled = false; err.hidden = true;
         });
       });
+      $('ubgRepNo').addEventListener('click', function () { closeRep(); try { rp.focus(); } catch (e) { /* ignore */ } });
+      go.addEventListener('click', function () {
+        if (!repSel || repBusy) return;
+        repBusy = true; go.disabled = true; go.textContent = 'Sending…'; err.hidden = true;
+        soc.report(cfg.id, repSel).then(function (r) {
+          if (r === 'ok' || r === 'dup') {
+            rp.classList.add('done'); fx.done(rp, 2400); var t = rp.querySelector('.t'); if (t) t.textContent = 'Reported';
+            repDone('Report sent. Thank you!', 'We will take a look at ' + cfg.title + '.');
+          } else {
+            repBusy = false; go.disabled = false; go.textContent = 'Try again';
+            err.textContent = r === 'off' ? 'Reports are switched off right now.' : "Couldn't send that. Check your connection and try again."; err.hidden = false;
+          }
+        });
+      });
+    }
+    if (rp && pan) {
+      if (soc.isReported(cfg.id)) { rp.classList.add('done'); var t0 = rp.querySelector('.t'); if (t0) t0.textContent = 'Reported'; }
+      rp.setAttribute('aria-expanded', 'false'); rp.setAttribute('aria-haspopup', 'dialog');
+      rp.addEventListener('click', function (e) {
+        e.stopPropagation(); fx.press(rp);
+        if (!pan.hidden) { closeRep(); return; }
+        if (soc.isReported(cfg.id)) { pan.hidden = false; repBusy = true; repDone('You already reported this game today.', 'Thanks for helping us keep UBG45 working.'); }
+        else { pan.hidden = false; repForm(); }
+        rp.setAttribute('aria-expanded', 'true'); placeRep();
+        var first = pan.querySelector('.ro'); if (first) try { first.focus(); } catch (er) { /* ignore */ }
+      });
+      var rx = pan.querySelector('.rp-x'); if (rx) rx.addEventListener('click', function () { repBusy = false; closeRep(); });
+      pan.addEventListener('click', function (e) { e.stopPropagation(); });
+      document.addEventListener('click', function () { closeRep(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !pan.hidden) { repBusy = false; closeRep(); try { rp.focus(); } catch (er) { /* ignore */ } } });
+      window.addEventListener('blur', function () { closeRep(); });        // clicking into the game moves focus to it
+      window.addEventListener('resize', function () { if (!pan.hidden) placeRep(); });
     }
     // scroll to the information
     var ib = $('ubgInfoBtn'), info = $('ubgInfo');
@@ -386,9 +474,13 @@
         (withSocial ? '<button class="ub" id="ubgLike" type="button" aria-pressed="false" aria-label="Like this game">' + IC.like + '<span class="t">Like</span><span class="n" id="ubgLikeN"></span></button>' : '') +
         '<button class="ub" id="ubgShare" type="button" aria-label="Copy link to share this game" title="Copy link to share this game">' + IC.share + '<span class="t">Share</span></button>' +
         (withSocial ? '<button class="ub" id="ubgReport" type="button" aria-label="Report a broken game" title="Report a broken game">' + IC.flag + '<span class="t">Report</span></button>' : '') +
+        '<button class="ub" id="ubgRefresh" type="button" aria-label="Reload the game" title="Reload the game">' + IC.refresh + '<span class="t">Refresh</span></button>' +
         '<button class="ub" id="ubgFs" type="button" aria-label="Full screen" title="Full screen">' + IC.fs + '</button>' +
+        '<button class="ub" id="ubgHide" type="button" aria-label="Hide this bar" title="Hide this bar">' + IC.hide + '</button>' +
         '<button class="ub" id="ubgInfoBtn" type="button" aria-label="Show game info and controls" title="Game info and controls">' + IC.down + '<span class="t">Info</span></button></div>' +
         '<div id="ubgInfo">' + infoHtml({ title: g.title, id: g.id, likes: f.likes, cats: f.cats, added: f.added, isNew: f.isNew, info: f.info, related: related, social: withSocial }, { related: true }) + '</div>' +
+        '<button id="ubgShow" type="button" aria-label="Show the bar" title="Show the bar">' + IC.up2 + '<span>Show bar</span></button>' +
+        (withSocial ? '<div id="ubgRep" role="dialog" aria-labelledby="ubgRepT" hidden><div class="rp-h"><b id="ubgRepT">Report this game</b><button class="rp-x" type="button" aria-label="Close">&times;</button></div><div id="ubgRepBody"></div></div>' : '') +
         '<div id="ubgToast" role="status" aria-live="polite"></div>';
       var js = '(' + tabCore.toString().replace(/<\/script/gi, '<\\/script') + ')(' + JSON.stringify(cfg).replace(/</g, '\\u003c') + ',' + make.replace(/<\/script/gi, '<\\/script') + ',' + makeFx.toString().replace(/<\/script/gi, '<\\/script') + ');';
       return html + '<script>' + js + '<\/script>';

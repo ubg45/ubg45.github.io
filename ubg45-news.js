@@ -10,6 +10,17 @@
  */
 (window.UBG45 = window.UBG45 || {}).news = [
   {
+    date: '2026-11-14', tag: 'feature', title: 'For developers: send us your game, plus new buttons while you play',
+    text: 'Made a browser game? There is now a Developers page (under Settings in the menu) where you can send it in. And the bar under every game got a few upgrades.',
+    points: [
+      'Developers page: send your game with its link, a short description and how to play. It lists what a game needs (an https link that works in a frame, responsive, light to load, no pop-ups) and has a Preview button so you can check the link works here before sending.',
+      'Hide the bar: the new double-arrow button hides the bar so the game gets the whole window. A small "Show bar" tab at the bottom brings it back.',
+      'Refresh: the new Refresh button reloads the game without leaving the page.',
+      'Report now works properly: pick what is wrong (will not load, freezes, controls, pop-ups, not suitable, other) and send. You see a clear thank-you, or an error if it did not go through.',
+      'The share button and like count no longer show on the game tiles. You can still like and share from the game page and while you play; the heart still saves favourites.'
+    ]
+  },
+  {
     date: '2026-11-13', tag: 'fix', title: 'Fixed: "More games like this" opened the wrong kind of page',
     text: 'Clicking a game under the info of another game could turn your UBG45 tab into the game, with no bar and the real web address showing.',
     points: [

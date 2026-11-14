@@ -52,6 +52,7 @@
     clock: '<circle cx="12" cy="12" r="9" fill="none" stroke="#2b3245" stroke-width="2"/><path d="M12 7v5l3.5 2" fill="none" stroke="#2b3245" stroke-width="2" stroke-linecap="round"/>',
     settings: '<path fill="#8a93a6" d="M10.5 2.8h3l.5 2.3 1.6.7 2-1.3 2.1 2.1-1.3 2 .7 1.6 2.3.5v3l-2.3.5-.7 1.6 1.3 2-2.1 2.1-2-1.3-1.6.7-.5 2.3h-3l-.5-2.3-1.6-.7-2 1.3-2.1-2.1 1.3-2-.7-1.6-2.3-.5v-3l2.3-.5.7-1.6-1.3-2 2.1-2.1 2 1.3 1.6-.7z"/><circle cx="12" cy="12" r="3.1" fill="#fff"/>',
     news: '<rect x="3.5" y="4" width="14" height="16" rx="2.4" fill="#3d7bff"/><path d="M17.5 8.5h2.2a1.3 1.3 0 0 1 1.3 1.3V17a3 3 0 0 1-3 3h-.5z" fill="#ffb02e"/><path d="M7 8.5h7M7 12h7M7 15.5h4" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>',
+    dev: '<rect x="2.5" y="4" width="19" height="16" rx="4" fill="#7a4dff"/><path d="M9.8 9 6.8 12l3 3M14.2 9l3 3-3 3" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
     install: '<rect x="3" y="3" width="18" height="18" rx="5" fill="#2f6bff"/><path d="M12 7v7.2M8.6 11.2 12 14.6l3.4-3.4M7.5 17.2h9" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
     suggest: '<path d="M4 4h16v12H9l-5 4z" fill="#ffb02e"/><path d="M12 7.5v5M9.5 10h5" stroke="#fff" stroke-width="2" stroke-linecap="round"/>',
     generic: '<circle cx="12" cy="12" r="8" fill="#9aa3b5"/>'
@@ -389,7 +390,7 @@
 
   /* ------------------------------------------------------------------ DOM refs */
   var sidebar = $('#sidebar'), main = $('#main'), content = $('.content');
-  var homeView = $('#homeView'), listView = $('#listView'), searchView = $('#searchView'), settingsView = $('#settingsView'), newsView = $('#newsView'), playView = $('#playView');
+  var homeView = $('#homeView'), listView = $('#listView'), searchView = $('#searchView'), settingsView = $('#settingsView'), newsView = $('#newsView'), devView = $('#devView'), playView = $('#playView');
   var searchBar = $('#searchBar'), clearBtn = $('#searchClear');
   var strip = $('#strip');
 
@@ -439,6 +440,7 @@
     f.appendChild(navItem('nav-fav', 'heart', 'Favourites', '#/favourites', ''));
     var rc = navItem('nav-recent', 'clock', 'Recently played', '#/recent'); f.appendChild(rc);
     f.appendChild(navItem('nav-settings', 'settings', 'Settings', '#/settings'));
+    f.appendChild(navItem('nav-developers', 'dev', 'Developers', '#/developers'));
     var ib = navItem('nav-install', 'install', 'Install app', '#install'); ib.hidden = true; ib.addEventListener('click', function (e) { e.preventDefault(); installApp(); }); f.appendChild(ib);
     var sg = navItem('nav-suggest', 'suggest', 'Suggest a Game', C.suggestUrl);
     sg.target = '_blank'; sg.rel = 'noopener';
@@ -763,6 +765,7 @@
     if (route.name === 'category' || route.name === 'new' || route.name === 'popular' || route.name === 'favourites' || route.name === 'recent' || route.name === 'liked') { settleIn(listView); popTiles($('#viewGrid'), 28); }
     else if (route.name === 'play') settleIn(playView);
     else if (route.name === 'news') settleIn(newsView);
+    else if (route.name === 'developers') settleIn(devView);
     else if (route.name === 'settings') settleIn(settingsView);
   }
 
@@ -771,8 +774,8 @@
     var q = searchBar.value.trim();
     var searching = !!q;
     body.classList.toggle('searching', searching);
-    homeView.hidden = listView.hidden = searchView.hidden = settingsView.hidden = newsView.hidden = playView.hidden = true;
-    $('#stripWrap').hidden = searching || route.name === 'settings' || route.name === 'news';
+    homeView.hidden = listView.hidden = searchView.hidden = settingsView.hidden = newsView.hidden = devView.hidden = playView.hidden = true;
+    $('#stripWrap').hidden = searching || route.name === 'settings' || route.name === 'news' || route.name === 'developers';
     if (searching) { searchView.hidden = false; updateSearch(); markNav(null); return; }
     var g;
     switch (route.name) {
@@ -793,6 +796,8 @@
         settingsView.hidden = false; buildSettings(); break;
       case 'news':
         newsView.hidden = false; buildNews(); break;
+      case 'developers':
+        devView.hidden = false; buildDev(); break;
       case 'favourites':
         g = favs.map(function (t) { return byTitle[norm(t)]; }).filter(Boolean);
         listPage(TITLES.favourites, g, '<strong>No favourites yet</strong>Click the heart on any game (or press F while it is focused) to save it here.' + EMPTY_ACTIONS, null, true); break;
@@ -802,7 +807,7 @@
       default:
         homeView.hidden = false; if (!homeView.firstChild || homeView._cols !== cols) { buildHome(); homeView._cols = cols; }
     }
-    if (route.name !== 'home' && route.name !== 'settings' && route.name !== 'news' && route.name !== 'play') listView.hidden = false;
+    if (route.name !== 'home' && route.name !== 'settings' && route.name !== 'news' && route.name !== 'developers' && route.name !== 'play') listView.hidden = false;
     markNav(route);
     buildStrip();
     syncFavs();
@@ -820,7 +825,7 @@
     var h = (location.hash || '').replace(/^#\/?/, '');
     var p = h.split('/');
     var dec = function (x) { try { return decodeURIComponent(x); } catch (e) { return ''; } };
-    if (p[0] === 'new' || p[0] === 'popular' || p[0] === 'favourites' || p[0] === 'recent' || p[0] === 'settings' || p[0] === 'news' || p[0] === 'liked') route = { name: p[0], id: '' };
+    if (p[0] === 'new' || p[0] === 'popular' || p[0] === 'favourites' || p[0] === 'recent' || p[0] === 'settings' || p[0] === 'news' || p[0] === 'developers' || p[0] === 'liked') route = { name: p[0], id: '' };
     else if (p[0] === 'category' && p[1]) route = { name: 'category', id: (function (id) { return id === 'car' ? 'driving' : id; })(dec(p[1])) };   // Car was merged into Driving
     else if (p[0] === 'play' && dec(p[1] || '')) route = { name: 'play', id: dec(p[1]).toLowerCase() };
     else route = { name: 'home', id: '' };
@@ -954,6 +959,12 @@
       playView.appendChild(row); requestAnimationFrame(updateRows);
     }
     syncFavs();
+  }
+
+  /* ------------------------------------------------------------------ developers page (send us your game) */
+  function buildDev() {
+    if (!U.devPage) { devView.innerHTML = '<div class="empty"><strong>Developers page unavailable</strong>ubg45-dev.js did not load.</div>'; return; }
+    U.devPage.build(devView, { cats: activeCats.map(function (d) { return d.name; }), toast: toast });
   }
 
   /* ------------------------------------------------------------------ news page */
@@ -1464,7 +1475,7 @@
     var sig = likeVisSig(map) + '|' + (hasLikes() ? 1 : 0);
     if (sig === before) return;
     likeSig = sig; applyLikes(); homeView._cols = 0;
-    if (!searchBar.value.trim() && route.name !== 'settings' && route.name !== 'news') render();
+    if (!searchBar.value.trim() && route.name !== 'settings' && route.name !== 'news' && route.name !== 'developers') render();
   }
   var likeFetchedAt = 0;
   function refreshLikes(force) { if (!SOC.on) return; likeFetchedAt = Date.now(); SOC.counts(setLikes, force); }
