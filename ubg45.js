@@ -831,6 +831,7 @@
     else route = { name: 'home', id: '' };
   }
   window.addEventListener('hashchange', function () {
+    closeRepPop(true);
     parseHash();
     if (searchBar.value) { searchBar.value = ''; searchBar.dispatchEvent(new Event('input', { bubbles: true })); }
     closeDrawer(); render(); window.scrollTo(0, 0);
@@ -862,6 +863,72 @@
     };
   }
   U.gameFacts = gameFacts;
+  /* "Report a broken game": a small panel that asks what is wrong, then sends it (same choices as in the game tab). */
+  var REPORT_REASONS = [['load', 'Won’t load or shows a blank screen'], ['crash', 'Freezes or crashes'], ['controls', 'Controls don’t work'], ['ads', 'Pop-ups or unwanted redirects'], ['unsuitable', 'Not suitable for school'], ['other', 'Something else']];
+  var repPop = null, repAnchor = null, repBusy = false;
+  function closeRepPop(force) {
+    if (!repPop || (repBusy && !force)) return;
+    repPop.remove(); repPop = null; repBusy = false;
+    if (repAnchor) { repAnchor.setAttribute('aria-expanded', 'false'); try { repAnchor.focus({ preventScroll: true }); } catch (e) { /* ignore */ } }
+    repAnchor = null;
+    document.removeEventListener('click', repOutside, true); document.removeEventListener('keydown', repKey, true); window.removeEventListener('resize', repPlace);
+  }
+  function repOutside(e) { if (repPop && !repPop.contains(e.target) && !(repAnchor && repAnchor.contains(e.target))) closeRepPop(); }
+  function repKey(e) { if (e.key === 'Escape') closeRepPop(); }
+  function repPlace() {
+    if (!repPop || !repAnchor) return;
+    var r = repAnchor.getBoundingClientRect(), w = repPop.offsetWidth, h = repPop.offsetHeight, vw = document.documentElement.clientWidth, vh = window.innerHeight;
+    if (vw < 560) { repPop.classList.add('sheet'); repPop.style.left = repPop.style.top = ''; return; }
+    repPop.classList.remove('sheet');
+    var left = Math.max(10, Math.min(r.left, vw - w - 10)), top = r.bottom + 10;
+    if (top + h > vh - 10) top = Math.max(10, r.top - h - 10);
+    repPop.style.left = left + 'px'; repPop.style.top = top + 'px';
+  }
+  function openRepPop(anchor, id, title, onSent) {
+    closeRepPop(true);
+    repAnchor = anchor; anchor.setAttribute('aria-expanded', 'true');
+    var pop = el('div', 'rpt-pop'); repPop = pop;
+    pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-label', 'Report this game');
+    pop.innerHTML = '<div class="rp-h"><b>Report this game</b><button type="button" class="rp-x" aria-label="Close">×</button></div><div class="rp-body"></div>';
+    document.body.appendChild(pop);
+    var body = $('.rp-body', pop);
+    function finish(text, sub) {
+      repBusy = true;
+      body.innerHTML = '<div class="rp-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path class="tick" d="M7.5 12.5l3.2 3.2 5.8-6.4"/></svg><p></p><small></small></div>';
+      $('p', body).textContent = text; $('small', body).textContent = sub || '';
+      setTimeout(function () { repBusy = false; if (repPop === pop) closeRepPop(); }, 2600);
+    }
+    if (SOC.isReported(id)) finish('You already reported this game today.', 'Thanks for helping us keep UBG45 working.');
+    else {
+      var sel = '', h = '<p class="rp-s">What is wrong with <b class="gn"></b>? Pick one.</p><div role="radiogroup" aria-label="What is wrong">';
+      REPORT_REASONS.forEach(function (r) { h += '<button type="button" class="rp-o" role="radio" aria-checked="false" data-r="' + r[0] + '"><i></i><span>' + esc(r[1]) + '</span></button>'; });
+      h += '</div><p class="rp-e" role="alert" hidden></p><div class="rp-a"><button type="button" class="btn-s rp-no">Cancel</button><button type="button" class="btn-s rp-go" disabled>Send report</button></div>';
+      body.innerHTML = h; $('.gn', body).textContent = title;
+      var go = $('.rp-go', body), err = $('.rp-e', body);
+      $$('.rp-o', body).forEach(function (b) {
+        b.addEventListener('click', function () {
+          if (repBusy) return;
+          sel = b.getAttribute('data-r');
+          $$('.rp-o', body).forEach(function (o) { var on = o === b; o.classList.toggle('on', on); o.setAttribute('aria-checked', on ? 'true' : 'false'); });
+          go.disabled = false; err.hidden = true;
+        });
+      });
+      $('.rp-no', body).addEventListener('click', function () { closeRepPop(); });
+      go.addEventListener('click', function () {
+        if (!sel || repBusy) return;
+        repBusy = true; go.disabled = true; go.textContent = 'Sending…'; err.hidden = true;
+        SOC.report(id, sel).then(function (r) {
+          if (r === 'ok' || r === 'dup') { onSent(); finish('Report sent. Thank you!', 'We will take a look at ' + title + '.'); }
+          else { repBusy = false; go.disabled = false; go.textContent = 'Try again'; err.textContent = r === 'off' ? 'Reports are switched off right now.' : 'Couldn’t send that. Check your connection and try again.'; err.hidden = false; }
+        });
+      });
+    }
+    $('.rp-x', pop).addEventListener('click', function () { closeRepPop(true); });
+    document.addEventListener('click', repOutside, true); document.addEventListener('keydown', repKey, true); window.addEventListener('resize', repPlace);
+    repPlace();
+    var first = $('.rp-o', pop); if (first) try { first.focus({ preventScroll: true }); } catch (e) { /* ignore */ }
+  }
+
   function buildPlay(slug) {
     var g = bySlug[slug];
     playView.innerHTML = '';
@@ -936,20 +1003,15 @@
       });
       sec._paintLike = paintLike;
     }
-    var rb = $('#playReport', sec), armT = 0;
+    var rb = $('#playReport', sec);
     if (rb) {
       var lblR = $('.lbl', rb);
-      var disarm = function () { clearTimeout(armT); rb.classList.remove('arm'); lblR.textContent = SOC.isReported(id) ? 'Reported' : 'Report'; };
-      if (SOC.isReported(id)) lblR.textContent = 'Reported';
-      rb.addEventListener('click', function () {
-        if (SOC.isReported(id)) { toast('You already reported this game today. Thanks!'); return; }
-        if (!rb.classList.contains('arm')) { rb.classList.add('arm'); lblR.textContent = 'Press again to report'; toast('Is this game broken? Press the button again to report it.'); armT = setTimeout(disarm, 4500); return; }
-        clearTimeout(armT); rb.disabled = true;
-        SOC.report(id).then(function (r) {
-          rb.disabled = false; rb.classList.remove('arm');
-          if (r === 'ok' || r === 'dup') { lblR.textContent = 'Reported'; toast('Report sent. Thanks, we will check this game.'); }
-          else { lblR.textContent = 'Report'; toast('Could not send the report. Try again later.'); }
-        });
+      if (SOC.isReported(id)) { lblR.textContent = 'Reported'; rb.classList.add('done'); }
+      rb.setAttribute('aria-haspopup', 'dialog'); rb.setAttribute('aria-expanded', 'false');
+      rb.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (repAnchor === rb) { closeRepPop(); return; }
+        openRepPop(rb, id, g.title, function () { lblR.textContent = 'Reported'; rb.classList.add('done'); });
       });
     }
     var about = el('div', 'play-info'); about.innerHTML = U.infoHtml ? U.infoHtml(gameFacts(g)) : ''; playView.appendChild(about);

@@ -474,7 +474,7 @@ footer a:hover { text-decoration: underline; }
 }
 
 /* ---------- Settings page ---------- */
-.set-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; align-items: start; max-width: 1100px; }
+.set-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; align-items: stretch; max-width: 1100px; }
 .set-card { padding: 18px 20px 20px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); }
 .set-card h2 { font-family: var(--display); font-size: 19px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 4px; }
 .set-card .desc { color: var(--muted); font-size: 14px; margin-bottom: 12px; }
@@ -1184,3 +1184,30 @@ footer::before { content: ""; position: absolute; left: 0; right: 0; top: 0; hei
 }
 @media (max-width: 900px) { .dv-hero, .dv-grid { grid-template-columns: 1fr; } .dv-hero { padding: 20px; } }
 @media (max-width: 520px) { .dv-urlrow { flex-direction: column; } .dv-card .dv-urlrow input[type="text"] { flex: none; } .dv-urlrow .btn-s { width: 100%; } }
+
+/* ===== Report panel on the game page ===== */
+.rpt-pop { position: fixed; z-index: 90; width: min(350px, calc(100vw - 20px)); padding: 16px; border-radius: 18px; background: var(--surface); color: var(--ink); border: 1px solid var(--line); box-shadow: 0 24px 54px -14px rgba(0, 0, 0, .5); }
+.rpt-pop.sheet { left: 10px; right: 10px; bottom: 10px; top: auto !important; width: auto; }
+.rpt-pop .rp-h { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.rpt-pop .rp-h b { font: 700 17px/1.2 var(--display); }
+.rpt-pop .rp-x { width: 30px; height: 30px; border: 0; border-radius: 9px; background: var(--soft); color: var(--ink); font-size: 18px; line-height: 1; cursor: pointer; }
+.rpt-pop .rp-x:hover { background: var(--soft-2); }
+.rpt-pop .rp-s { color: var(--muted); font-size: 13.5px; margin: 0 0 8px; }
+.rpt-pop .rp-o { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; margin-top: 6px; padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 12px; background: transparent; color: var(--ink); font: 500 14px/1.2 var(--font, inherit); cursor: pointer; transition: border-color .15s, background .15s, transform .2s var(--spring); }
+.rpt-pop .rp-o:hover { background: var(--soft); transform: translateX(2px); }
+.rpt-pop .rp-o i { flex: none; width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--muted); }
+.rpt-pop .rp-o.on { border-color: var(--blue); background: var(--soft); }
+.rpt-pop .rp-o.on i { border-color: var(--blue); background: radial-gradient(circle, var(--blue) 0 38%, transparent 42%); }
+.rpt-pop .rp-a { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+.rpt-pop .rp-go { background: var(--blue); border-color: var(--blue); color: #fff; }
+.rpt-pop .rp-go:hover { background: var(--blue); filter: brightness(1.1); }
+.rpt-pop .rp-go:disabled { opacity: .45; cursor: not-allowed; }
+.rpt-pop .rp-e { color: #d6402f; font-size: 13px; font-weight: 600; margin: 10px 0 0; }
+.rpt-pop .rp-ok { text-align: center; padding: 10px 0 4px; }
+.rpt-pop .rp-ok svg { width: 54px; height: 54px; color: #18a76b; }
+.rpt-pop .rp-ok p { margin: 8px 0 0; font-weight: 600; } .rpt-pop .rp-ok small { color: var(--muted); }
+#playReport.done { background: #18a76b; border-color: #18a76b; color: #fff; }
+@media (prefers-reduced-motion: no-preference) {
+  .rpt-pop { animation: rpt-pop .28s var(--spring); } @keyframes rpt-pop { from { opacity: 0; transform: translateY(8px) scale(.95); } }
+  .rpt-pop .rp-ok .tick, .rpt-pop .rp-ok circle { stroke-dasharray: 70; stroke-dashoffset: 70; animation: dv-draw .6s ease-out forwards; } .rpt-pop .rp-ok .tick { stroke-dasharray: 30; stroke-dashoffset: 30; animation-delay: .25s; }
+}

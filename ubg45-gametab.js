@@ -185,7 +185,7 @@
     '.ig-h h2{font:700 22px/1.2 var(--display);letter-spacing:-.02em;margin:0}.ig-h h2 span{color:var(--blue)}',
     '.ig-tags{display:flex;flex-wrap:wrap;gap:6px}.ig-tags span{font-size:12.5px;font-weight:600;padding:4px 11px;border-radius:999px;background:var(--blue-soft);color:var(--blue)}',
     '.ig-about{margin:0 0 16px;color:var(--ink-2);font-size:15.5px;line-height:1.6;max-width:78ch}',
-    '.ig-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start}',
+    '.ig-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:stretch}',
     '.ig-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow);transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .25s}',
     '.ig-card:hover{transform:translateY(-3px)}',
     '.ig-grid>.ig-card{animation:igCard .55s cubic-bezier(.2,.8,.2,1) both}.ig-grid>.ig-card:nth-child(2){animation-delay:.08s}.ig-grid>.ig-card:nth-child(3){animation-delay:.16s}',
@@ -296,8 +296,13 @@
     }
     // game: keyboard goes to it straight away
     var slowT = 0, docEl = document.documentElement;
-    function onLoad() { clearTimeout(slowT); try { frame.focus(); } catch (e) { /* ignore */ } if (stage) stage.className = 'ready'; }
-    function waitFor() { clearTimeout(slowT); slowT = setTimeout(function () { if (stage) stage.className = 'ready'; }, 20000); }   // never leave the spinner up for ever
+    function onLoad() { clearTimeout(slowT); clearTimeout(hintT); try { frame.focus(); } catch (e) { /* ignore */ } if (stage) stage.className = 'ready'; }
+    var hintT = 0;
+    function waitFor() {
+      clearTimeout(slowT); clearTimeout(hintT);
+      hintT = setTimeout(function () { if (stage && stage.className !== 'ready') say('Taking a while. Try the Refresh button, or Report if it never loads.'); }, 10000);
+      slowT = setTimeout(function () { if (stage) stage.className = 'ready'; }, 20000);   // never leave the spinner up for ever
+    }
     if (frame) { frame.addEventListener('load', onLoad); waitFor(); setTimeout(function () { try { frame.focus(); } catch (e) { /* ignore */ } }, 400); }
     // refresh: a fresh copy of the game frame (works for any game, also when it is hosted on another site)
     var rf = $('ubgRefresh');
