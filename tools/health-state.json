@@ -1,1 +1,14 @@
-{"games": {}}
+{
+ "games": {
+  "https://ubg77.github.io/drift-dudes/": {
+   "fails": 1,
+   "hidden": false,
+   "last": "2026-11-15",
+   "protected": false,
+   "reason": "HTTP 404 (page gone)",
+   "since": "2026-11-15",
+   "title": "Drift Dudes"
+  }
+ },
+ "updated": "2026-11-15"
+}
