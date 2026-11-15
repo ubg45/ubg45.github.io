@@ -41,3 +41,8 @@ create index if not exists ubg45_submissions_created_idx on public.ubg45_submiss
 -- ubg45_submit_game(...) validates every field, rejects duplicate links, drops bot submissions (hidden field) and is capped:
 -- 100 a day overall, 3 an hour per email, 3000 in total. It returns 'ok:<REF>', 'dup', 'full' or 'invalid:<field>'.
 -- (Full function body: see the migration in the Supabase project.)
+
+-- 3) Google Sheet feed (2026-11-15). Every report / submission is also POSTed (pg_net) to a Google Apps Script web app.
+--    Table ubg45_config holds 'sheet_url' (the web app URL; empty = off) and 'sheet_secret' (must match SECRET in the script).
+--    Private: RLS on, no access for visitors. Script template: supabase/google-sheet-script.template.gs. Function ubg45_push() sends the event
+--    and never raises an error, so reports and submissions work even if the sheet is down.
