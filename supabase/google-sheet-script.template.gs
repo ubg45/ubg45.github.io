@@ -219,15 +219,36 @@ function summary_(ss) {
   for (var h = 7; h <= 27; h++) if (h !== 7 && h !== 18) s.setRowHeight(h, 26);
   s.setRowHeight(7, 28); s.setRowHeight(17, 16); s.setRowHeight(18, 28); s.setRowHeight(28, 16);
 
+  /* your progress: how many boxes are in each Status */
+  band_(s, 'A29:D29', 'REPORTS  ·  by Status', COL.orange);
+  band_(s, 'E29:H29', 'DEVELOPER GAMES  ·  by Status', COL.purple);
+  REP_STATUS.forEach(function (st, i) {
+    var r = 30 + i;
+    s.getRange('A' + r).setValue(st);
+    s.getRange('B' + r).setFormula('=COUNTIFS(\'Report inbox\'!A4:A5000,"Status",\'Report inbox\'!B4:B5000,A' + r + ')').setHorizontalAlignment('center').setFontWeight('bold');
+    s.getRange('C' + r).setFormula('=REPT("█",MIN(B' + r + ',12))').setFontColor(COL.orange);
+  });
+  SUB_STATUS.forEach(function (st, i) {
+    var r = 30 + i;
+    s.getRange('E' + r).setValue(st);
+    s.getRange('F' + r).setFormula('=COUNTIFS(\'Developer inbox\'!A4:A5000,"Status",\'Developer inbox\'!B4:B5000,E' + r + ')').setHorizontalAlignment('center').setFontWeight('bold');
+    s.getRange('G' + r).setFormula('=REPT("█",MIN(F' + r + ',12))').setFontColor(COL.purple);
+  });
+  s.getRange('A30:D34').setVerticalAlignment('middle').setBorder(true, true, true, true, false, true, COL.line, SpreadsheetApp.BorderStyle.SOLID);
+  s.getRange('E30:H33').setVerticalAlignment('middle').setBorder(true, true, true, true, false, true, COL.line, SpreadsheetApp.BorderStyle.SOLID);
+  for (var q = 30; q <= 34; q++) s.setRowHeight(q, 26);
+  s.setRowHeight(35, 16);
+  s.setConditionalFormatRules(s.getConditionalFormatRules().concat(colorRules_(s, 1, STATUS_LOOK, 30, 34)).concat(colorRules_(s, 5, STATUS_LOOK, 30, 33)));
+
   /* how it works */
-  band_(s, 'A29:H29', 'HOW THIS WORKS', COL.ink);
+  band_(s, 'A36:H36', 'HOW THIS WORKS', COL.ink);
   var help = [
     'Report inbox:  every report from a player is one box with the game, the problem, the device and what they wrote. Set its Status when you have looked at it (New > Checking > Fixed, Removed or Ignore).',
     'Developer inbox:  every game a developer sends in is one box. Try the play link, tick the checklist, then set the Status (New > Playing it > Added or Declined).',
     'Reports and Submissions:  the same things as plain rows, for sorting, filtering and searching. Click the filter icon in the top row of those tabs.',
     'Nothing here changes the website. New boxes and rows appear on their own a few seconds after someone sends a report or a game.'
   ];
-  help.forEach(function (t, i) { s.getRange('A' + (30 + i) + ':H' + (30 + i)).merge().setValue(t).setWrap(true).setFontColor(COL.ink).setVerticalAlignment('middle').setBackground(i % 2 ? COL.white : COL.grey); s.setRowHeight(30 + i, 38); });
+  help.forEach(function (t, i) { s.getRange('A' + (37 + i) + ':H' + (37 + i)).merge().setValue(t).setWrap(true).setFontColor(COL.ink).setVerticalAlignment('middle').setBackground(i % 2 ? COL.white : COL.grey); s.setRowHeight(37 + i, 38); });
 }
 function band_(s, a1, text, color) {
   s.getRange(a1).merge().setValue(text).setFontSize(9).setFontWeight('bold').setFontColor('#ffffff').setBackground(color).setHorizontalAlignment('left').setVerticalAlignment('middle');
@@ -317,8 +338,8 @@ function addDevCard_(sh, p, when) {
     ['Category', v(p.category) || 'Not chosen', 'Email', v(p.email)],
     ['Works on', v(p.platforms) || 'Not said', 'Website', v(p.site) || 'None'],
     ['How to play', v(p.controls) || 'Not said', 'Picture', v(p.thumb) || 'None'],
-    ['WHAT THE GAME IS', '', '', ''],
-    [v(p.desc), '', '', ''],
+    ['THE PICTURE', '', 'WHAT THE GAME IS', ''],
+    ['', '', v(p.desc), ''],
     ['YOUR REVIEW  ·  tick each one when you have checked it', '', '', ''],
     ['', 'It loads inside the site', '', 'Keyboard / mouse controls work'],
     ['', 'It is safe for school', '', 'It works on a phone or Chromebook'],
@@ -341,12 +362,17 @@ function addDevCard_(sh, p, when) {
   g(0, 1).setFontSize(16).setFontWeight('bold'); g(0, 3).setHorizontalAlignment('right').setFontSize(9);
   g(1, 1, 1, 2).merge().setBackground(COL.sky); g(1, 3, 1, 2).merge().setBackground(COL.violet);
   g(1, 1, 1, 4).setFontSize(9).setFontWeight('bold').setFontColor(COL.blue);
-  g(6, 1, 1, 4).merge().setBackground(COL.mint).setFontSize(9).setFontWeight('bold').setFontColor('#0e7a4b');
+  g(6, 1, 1, 2).merge().setBackground(COL.amber).setFontSize(9).setFontWeight('bold').setFontColor('#a15c00');
+  g(6, 3, 1, 2).merge().setBackground(COL.mint).setFontSize(9).setFontWeight('bold').setFontColor('#0e7a4b');
   [2, 3, 4, 5].forEach(function (r) {
     g(r, 1).setBackground(COL.grey).setFontWeight('bold').setFontColor(COL.label);
     g(r, 3).setBackground(COL.grey).setFontWeight('bold').setFontColor(COL.label);
   });
-  g(7, 1, 1, 4).merge().setWrap(true).setVerticalAlignment('top').setFontSize(11);
+  /* the picture the developer sent (shown right in the box) and the description */
+  g(7, 1, 1, 2).merge().setHorizontalAlignment('center').setVerticalAlignment('middle');
+  g(7, 3, 1, 2).merge().setWrap(true).setVerticalAlignment('top').setFontSize(11);
+  if (/^https:\/\/[^\s"<>]+$/.test(String(p.thumb || ''))) g(7, 1).setNumberFormat('General').setFormula('=IMAGE("' + String(p.thumb).replace(/"/g, '%22') + '",1)');
+  else g(7, 1).setValue('No picture was sent.').setFontColor(COL.label).setFontStyle('italic');
   /* the checklist */
   g(8, 1, 1, 4).merge().setBackground(COL.amber).setFontSize(9).setFontWeight('bold').setFontColor('#a15c00');
   [9, 10].forEach(function (r) {
@@ -361,7 +387,7 @@ function addDevCard_(sh, p, when) {
   g(0, 1, 12, 4).setBorder(true, true, true, true, false, false, COL.purple, SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
   sh.setRowHeight(t, 38); sh.setRowHeight(t + 1, 22);
   for (var i = 2; i <= 5; i++) sh.setRowHeight(t + i, 26);
-  sh.setRowHeight(t + 6, 22); sh.setRowHeight(t + 7, 70); sh.setRowHeight(t + 8, 22);
+  sh.setRowHeight(t + 6, 22); sh.setRowHeight(t + 7, 120); sh.setRowHeight(t + 8, 22);
   sh.setRowHeight(t + 9, 26); sh.setRowHeight(t + 10, 26); sh.setRowHeight(t + 11, 32); sh.setRowHeight(t + 12, 18);
 }
 
