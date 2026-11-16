@@ -54,14 +54,35 @@
         });
       },
 
-      /* One report per game per day per browser. Resolves 'ok', 'dup' (already reported today), 'off' (not configured) or 'err'. */
-      report: function (id, reason) {
+      /* What kind of device this is, so a report can say "controls do not work" AND "on a phone". */
+      device: function () {
+        try {
+          var ua = navigator.userAgent || '', touch = (navigator.maxTouchPoints || 0) > 0, w = Math.min(screen.width || 0, screen.height || 0);
+          if (/CrOS/.test(ua)) return 'chromebook';
+          if (/iPad|Tablet/i.test(ua) || (touch && /Macintosh/.test(ua))) return 'tablet';
+          if (/iPhone|iPod|Mobile/i.test(ua)) return 'phone';
+          if (touch && /Android/i.test(ua)) return w && w < 600 ? 'phone' : 'tablet';
+          return 'computer';
+        } catch (e) { return 'computer'; }
+      },
+
+      /* One report per game per day per browser. extra = { title, device, note } (all optional). Resolves 'ok', 'dup' (already reported today), 'off' (not configured) or 'err'.
+       * If the database does not know the newer details yet, the report is still sent with fewer of them, so it never gets lost. */
+      report: function (id, reason, extra) {
         if (api.isReported(id)) return Promise.resolve('dup');
         if (!api.on) return Promise.resolve('off');
-        return rpc('ubg45_report', reason ? { p_game: id, p_reason: reason } : { p_game: id }).catch(function (e) { if (reason) return rpc('ubg45_report', { p_game: id }); throw e; }).then(function () {
-          var t = today(), m = rd(RK), n = {}; Object.keys(m).forEach(function (k) { if (m[k] === t) n[k] = t; }); n[id] = t; wr(RK, n);
-          return 'ok';
-        }, function () { return 'err'; });
+        var body = { p_game: id }, x = extra || {};
+        if (reason) body.p_reason = reason;
+        if (x.title) body.p_title = String(x.title).slice(0, 80);
+        if (x.device) body.p_device = String(x.device);
+        if (x.note && String(x.note).trim()) body.p_note = String(x.note).trim().slice(0, 200);
+        return rpc('ubg45_report', body)
+          .catch(function (e) { if (reason && Object.keys(body).length > 2) return rpc('ubg45_report', { p_game: id, p_reason: reason }); throw e; })
+          .catch(function (e) { if (reason) return rpc('ubg45_report', { p_game: id }); throw e; })
+          .then(function () {
+            var t = today(), m = rd(RK), n = {}; Object.keys(m).forEach(function (k) { if (m[k] === t) n[k] = t; }); n[id] = t; wr(RK, n);
+            return 'ok';
+          }, function () { return 'err'; });
       },
 
       /* Like totals for every game: cb(map, fromCache). Cached for two minutes so pages do not refetch on every view. */

@@ -902,7 +902,7 @@
     else {
       var sel = '', h = '<p class="rp-s">What is wrong with <b class="gn"></b>? Pick one.</p><div role="radiogroup" aria-label="What is wrong">';
       REPORT_REASONS.forEach(function (r) { h += '<button type="button" class="rp-o" role="radio" aria-checked="false" data-r="' + r[0] + '"><i></i><span>' + esc(r[1]) + '</span></button>'; });
-      h += '</div><p class="rp-e" role="alert" hidden></p><div class="rp-a"><button type="button" class="btn-s rp-no">Cancel</button><button type="button" class="btn-s rp-go" disabled>Send report</button></div>';
+      h += '</div><label class="rp-nl">Tell us more <span>(optional)</span><textarea class="rp-note" maxlength="200" rows="2" placeholder="For example: black screen after the menu"></textarea></label><p class="rp-e" role="alert" hidden></p><div class="rp-a"><button type="button" class="btn-s rp-no">Cancel</button><button type="button" class="btn-s rp-go" disabled>Send report</button></div>';
       body.innerHTML = h; $('.gn', body).textContent = title;
       var go = $('.rp-go', body), err = $('.rp-e', body);
       $$('.rp-o', body).forEach(function (b) {
@@ -917,7 +917,7 @@
       go.addEventListener('click', function () {
         if (!sel || repBusy) return;
         repBusy = true; go.disabled = true; go.textContent = 'Sending…'; err.hidden = true;
-        SOC.report(id, sel).then(function (r) {
+        SOC.report(id, sel, { title: title, device: SOC.device ? SOC.device() : '', note: ($('.rp-note', body) || {}).value || '' }).then(function (r) {
           if (r === 'ok' || r === 'dup') { onSent(); finish('Report sent. Thank you!', 'We will take a look at ' + title + '.'); }
           else { repBusy = false; go.disabled = false; go.textContent = 'Try again'; err.textContent = r === 'off' ? 'Reports are switched off right now.' : 'Couldn’t send that. Check your connection and try again.'; err.hidden = false; }
         });

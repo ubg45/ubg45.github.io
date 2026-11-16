@@ -1211,3 +1211,8 @@ footer::before { content: ""; position: absolute; left: 0; right: 0; top: 0; hei
   .rpt-pop { animation: rpt-pop .28s var(--spring); } @keyframes rpt-pop { from { opacity: 0; transform: translateY(8px) scale(.95); } }
   .rpt-pop .rp-ok .tick, .rpt-pop .rp-ok circle { stroke-dasharray: 70; stroke-dashoffset: 70; animation: dv-draw .6s ease-out forwards; } .rpt-pop .rp-ok .tick { stroke-dasharray: 30; stroke-dashoffset: 30; animation-delay: .25s; }
 }
+
+.rpt-pop .rp-nl { display: block; margin: 12px 0 0; font-size: 13px; font-weight: 600; }
+.rpt-pop .rp-nl span { color: var(--muted); font-weight: 500; }
+.rpt-pop .rp-note { display: block; width: 100%; margin-top: 5px; resize: none; border: 1.5px solid var(--line-3); border-radius: 12px; background: var(--surface); color: var(--ink); font: 500 14px/1.4 inherit; padding: 9px 12px; }
+.rpt-pop .rp-note:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 4px rgba(47, 91, 255, .16); }

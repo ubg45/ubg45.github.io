@@ -268,6 +268,8 @@
     '#ubgRep .ro:hover{background:var(--soft);transform:translateX(2px)}#ubgRep .ro i{flex:none;width:16px;height:16px;border-radius:50%;border:2px solid var(--muted);transition:all .15s}',
     '#ubgRep .ro.on{border-color:var(--blue);background:var(--soft)}#ubgRep .ro.on i{border-color:var(--blue);background:radial-gradient(circle,var(--blue) 0 38%,transparent 42%)}',
     '#ubgRep .rp-a{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}#ubgRep .go{background:var(--blue);color:#fff}#ubgRep .go:disabled{opacity:.45;cursor:not-allowed}',
+    '#ubgRep .rp-nl{display:block;margin:12px 0 4px;font-size:13px;font-weight:600}#ubgRep .rp-nl span{color:var(--muted);font-weight:500}',
+    '#ubgRep .rp-note{width:100%;resize:none;border:1.5px solid var(--line);border-radius:12px;background:transparent;color:var(--ink);font:500 14px/1.4 var(--font);padding:9px 12px}#ubgRep .rp-note:focus{outline:none;border-color:var(--blue)}',
     '#ubgRep .rp-e{color:#d6402f;font-size:13px;margin:10px 0 0;font-weight:600}',
     '#ubgRep .rp-ok{text-align:center;padding:10px 0 4px}#ubgRep .rp-ok svg{width:54px;height:54px;color:#18a76b}#ubgRep .rp-ok .tick{stroke-dasharray:30;stroke-dashoffset:30;animation:ubgTick .5s .15s ease-out forwards}#ubgRep .rp-ok circle{stroke-dasharray:70;stroke-dashoffset:70;animation:ubgTick .6s ease-out forwards}',
     '@keyframes ubgTick{to{stroke-dashoffset:0}}#ubgRep .rp-ok p{margin:8px 0 0;font-weight:600}#ubgRep .rp-ok small{color:var(--muted)}',
@@ -396,7 +398,7 @@
       repSel = ''; repBusy = false;
       var h = '<p class="rp-s">What is wrong with ' + '<b class="gn"></b>' + '? Pick one.</p><div role="radiogroup" aria-label="What is wrong">';
       REASONS.forEach(function (r) { h += '<button type="button" class="ro" role="radio" aria-checked="false" data-r="' + r[0] + '"><i></i><span>' + r[1] + '</span></button>'; });
-      h += '</div><p class="rp-e" id="ubgRepErr" role="alert" hidden></p><div class="rp-a"><button type="button" class="ub" id="ubgRepNo">Cancel</button><button type="button" class="ub go" id="ubgRepGo" disabled>Send report</button></div>';
+      h += '</div><label class="rp-nl" for="ubgRepNote">Tell us more <span>(optional)</span></label><textarea id="ubgRepNote" class="rp-note" maxlength="200" rows="2" placeholder="For example: black screen after the menu"></textarea><p class="rp-e" id="ubgRepErr" role="alert" hidden></p><div class="rp-a"><button type="button" class="ub" id="ubgRepNo">Cancel</button><button type="button" class="ub go" id="ubgRepGo" disabled>Send report</button></div>';
       body.innerHTML = h; body.querySelector('.gn').textContent = cfg.title;
       var go = $('ubgRepGo'), err = $('ubgRepErr');
       body.querySelectorAll('.ro').forEach(function (b) {
@@ -411,7 +413,7 @@
       go.addEventListener('click', function () {
         if (!repSel || repBusy) return;
         repBusy = true; go.disabled = true; go.textContent = 'Sending…'; err.hidden = true;
-        soc.report(cfg.id, repSel).then(function (r) {
+        soc.report(cfg.id, repSel, { title: cfg.title, device: soc.device ? soc.device() : '', note: ($('ubgRepNote') || {}).value || '' }).then(function (r) {
           if (r === 'ok' || r === 'dup') {
             rp.classList.add('done'); fx.done(rp, 2400); var t = rp.querySelector('.t'); if (t) t.textContent = 'Reported';
             repDone('Report sent. Thank you!', 'We will take a look at ' + cfg.title + '.');
