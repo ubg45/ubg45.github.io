@@ -492,7 +492,7 @@ function cleanup_(ss, re, dropOld) {
     var sh = ss.getSheetByName(cfg[0]), last = sh ? sh.getLastRow() : 0;
     if (!sh || last < CARD_TOP) return;
     var col = sh.getRange(CARD_TOP, 1, last - CARD_TOP + 1, 1).getValues().map(function (r) { return String(r[0]); }), starts = [], i;
-    for (i = 0; i < col.length - 1; i++) if (col[i] !== '' && (col[i + 1] === cfg[1] || (cfg[1] === 'THE GAME' && col[i + 1] === 'CONTACT THEM'))) starts.push(i);
+    for (i = 0; i < col.length - 1; i++) if (col[i] !== '' && col[i] !== 'CONTACT THEM' && (col[i + 1] === cfg[1] || (cfg[1] === 'THE GAME' && col[i + 1] === 'CONTACT THEM'))) starts.push(i);
     for (i = starts.length - 1; i >= 0; i--) {                       // bottom up, so the row numbers above stay right
       var from = starts[i], to = i + 1 < starts.length ? starts[i + 1] : col.length;
       if (re.test(col[from].trim())) { sh.deleteRows(CARD_TOP + from, to - from); out[cfg[2]]++; }
