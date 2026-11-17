@@ -3,7 +3,7 @@
  * What you get in your Google Sheet (tabs along the bottom):
  *   Summary          the overview: what is waiting for you, the latest reports (game + problem + device), most reported games, problems
  *   Report inbox     ONE BOX PER REPORT: the game, the problem (coloured), the device, what the player wrote, a Status box you can change
- *   Developer inbox  ONE BOX PER DEVELOPER GAME: the game, the developer, the description, a review checklist and a Status box
+ *   Developer inbox  ONE BOX PER DEVELOPER GAME: a CONTACT THEM bar (name + clickable email), the game, the developer, the picture, description, a review checklist and a Status box
  *   Reports          every report as one plain row (for sorting, filtering and searching)
  *   Submissions      every developer game as one plain row (for sorting, filtering and searching)
  *
@@ -37,7 +37,7 @@ PROBLEM_LOOK[REASONS.other] = ['#e9ecf3', '#5b6685'];
 
 var COL = { blue: '#2f5bff', ink: '#1b2250', sky: '#e8eeff', violet: '#efe7ff', mint: '#e5f6ee', amber: '#fff0d6', grey: '#f4f6fb', label: '#5b6685', line: '#c9d2ea', note: '#fffbe6', white: '#ffffff', orange: '#e8590c', purple: '#6b3fd4' };
 var CARD_TOP = 4;            // the newest box is always inserted at this row
-var DEV_ROWS = 13;           // rows used by one developer box (12 + 1 spacer)
+var DEV_ROWS = 14;           // rows used by one developer box (13 + 1 spacer)
 var REP_ROWS = 10;           // rows used by one report box (9 + 1 spacer)
 var WEEK = 'TEXT(TODAY()-6,"yyyy-mm-dd")';   // "last 7 days" starts here
 
@@ -51,6 +51,8 @@ function setup() {
   reports_(ss);
   table_(ss);
   summary_(ss);
+  var blank = ss.getSheetByName('Sheet1');
+  if (blank && blank.getLastRow() === 0 && ss.getNumSheets() > 1) ss.deleteSheet(blank);
   var order = ['Summary', 'Report inbox', 'Developer inbox', 'Reports', 'Submissions'];
   order.forEach(function (n, i) { var sh = ss.getSheetByName(n); if (sh) { ss.setActiveSheet(sh); ss.moveActiveSheet(i + 1); } });
   ss.getSheets().forEach(function (sh) { if (/\(old/.test(sh.getName())) { sh.setTabColor('#9aa3b8'); ss.setActiveSheet(sh); ss.moveActiveSheet(ss.getNumSheets()); } });
@@ -91,7 +93,7 @@ function rebuildInbox() {
 /* ================================================================ the tabs */
 function statusRules_(sh) {
   grow_(sh, 5000);
-  var rng = sh.getRange('B' + CARD_TOP + ':B5000'), rules = [];
+  var rng = sh.getRange('B' + (CARD_TOP - 1) + ':B5000')   /* starts one row ABOVE where new boxes are inserted, so new boxes are always inside it */, rules = [];
   Object.keys(STATUS_LOOK).forEach(function (t) { rules.push(SpreadsheetApp.newConditionalFormatRule().whenTextEqualTo(t).setBackground(STATUS_LOOK[t][0]).setFontColor(STATUS_LOOK[t][1]).setRanges([rng]).build()); });
   sh.setConditionalFormatRules(rules);
 }
@@ -102,7 +104,7 @@ function reportInbox_(ss) {
   sh = ss.insertSheet('Report inbox');
   sh.setHiddenGridlines(true);
   sh.setTabColor(COL.orange);
-  [130, 310, 150, 310].forEach(function (w, i) { sh.setColumnWidth(i + 1, w); });
+  [120, 280, 150, 280].forEach(function (w, i) { sh.setColumnWidth(i + 1, w); });
   sh.getRange('A1:D1').merge().setValue('UBG45  ·  Report inbox').setFontSize(20).setFontWeight('bold').setFontColor(COL.orange).setVerticalAlignment('middle');
   sh.getRange('A2:D2').merge().setValue('One box per report from a player. Newest at the top. When you have dealt with one, change its Status box.').setFontColor(COL.label).setFontStyle('italic');
   sh.setRowHeight(1, 44); sh.setFrozenRows(2);
@@ -115,7 +117,7 @@ function devInbox_(ss) {
   if (!sh) {
     sh = ss.insertSheet('Developer inbox');
     sh.setHiddenGridlines(true);
-    [130, 320, 130, 320].forEach(function (w, i) { sh.setColumnWidth(i + 1, w); });
+    [120, 280, 120, 280].forEach(function (w, i) { sh.setColumnWidth(i + 1, w); });
     sh.setRowHeight(1, 44); sh.setFrozenRows(2);
   }
   sh.setTabColor(COL.purple);
@@ -174,15 +176,15 @@ function summary_(ss) {
   s.getRange(1, 1, s.getMaxRows(), s.getMaxColumns()).breakApart();
   s.clear(); s.clearConditionalFormatRules(); s.setHiddenGridlines(true); s.setTabColor(COL.blue);
   s.getCharts().forEach(function (c) { s.removeChart(c); });
-  [200, 200, 100, 130, 200, 160, 110, 130].forEach(function (w, i) { s.setColumnWidth(i + 1, w); });
+  [200, 200, 100, 130, 200, 160, 230, 130, 200, 200, 330].forEach(function (w, i) { s.setColumnWidth(i + 1, w); });
   s.getRange('A1:H1').merge().setValue('UBG45  ·  Overview').setFontSize(22).setFontWeight('bold').setFontColor(COL.blue).setVerticalAlignment('middle');
   s.getRange('A2:H2').merge().setFormula('="Live overview  ·  today is "&TEXT(TODAY(),"dddd d mmmm yyyy")&"  ·  all times are Sydney time"').setFontColor(COL.label).setFontStyle('italic');
   s.setRowHeight(1, 48); s.setRowHeight(2, 24); s.setRowHeight(3, 10);
 
   /* four big numbers */
   var boxes = [
-    ['A', 'B', 'NEW REPORTS  ·  waiting for you', '=COUNTIFS(\'Report inbox\'!A4:A5000,"Status",\'Report inbox\'!B4:B5000,"New")', COL.amber],
-    ['C', 'D', 'NEW DEVELOPER GAMES', '=COUNTIFS(\'Developer inbox\'!A4:A5000,"Status",\'Developer inbox\'!B4:B5000,"New")', COL.violet],
+    ['A', 'B', 'NEW REPORTS  ·  waiting for you', '=COUNTIFS(\'Report inbox\'!A3:A5000,"Status",\'Report inbox\'!B3:B5000,"New")', COL.amber],
+    ['C', 'D', 'NEW DEVELOPER GAMES', '=COUNTIFS(\'Developer inbox\'!A3:A5000,"Status",\'Developer inbox\'!B3:B5000,"New")', COL.violet],
     ['E', 'F', 'REPORTS  ·  last 7 days', '=SUMPRODUCT(--(LEFT(Reports!A2:A5000,10)>=' + WEEK + '))', COL.sky],
     ['G', 'H', 'GAMES REPORTED  ·  last 7 days', '=IFERROR(COUNTA(UNIQUE(FILTER(Reports!C2:C5000,LEFT(Reports!A2:A5000,10)>=' + WEEK + '))),0)', COL.mint]
   ];
@@ -201,7 +203,7 @@ function summary_(ss) {
   band_(s, 'A7:D7', 'LATEST REPORTS  ·  newest first', COL.orange);
   band_(s, 'E7:H7', 'LATEST DEVELOPER GAMES  ·  newest first', COL.purple);
   s.getRange('A8').setFormula('=IFERROR(QUERY(Reports!A2:I5000,"select C, D, E, A where A is not null order by A desc limit 8 label C \'Game\', D \'Problem\', E \'Device\', A \'When\'",0),"No reports yet")');
-  s.getRange('E8').setFormula('=IFERROR(QUERY(Submissions!A2:L5000,"select C, D, F, A where A is not null order by A desc limit 8 label C \'Game\', D \'Developer\', F \'Category\', A \'When\'",0),"No developer games yet")');
+  s.getRange('E8').setFormula('=IFERROR(QUERY(Submissions!A2:L5000,"select C, D, E, A where A is not null order by A desc limit 8 label C \'Game\', D \'Developer\', E \'Email\', A \'When\'",0),"No developer games yet")');
   listLook_(s, 'A8:D16'); listLook_(s, 'E8:H16');
 
   /* last 7 days */
@@ -225,13 +227,13 @@ function summary_(ss) {
   REP_STATUS.forEach(function (st, i) {
     var r = 30 + i;
     s.getRange('A' + r).setValue(st);
-    s.getRange('B' + r).setFormula('=COUNTIFS(\'Report inbox\'!A4:A5000,"Status",\'Report inbox\'!B4:B5000,A' + r + ')').setHorizontalAlignment('center').setFontWeight('bold');
+    s.getRange('B' + r).setFormula('=COUNTIFS(\'Report inbox\'!A3:A5000,"Status",\'Report inbox\'!B3:B5000,A' + r + ')').setHorizontalAlignment('center').setFontWeight('bold');
     s.getRange('C' + r).setFormula('=REPT("█",MIN(B' + r + ',12))').setFontColor(COL.orange);
   });
   SUB_STATUS.forEach(function (st, i) {
     var r = 30 + i;
     s.getRange('E' + r).setValue(st);
-    s.getRange('F' + r).setFormula('=COUNTIFS(\'Developer inbox\'!A4:A5000,"Status",\'Developer inbox\'!B4:B5000,E' + r + ')').setHorizontalAlignment('center').setFontWeight('bold');
+    s.getRange('F' + r).setFormula('=COUNTIFS(\'Developer inbox\'!A3:A5000,"Status",\'Developer inbox\'!B3:B5000,E' + r + ')').setHorizontalAlignment('center').setFontWeight('bold');
     s.getRange('G' + r).setFormula('=REPT("█",MIN(F' + r + ',12))').setFontColor(COL.purple);
   });
   s.getRange('A30:D34').setVerticalAlignment('middle').setBorder(true, true, true, true, false, true, COL.line, SpreadsheetApp.BorderStyle.SOLID);
@@ -240,15 +242,25 @@ function summary_(ss) {
   s.setRowHeight(35, 16);
   s.setConditionalFormatRules(s.getConditionalFormatRules().concat(colorRules_(s, 1, STATUS_LOOK, 30, 34)).concat(colorRules_(s, 5, STATUS_LOOK, 30, 33)));
 
+  /* every detail a developer typed into the website form, newest first */
+  band_(s, 'A36:K36', 'DEVELOPER GAMES  ·  every detail the developer entered  ·  newest first', COL.purple);
+  s.getRange('A37').setFormula('=IFERROR(QUERY(Submissions!A2:L5000,"select A, C, F, I, D, E, J, L, H, K, G where A is not null order by A desc limit 10 label A \'When\', C \'Game\', F \'Category\', I \'Works on\', D \'Developer\', E \'Email\', J \'Play link\', L \'Website\', H \'How to play\', K \'Picture\', G \'Description\'",0),"No developer games yet")');
+  listLook_(s, 'A37:K47');
+  s.getRange('A38:K47').setWrap(true).setVerticalAlignment('top');
+  s.setRowHeight(37, 26);
+  for (var dr = 38; dr <= 47; dr++) s.setRowHeight(dr, 48);
+  s.setRowHeight(48, 16);
+
   /* how it works */
-  band_(s, 'A36:H36', 'HOW THIS WORKS', COL.ink);
+  band_(s, 'A49:H49', 'HOW THIS WORKS', COL.ink);
   var help = [
     'Report inbox:  every report from a player is one box with the game, the problem, the device and what they wrote. Set its Status when you have looked at it (New > Checking > Fixed, Removed or Ignore).',
     'Developer inbox:  every game a developer sends in is one box. Try the play link, tick the checklist, then set the Status (New > Playing it > Added or Declined).',
+    'Developer table (above):  everything a developer typed into the website form, one row per game. Click a game\'s box in the Developer inbox tab for clickable links.',
     'Reports and Submissions:  the same things as plain rows, for sorting, filtering and searching. Click the filter icon in the top row of those tabs.',
     'Nothing here changes the website. New boxes and rows appear on their own a few seconds after someone sends a report or a game.'
   ];
-  help.forEach(function (t, i) { s.getRange('A' + (37 + i) + ':H' + (37 + i)).merge().setValue(t).setWrap(true).setFontColor(COL.ink).setVerticalAlignment('middle').setBackground(i % 2 ? COL.white : COL.grey); s.setRowHeight(37 + i, 38); });
+  help.forEach(function (t, i) { s.getRange('A' + (50 + i) + ':H' + (50 + i)).merge().setValue(t).setWrap(true).setFontColor(COL.ink).setVerticalAlignment('middle').setBackground(i % 2 ? COL.white : COL.grey); s.setRowHeight(50 + i, 38); });
 }
 function band_(s, a1, text, color) {
   s.getRange(a1).merge().setValue(text).setFontSize(9).setFontWeight('bold').setFontColor('#ffffff').setBackground(color).setHorizontalAlignment('left').setVerticalAlignment('middle');
@@ -321,7 +333,12 @@ function addReportCard_(sh, p) {
   sh.setRowHeight(t + 8, 32); sh.setRowHeight(t + 9, 18);
 }
 
-/* ================================================================ one developer game = one box (13 rows) */
+/* ================================================================ one developer game = one box (14 rows) */
+function mailLink_(email, label) {
+  email = String(email || '').trim();
+  if (!/^[^\s"<>@]+@[^\s"<>@]+\.[^\s"<>@]+$/.test(email)) return '';
+  return '=HYPERLINK("mailto:' + email + '","' + String(label || email).replace(/["\n\r]/g, '') + '")';
+}
 function addDevCard_(sh, p, when) {
   var t = CARD_TOP, g = function (r, c, nr, nc) { return sh.getRange(t + r, c, nr || 1, nc || 1); };
   if (sh.getMaxRows() < t) sh.insertRowsAfter(sh.getMaxRows(), t - sh.getMaxRows());
@@ -333,9 +350,10 @@ function addDevCard_(sh, p, when) {
   var v = safe_;
   all.setValues([
     [v(p.title), '', 'Reference ' + v(p.ref) + '   ·   ' + when, ''],
+    ['CONTACT THEM', v(p.dev) + '   ·   ' + (v(p.email) || 'no email given'), '', ''],
     ['THE GAME', '', 'THE DEVELOPER', ''],
     ['Play link', '', 'Name', v(p.dev)],
-    ['Category', v(p.category) || 'Not chosen', 'Email', v(p.email)],
+    ['Category', v(p.category) || 'Not chosen', 'Email', v(p.email) || 'Not given'],
     ['Works on', v(p.platforms) || 'Not said', 'Website', v(p.site) || 'None'],
     ['How to play', v(p.controls) || 'Not said', 'Picture', v(p.thumb) || 'None'],
     ['THE PICTURE', '', 'WHAT THE GAME IS', ''],
@@ -347,48 +365,57 @@ function addDevCard_(sh, p, when) {
     ['', '', '', '']
   ]);
 
-  /* real, clickable links */
+  /* real, clickable links (the email opens a new message to the developer) */
   var link = function (r, c, url, label) {
     url = String(url || '');
     if (!/^https:\/\/[^\s"<>]+$/.test(url)) return;
     g(r, c).setNumberFormat('General').setFormula('=HYPERLINK("' + url.replace(/"/g, '%22') + '","' + String(label).replace(/"/g, '') + '")').setFontColor(COL.blue).setFontWeight('bold');
   };
-  link(2, 2, p.url, p.url);
-  link(4, 4, p.site, p.site);
-  link(5, 4, p.thumb, 'Open the picture');
+  link(3, 2, p.url, p.url);
+  link(5, 4, p.site, p.site);
+  link(6, 4, p.thumb, 'Open the picture');
+  var mail = mailLink_(p.email, p.email), contact = mailLink_(p.email, String(p.dev || '').replace(/["\n\r]/g, '') + '   ·   ' + p.email);
+  if (mail) g(4, 4).setNumberFormat('General').setFormula(mail).setFontColor(COL.blue).setFontWeight('bold');
+  if (contact) g(1, 2).setNumberFormat('General').setFormula(contact);
 
+  /* title band */
   g(0, 1, 1, 2).merge(); g(0, 3, 1, 2).merge();
   g(0, 1, 1, 4).setBackground(COL.purple).setFontColor('#ffffff');
   g(0, 1).setFontSize(16).setFontWeight('bold'); g(0, 3).setHorizontalAlignment('right').setFontSize(9);
-  g(1, 1, 1, 2).merge().setBackground(COL.sky); g(1, 3, 1, 2).merge().setBackground(COL.violet);
-  g(1, 1, 1, 4).setFontSize(9).setFontWeight('bold').setFontColor(COL.blue);
-  g(6, 1, 1, 2).merge().setBackground(COL.amber).setFontSize(9).setFontWeight('bold').setFontColor('#a15c00');
-  g(6, 3, 1, 2).merge().setBackground(COL.mint).setFontSize(9).setFontWeight('bold').setFontColor('#0e7a4b');
-  [2, 3, 4, 5].forEach(function (r) {
+  /* contact bar: who to write to, one click */
+  g(1, 2, 1, 3).merge().setHorizontalAlignment('left').setFontSize(12).setFontWeight('bold').setFontColor(contact ? COL.blue : COL.ink);
+  g(1, 1, 1, 4).setBackground('#d8f3e5');
+  g(1, 1).setFontSize(9).setFontWeight('bold').setFontColor('#0e7a4b');
+  /* the two boxes */
+  g(2, 1, 1, 2).merge().setBackground(COL.sky); g(2, 3, 1, 2).merge().setBackground(COL.violet);
+  g(2, 1, 1, 4).setFontSize(9).setFontWeight('bold').setFontColor(COL.blue);
+  [3, 4, 5, 6].forEach(function (r) {
     g(r, 1).setBackground(COL.grey).setFontWeight('bold').setFontColor(COL.label);
     g(r, 3).setBackground(COL.grey).setFontWeight('bold').setFontColor(COL.label);
   });
-  /* the picture the developer sent (shown right in the box) and the description */
-  g(7, 1, 1, 2).merge().setHorizontalAlignment('center').setVerticalAlignment('middle');
-  g(7, 3, 1, 2).merge().setWrap(true).setVerticalAlignment('top').setFontSize(11);
-  if (/^https:\/\/[^\s"<>]+$/.test(String(p.thumb || ''))) g(7, 1).setNumberFormat('General').setFormula('=IMAGE("' + String(p.thumb).replace(/"/g, '%22') + '",1)');
-  else g(7, 1).setValue('No picture was sent.').setFontColor(COL.label).setFontStyle('italic');
+  /* picture + description */
+  g(7, 1, 1, 2).merge().setBackground(COL.amber).setFontSize(9).setFontWeight('bold').setFontColor('#a15c00');
+  g(7, 3, 1, 2).merge().setBackground(COL.mint).setFontSize(9).setFontWeight('bold').setFontColor('#0e7a4b');
+  g(8, 1, 1, 2).merge().setHorizontalAlignment('center').setVerticalAlignment('middle');
+  g(8, 3, 1, 2).merge().setWrap(true).setVerticalAlignment('top').setFontSize(11);
+  if (/^https:\/\/[^\s"<>]+$/.test(String(p.thumb || ''))) g(8, 1).setNumberFormat('General').setFormula('=IFERROR(IMAGE("' + String(p.thumb).replace(/"/g, '%22') + '",1),"The picture could not be shown. Use the Picture link above.")');
+  else g(8, 1).setValue('No picture was sent.').setFontColor(COL.label).setFontStyle('italic');
   /* the checklist */
-  g(8, 1, 1, 4).merge().setBackground(COL.amber).setFontSize(9).setFontWeight('bold').setFontColor('#a15c00');
-  [9, 10].forEach(function (r) {
+  g(9, 1, 1, 4).merge().setBackground(COL.amber).setFontSize(9).setFontWeight('bold').setFontColor('#a15c00');
+  [10, 11].forEach(function (r) {
     [1, 3].forEach(function (c) { g(r, c).setNumberFormat('General').insertCheckboxes().setHorizontalAlignment('right'); });
   });
   /* status + notes */
-  g(11, 1).setBackground(COL.grey).setFontWeight('bold').setFontColor(COL.label);
-  g(11, 3).setBackground(COL.grey).setFontWeight('bold').setFontColor(COL.label);
-  g(11, 2).setDataValidation(SpreadsheetApp.newDataValidation().requireValueInList(SUB_STATUS, true).build()).setNumberFormat('General').setFontWeight('bold').setHorizontalAlignment('center');
-  g(11, 4).setBackground(COL.note);
-  g(2, 1, 4, 4).setBorder(null, null, null, null, false, true, COL.line, SpreadsheetApp.BorderStyle.SOLID);
-  g(0, 1, 12, 4).setBorder(true, true, true, true, false, false, COL.purple, SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
-  sh.setRowHeight(t, 38); sh.setRowHeight(t + 1, 22);
-  for (var i = 2; i <= 5; i++) sh.setRowHeight(t + i, 26);
-  sh.setRowHeight(t + 6, 22); sh.setRowHeight(t + 7, 120); sh.setRowHeight(t + 8, 22);
-  sh.setRowHeight(t + 9, 26); sh.setRowHeight(t + 10, 26); sh.setRowHeight(t + 11, 32); sh.setRowHeight(t + 12, 18);
+  g(12, 1).setBackground(COL.grey).setFontWeight('bold').setFontColor(COL.label);
+  g(12, 3).setBackground(COL.grey).setFontWeight('bold').setFontColor(COL.label);
+  g(12, 2).setDataValidation(SpreadsheetApp.newDataValidation().requireValueInList(SUB_STATUS, true).build()).setNumberFormat('General').setFontWeight('bold').setHorizontalAlignment('center');
+  g(12, 4).setBackground(COL.note);
+  g(3, 1, 4, 4).setBorder(null, null, null, null, false, true, COL.line, SpreadsheetApp.BorderStyle.SOLID);
+  g(0, 1, 13, 4).setBorder(true, true, true, true, false, false, COL.purple, SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
+  sh.setRowHeight(t, 38); sh.setRowHeight(t + 1, 36); sh.setRowHeight(t + 2, 22);
+  for (var i = 3; i <= 6; i++) sh.setRowHeight(t + i, 26);
+  sh.setRowHeight(t + 7, 22); sh.setRowHeight(t + 8, 120); sh.setRowHeight(t + 9, 22);
+  sh.setRowHeight(t + 10, 26); sh.setRowHeight(t + 11, 26); sh.setRowHeight(t + 12, 32); sh.setRowHeight(t + 13, 18);
 }
 
 /* ================================================================ what the website sends */
@@ -426,6 +453,7 @@ function doPost(e) {
     lock.waitLock(20000);
     var ss = SpreadsheetApp.getActiveSpreadsheet(), p = d.data || {}, now = Utilities.formatDate(new Date(), TZ, 'yyyy-MM-dd HH:mm');
     if (d.kind === 'inspect') return out_(inspect_(ss));
+    if (d.kind === 'cleanup') return out_(cleanup_(ss, new RegExp(String(p.match || '^$'), 'i'), p.dropOld === true));
     if (d.kind !== 'report' && d.kind !== 'submission') return out_('unknown');
     if (PropertiesService.getScriptProperties().getProperty('layout') !== String(VERSION)) setup();   // in case "setup" was never run
 
@@ -444,6 +472,8 @@ function doPost(e) {
       addReportCard_(ss.getSheetByName('Report inbox') || reportInbox_(ss), { id: id, when: now, title: title, slug: slug, problem: problem, device: device, note: note, today: today, week: week });
     } else {
       var sub = ss.getSheetByName('Submissions') || table_(ss), rr = logRow_(sub, [now, safe_(p.ref), safe_(p.title), safe_(p.dev), safe_(p.email), safe_(p.category), safe_(p.desc), safe_(p.controls), safe_(p.platforms), '', '', ''], 12);
+      var ml = mailLink_(p.email, p.email);
+      if (ml) sub.getRange(rr, 5).setNumberFormat('General').setFormula(ml);
       sub.getRange(rr, 10, 1, 3).setNumberFormat('General').setFormulas([[link_(p.url, p.url), p.thumb ? link_(p.thumb, 'Picture') : '', p.site ? link_(p.site, p.site) : '']]);
       addDevCard_(devInbox_(ss), p, now);
     }
@@ -453,6 +483,32 @@ function doPost(e) {
   } finally {
     try { lock.releaseLock(); } catch (e2) { /* not locked */ }
   }
+}
+
+/* removes test boxes and rows (used by the UBG45 team after a test). Needs the secret. match = words to look for in the game title. */
+function cleanup_(ss, re, dropOld) {
+  var out = { reportBoxes: 0, developerBoxes: 0, reportRows: 0, submissionRows: 0, oldTabs: 0 };
+  [['Report inbox', 'THE PROBLEM', 'reportBoxes'], ['Developer inbox', 'THE GAME', 'developerBoxes']].forEach(function (cfg) {
+    var sh = ss.getSheetByName(cfg[0]), last = sh ? sh.getLastRow() : 0;
+    if (!sh || last < CARD_TOP) return;
+    var col = sh.getRange(CARD_TOP, 1, last - CARD_TOP + 1, 1).getValues().map(function (r) { return String(r[0]); }), starts = [], i;
+    for (i = 0; i < col.length - 1; i++) if (col[i] !== '' && (col[i + 1] === cfg[1] || (cfg[1] === 'THE GAME' && col[i + 1] === 'CONTACT THEM'))) starts.push(i);
+    for (i = starts.length - 1; i >= 0; i--) {                       // bottom up, so the row numbers above stay right
+      var from = starts[i], to = i + 1 < starts.length ? starts[i + 1] : col.length;
+      if (re.test(col[from].trim())) { sh.deleteRows(CARD_TOP + from, to - from); out[cfg[2]]++; }
+    }
+  });
+  [['Reports', 'reportRows'], ['Submissions', 'submissionRows']].forEach(function (cfg) {
+    var sh = ss.getSheetByName(cfg[0]), last = sh ? sh.getLastRow() : 0;
+    if (!sh || last < 2) return;
+    var games = sh.getRange(2, 3, last - 1, 1).getValues();
+    for (var r = games.length - 1; r >= 0; r--) if (re.test(String(games[r][0]).trim())) { sh.deleteRows(r + 2, 1); out[cfg[1]]++; }
+  });
+  var rep = ss.getSheetByName('Reports');
+  if (rep && rep.getLastRow() < 2) PropertiesService.getScriptProperties().setProperty('reportCount', '0');   // next report is R-0001 again
+  if (dropOld) ss.getSheets().forEach(function (sh) { if (/\(old/.test(sh.getName()) && ss.getNumSheets() > 1) { ss.deleteSheet(sh); out.oldTabs++; } });
+  SpreadsheetApp.flush();
+  return JSON.stringify(out);
 }
 
 /* lets the UBG45 team read back what the sheet shows (needs the secret) */
