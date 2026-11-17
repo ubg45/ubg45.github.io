@@ -1,4 +1,5 @@
 name: Verify candidate games (real browser, open internet)
+# Second (slower, stricter) round: 25-30 seconds of loading time per game. First round used tools/candidates-pfg.json and candidates-mgg2.json.
 # Tests games we may add: the ones that live on other websites (tools/candidates-pfg.json) are opened inside an iframe like UBG45 does;
 # the ones from the monkeygg2 collection (tools/candidates-mgg2.json) are served from a checkout of ubg45/monkeygg2.github.io.
 # Runs when tools/candidates-request.txt changes on main (or by hand). Results go to the branch "candidates-results".
@@ -31,9 +32,9 @@ jobs:
           pip install playwright pillow
           python -m playwright install --with-deps chromium
       - name: Test games on other websites
-        run: python tools/verify-candidates.py --list tools/candidates-pfg.json --out out --tag pfg --workers 6 --wait 10000
+        run: python tools/verify-candidates.py --list tools/candidates-pfg2.json --out out --tag pfg2 --workers 6 --wait 25000 --passes 1
       - name: Test monkeygg2 games
-        run: python tools/verify-candidates.py --list tools/candidates-mgg2.json --out out --tag mgg2 --local-dir _mgg2/games --workers 6 --wait 9000
+        run: python tools/verify-candidates.py --list tools/candidates-mgg2b.json --out out --tag mgg2b --local-dir _mgg2/games --workers 6 --wait 30000 --passes 1
       - name: Publish results
         if: always()
         run: |

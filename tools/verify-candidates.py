@@ -52,19 +52,68 @@ def make_thumb(data, dst, size=300):
     return ow, oh
 
 
-async def fetch_thumb(ctx, url, dst):
-    out = {'thumb_ok': False}
-    if not url:
-        return out
+async def fetch_image(ctx, url):
+    """Download a picture; pictures PIL cannot read (webp variants, avif, svg) are drawn by the browser and photographed instead."""
+    r = await ctx.request.get(url, headers={'User-Agent': UA, 'Referer': 'https://ubg45.github.io/'}, timeout=25000)
+    if r.status >= 400:
+        raise RuntimeError('HTTP %d' % r.status)
+    data = await r.body()
     try:
-        r = await ctx.request.get(url, headers={'User-Agent': UA, 'Referer': 'https://ubg45.github.io/'}, timeout=25000)
+        from PIL import Image
+        im = Image.open(io.BytesIO(data)); im.load()
+        return data, None
+    except Exception:
+        pg = await ctx.new_page()
+        try:
+            await pg.set_viewport_size({'width': 800, 'height': 800})
+            await pg.goto(url, wait_until='load', timeout=25000)
+            el = await pg.query_selector('img')
+            png = await (el or pg).screenshot()
+        finally:
+            await pg.close()
+        return png, 'drawn by the browser'
+
+
+async def page_images(ctx, page_url):
+    """Pictures a game's own page advertises (og:image, twitter:image, apple-touch-icon)."""
+    try:
+        from urllib.parse import urljoin
+        r = await ctx.request.get(page_url, headers={'User-Agent': UA}, timeout=20000)
         if r.status >= 400:
-            out['thumb_error'] = 'HTTP %d' % r.status; return out
-        data = await r.body()
-        ow, oh = make_thumb(data, dst)
-        out.update(thumb_ok=True, thumb_w=ow, thumb_h=oh, thumb_bytes=len(data))
-    except Exception as e:
-        out['thumb_error'] = re.sub(r'\s+', ' ', str(e))[:100]
+            return []
+        h = (await r.text())[:200000]
+        found = re.findall(r'<meta[^>]+(?:property|name)=["\'](?:og:image|twitter:image)["\'][^>]+content=["\']([^"\']+)', h, re.I) + \
+            re.findall(r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+(?:property|name)=["\'](?:og:image|twitter:image)["\']', h, re.I) + \
+            re.findall(r'<link[^>]+rel=["\']apple-touch-icon[^"\']*["\'][^>]+href=["\']([^"\']+)', h, re.I)
+        return [urljoin(page_url, u) for u in found][:4]
+    except Exception:
+        return []
+
+
+async def fetch_thumb(ctx, url, dst, page_url=''):
+    out = {'thumb_ok': False}
+    tries = [('given', url)] if url else []
+    errs = []
+    fell_back = False
+    while True:
+        for kind, u in tries:
+            try:
+                data, how = await fetch_image(ctx, u)
+                ow, oh = make_thumb(data, dst)
+                out.update(thumb_ok=True, thumb_w=ow, thumb_h=oh, thumb_bytes=len(data), thumb_from=u if kind != 'given' else 'repo list')
+                if kind != 'given': out['thumb_source'] = 'game page (og:image)'
+                if how: out['thumb_note'] = how
+                return out
+            except Exception as e:
+                errs.append(re.sub(r'\s+', ' ', str(e))[:80])
+        if fell_back or not page_url:
+            break
+        fell_back = True
+        tries = [('page', u) for u in await page_images(ctx, page_url)]
+        if not tries:
+            break
+    if errs:
+        out['thumb_error'] = ' | '.join(errs)[:200]
     return out
 
 
@@ -149,9 +198,9 @@ async def probe(browser, t, base, wait_ms, dirs, sem, thumbs=True):
         except Exception as e:
             res.update(verdict='timeout', detail=re.sub(r'\s+', ' ', str(e))[:140])
         finally:
-            if thumbs and t.get('thumb'):
+            if thumbs and (t.get('thumb') or t.get('url')):
                 try:
-                    res.update(await fetch_thumb(ctx, t['thumb'], os.path.join(dirs['thumbs'], re.sub(r'[^A-Za-z0-9._-]+', '_', t['key'])[:90] + '.jpg')))
+                    res.update(await fetch_thumb(ctx, t['thumb'], os.path.join(dirs['thumbs'], re.sub(r'[^A-Za-z0-9._-]+', '_', t['key'])[:90] + '.jpg'), t.get('url', '')))
                 except Exception:
                     pass
             try:
