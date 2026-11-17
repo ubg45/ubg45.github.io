@@ -1,0 +1,49 @@
+name: Verify candidate games (real browser, open internet)
+# Tests games we may add: the ones that live on other websites (tools/candidates-pfg.json) are opened inside an iframe like UBG45 does;
+# the ones from the monkeygg2 collection (tools/candidates-mgg2.json) are served from a checkout of ubg45/monkeygg2.github.io.
+# Runs when tools/candidates-request.txt changes on main (or by hand). Results go to the branch "candidates-results".
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [tools/candidates-request.txt]
+permissions:
+  contents: write
+concurrency:
+  group: verify-candidates
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 170
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch monkeygg2 games
+        uses: actions/checkout@v4
+        with:
+          repository: ubg45/monkeygg2.github.io
+          path: _mgg2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser
+        run: |
+          pip install playwright pillow
+          python -m playwright install --with-deps chromium
+      - name: Test games on other websites
+        run: python tools/verify-candidates.py --list tools/candidates-pfg.json --out out --tag pfg --workers 6 --wait 10000
+      - name: Test monkeygg2 games
+        run: python tools/verify-candidates.py --list tools/candidates-mgg2.json --out out --tag mgg2 --local-dir _mgg2/games --workers 6 --wait 9000
+      - name: Publish results
+        if: always()
+        run: |
+          cp -r out /tmp/out
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch --orphan candidates-results
+          git rm -rf --quiet . 2>/dev/null || true
+          rm -rf _mgg2 out
+          cp -r /tmp/out/. .
+          git add -A
+          git commit -q -m "Candidate results $(date -u +%F)"
+          git push -f origin candidates-results
