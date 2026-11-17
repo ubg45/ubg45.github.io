@@ -186,7 +186,7 @@ function summary_(ss) {
     ['A', 'B', 'NEW REPORTS  ·  waiting for you', '=COUNTIFS(\'Report inbox\'!A3:A5000,"Status",\'Report inbox\'!B3:B5000,"New")', COL.amber],
     ['C', 'D', 'NEW DEVELOPER GAMES', '=COUNTIFS(\'Developer inbox\'!A3:A5000,"Status",\'Developer inbox\'!B3:B5000,"New")', COL.violet],
     ['E', 'F', 'REPORTS  ·  last 7 days', '=SUMPRODUCT(--(LEFT(Reports!A2:A5000,10)>=' + WEEK + '))', COL.sky],
-    ['G', 'H', 'GAMES REPORTED  ·  last 7 days', '=IFERROR(COUNTA(UNIQUE(FILTER(Reports!C2:C5000,LEFT(Reports!A2:A5000,10)>=' + WEEK + '))),0)', COL.mint]
+    ['G', 'H', 'GAMES REPORTED  ·  last 7 days', '=IF(E5=0,0,IFERROR(COUNTA(UNIQUE(FILTER(Reports!C2:C5000,LEFT(Reports!A2:A5000,10)>=' + WEEK + '))),0))', COL.mint]
   ];
   boxes.forEach(function (b) {
     s.getRange(b[0] + '4:' + b[1] + '4').merge().setValue(b[2]).setFontSize(9).setFontWeight('bold').setFontColor(COL.label).setHorizontalAlignment('center').setVerticalAlignment('middle').setBackground(b[4]);
