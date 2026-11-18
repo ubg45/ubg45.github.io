@@ -1,4 +1,5 @@
 name: Verify candidate games (real browser, open internet)
+# Live round: the self-hosted games we added, tested at their real https addresses.
 # Third round: only the games that were doubtful before, two at a time so heavy 3D games are not starved. (Round 2: 25-30 seconds per game.)
 # Second (slower, stricter) round: 25-30 seconds of loading time per game. First round used tools/candidates-pfg.json and candidates-mgg2.json.
 # Tests games we may add: the ones that live on other websites (tools/candidates-pfg.json) are opened inside an iframe like UBG45 does;
@@ -33,7 +34,7 @@ jobs:
           pip install playwright pillow
           python -m playwright install --with-deps chromium
       - name: Re-test the doubtful games on other websites, two at a time
-        run: python tools/verify-candidates.py --list tools/candidates-pfg3.json --out out --tag pfg3 --workers 2 --wait 20000 --passes 2
+        run: python tools/verify-candidates.py --list tools/candidates-live.json --out out --tag live --workers 3 --wait 20000 --passes 1
       - name: Publish results
         if: always()
         run: |
