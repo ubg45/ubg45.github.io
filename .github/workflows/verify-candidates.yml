@@ -34,7 +34,7 @@ jobs:
           pip install playwright pillow
           python -m playwright install --with-deps chromium
       - name: Re-test the doubtful games on other websites, two at a time
-        run: python tools/verify-candidates.py --list tools/candidates-live.json --out out --tag live --workers 3 --wait 20000 --passes 1
+        run: python tools/verify-candidates.py --list tools/candidates-live2.json --out out --tag live2 --workers 3 --wait 20000 --passes 1
       - name: Publish results
         if: always()
         run: |
