@@ -747,5 +747,6 @@
   "there is no game": "2026-11-18",
   "this is the only level 2": "2026-11-18",
   "vex 4": "2026-11-18",
-  "volley random": "2026-11-18"
+  "volley random": "2026-11-18",
+  "subway surfers new york": "2026-11-19"
 };
