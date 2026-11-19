@@ -1,0 +1,254 @@
+{
+ "when": "2026-11-19T05:25:45Z",
+ "summary": {
+  "ok": 10
+ },
+ "results": [
+  {
+   "key": "learn-to-fly-3",
+   "title": "Learn To Fly 3",
+   "url": "https://ubg45.github.io/games/flash/?game=learn-to-fly-3",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "frame_url": "https://ubg45.github.io/games/flash/?game=learn-to-fly-3",
+   "text": "",
+   "first": {
+    "top": 0.167,
+    "colors": 167,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.219,
+    "colors": 162,
+    "blank": false
+   },
+   "errors": 0,
+   "bad_responses": [],
+   "seconds": 33.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "riddle-transfer-2",
+   "title": "Riddle Transfer 2",
+   "url": "https://ubg45.github.io/games/flash/?game=riddle-transfer-2",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "frame_url": "https://ubg45.github.io/games/flash/?game=riddle-transfer-2",
+   "text": "",
+   "first": {
+    "top": 0.659,
+    "colors": 32,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.659,
+    "colors": 32,
+    "blank": false
+   },
+   "errors": 0,
+   "bad_responses": [
+    "404 https://ubg45.github.io/games/flash/undefined"
+   ],
+   "seconds": 33.5,
+   "pass1": "ok"
+  },
+  {
+   "key": "submachine-10",
+   "title": "Submachine 10",
+   "url": "https://ubg45.github.io/games/flash/?game=submachine-10",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "frame_url": "https://ubg45.github.io/games/flash/?game=submachine-10",
+   "text": "",
+   "first": {
+    "top": 0.939,
+    "colors": 24,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.939,
+    "colors": 26,
+    "blank": false
+   },
+   "errors": 0,
+   "bad_responses": [],
+   "seconds": 32.0,
+   "pass1": "ok"
+  },
+  {
+   "key": "henry-stickmin-3-infiltrating-the-airship",
+   "title": "Henry Stickmin 3: Infiltrating The Airship",
+   "url": "https://ubg45.github.io/games/flash/?game=henry-stickmin-3-infiltrating-the-airship",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "frame_url": "https://ubg45.github.io/games/flash/?game=henry-stickmin-3-infiltrating-the-airship",
+   "text": "",
+   "first": {
+    "top": 0.169,
+    "colors": 750,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.17,
+    "colors": 768,
+    "blank": false
+   },
+   "errors": 0,
+   "bad_responses": [],
+   "seconds": 31.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "henry-stickmin-4-fleeing-the-complex",
+   "title": "Henry Stickmin 4: Fleeing the Complex",
+   "url": "https://ubg45.github.io/games/flash/?game=henry-stickmin-4-fleeing-the-complex",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "frame_url": "https://ubg45.github.io/games/flash/?game=henry-stickmin-4-fleeing-the-complex",
+   "text": "",
+   "first": {
+    "top": 0.129,
+    "colors": 343,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.128,
+    "colors": 348,
+    "blank": false
+   },
+   "errors": 0,
+   "bad_responses": [],
+   "seconds": 31.8,
+   "pass1": "ok"
+  },
+  {
+   "key": "subway-surfers-new-york",
+   "title": "Subway Surfers New York",
+   "url": "https://ubg45.github.io/games/subway-surfers-new-york/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "frame_url": "https://ubg45.github.io/games/subway-surfers-new-york/",
+   "text": ". . /** Anti-fraud and anti-abuse applications only. See google.com/recaptcha */ try{var clients={'sodar':'https://pagead2.googlesyndication.com/pagead/sodar?','sodar_atqg':'https://ep1.adtrafficquality.google/pagead/sodar?'};window.addEventListener(\"message\",function(a){try{if(a.source===window.par",
+   "first": {
+    "top": 0.027,
+    "colors": 3097,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.016,
+    "colors": 3146,
+    "blank": false
+   },
+   "errors": 0,
+   "bad_responses": [
+    "404 https://ubg45.github.io/js/main.js"
+   ],
+   "seconds": 34.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "vex-6",
+   "title": "Vex 6",
+   "url": "https://ubg45.github.io/games/vex-6/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "frame_url": "https://ubg45.github.io/games/vex-6/",
+   "text": "/** Anti-fraud and anti-abuse applications only. See google.com/recaptcha */ try{var clients={'sodar':'https://pagead2.googlesyndication.com/pagead/sodar?','sodar_atqg':'https://ep1.adtrafficquality.google/pagead/sodar?'};window.addEventListener(\"message\",function(a){try{if(a.source===window.parent)",
+   "first": {
+    "top": 0.661,
+    "colors": 1053,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.66,
+    "colors": 1071,
+    "blank": false
+   },
+   "errors": 2,
+   "bad_responses": [
+    "405 https://ubg45.github.io/games/vex-6/@gamedistribution/null.js?https://rubick.gameanalytics.com/v2/command_center?game_ke"
+   ],
+   "seconds": 58.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "vex-7",
+   "title": "Vex 7",
+   "url": "https://ubg45.github.io/games/vex-7/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "frame_url": "https://ubg45.github.io/games/vex-7/",
+   "text": "PLAY Vex 7 Loading... /** Anti-fraud and anti-abuse applications only. See google.com/recaptcha */ try{var clients={'sodar':'https://pagead2.googlesyndication.com/pagead/sodar?','sodar_atqg':'https://ep1.adtrafficquality.google/pagead/sodar?'};window.addEventListener(\"message\",function(a){try{if(a.s",
+   "first": {
+    "top": 0.797,
+    "colors": 793,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.797,
+    "colors": 793,
+    "blank": false
+   },
+   "errors": 0,
+   "bad_responses": [],
+   "seconds": 58.5,
+   "pass1": "ok"
+  },
+  {
+   "key": "slice-master",
+   "title": "Slice Master",
+   "url": "https://ubg45.github.io/games/slice-master/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "frame_url": "https://ubg45.github.io/games/slice-master/",
+   "text": "",
+   "first": {
+    "top": 0.929,
+    "colors": 1019,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.929,
+    "colors": 1019,
+    "blank": false
+   },
+   "errors": 0,
+   "bad_responses": [],
+   "seconds": 51.7,
+   "pass1": "ok"
+  },
+  {
+   "key": "n-gon",
+   "title": "N-gon",
+   "url": "https://ubg45.github.io/games/n-gon/",
+   "verdict": "ok",
+   "detail": "",
+   "status": 200,
+   "frame_url": "https://ubg45.github.io/games/n-gon/",
+   "text": "experiment training settings controls updates about Q W E A S D switch guns move fire field /** Anti-fraud and anti-abuse applications only. See google.com/recaptcha */ try{var clients={'sodar':'https://pagead2.googlesyndication.com/pagead/sodar?','sodar_atqg':'https://ep1.adtrafficquality.google/pa",
+   "first": {
+    "top": 0.874,
+    "colors": 146,
+    "blank": false
+   },
+   "after_click": {
+    "top": 0.495,
+    "colors": 120,
+    "blank": false
+   },
+   "errors": 0,
+   "bad_responses": [],
+   "seconds": 37.5,
+   "pass1": "ok"
+  }
+ ]
+}
