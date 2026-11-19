@@ -3121,5 +3121,32 @@
   "reason": "address is a bit.ly link that leads to an unrelated marketing demo page, not a game",
   "removed": "2026-11-10",
   "card": "\t\t<div class=\"game-card\" onclick=\"openGame('https://bit.ly/BoostRoulette', 'Google Docs')\">\n\t\t<img src=\"https://ubg42.github.io/img/BoostRoulette.jpg\" alt=\"Boost Roulette\" loading=\"lazy\" decoding=\"async\">\n\t\t<h3>Boost Roulette</h3>\n\t</div>"
+ },
+ {
+  "title": "Bloons TD 1",
+  "url": "https://ubg45.github.io/games/flash/?game=bloons-td-1",
+  "img": "img/mgg2/bloons-td-1.jpg",
+  "in_random_list": true,
+  "reason": "duplicate: the site already has Bloons Tower Defense (the same game)",
+  "removed": "2026-11-19",
+  "card": "\t\t<div class=\"game-card\" onclick=\"openGame('https://ubg45.github.io/games/flash/?game=bloons-td-1', 'Google Docs')\">\n\t\t<img src=\"img/mgg2/bloons-td-1.jpg\" alt=\"Bloons TD 1\" loading=\"lazy\" decoding=\"async\">\n\t\t<h3>Bloons TD 1</h3>\n\t</div>"
+ },
+ {
+  "title": "Geometry Dash Lite",
+  "url": "https://szhong.4399.com/4399swf//upload_swf/ftp45/chenling/20240221/08/index.html",
+  "img": "img/pfg/geometry-dash-lite.jpg",
+  "in_random_list": true,
+  "reason": "duplicate: the site already has Geometry Dash (Lite is the same game)",
+  "removed": "2026-11-19",
+  "card": "\t\t<div class=\"game-card\" onclick=\"openGame('https://szhong.4399.com/4399swf//upload_swf/ftp45/chenling/20240221/08/index.html', 'Google Docs')\">\n\t\t<img src=\"img/pfg/geometry-dash-lite.jpg\" alt=\"Geometry Dash Lite\" loading=\"lazy\" decoding=\"async\">\n\t\t<h3>Geometry Dash Lite</h3>\n\t</div>"
+ },
+ {
+  "title": "Minesweeper",
+  "url": "https://freeonlinegames.github.io/games/minesweeper/",
+  "img": "img/pfg/minesweeper.jpg",
+  "in_random_list": true,
+  "reason": "duplicate: the site already has Google Minesweeper",
+  "removed": "2026-11-19",
+  "card": "\t\t<div class=\"game-card\" onclick=\"openGame('https://freeonlinegames.github.io/games/minesweeper/', 'Google Docs')\">\n\t\t<img src=\"img/pfg/minesweeper.jpg\" alt=\"Minesweeper\" loading=\"lazy\" decoding=\"async\">\n\t\t<h3>Minesweeper</h3>\n\t</div>"
  }
 ]
